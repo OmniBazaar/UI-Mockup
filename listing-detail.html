@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniBazaar - Vintage Camera Listing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .navigation {
+            background: white;
+            padding: 16px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #764ba2;
+        }
+        
+        .breadcrumb {
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .listing-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .image-gallery {
+            position: relative;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+        
+        .thumbnail-strip {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+        }
+        
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            background: #ddd;
+            border-radius: 8px;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .thumbnail:hover {
+            transform: scale(1.05);
+        }
+        
+        .thumbnail.active {
+            border: 3px solid #667eea;
+        }
+        
+        .listing-info {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .listing-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        
+        .listing-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 16px;
+        }
+        
+        .price-crypto {
+            font-size: 1.2rem;
+            color: #999;
+            margin-bottom: 24px;
+        }
+        
+        .listing-meta {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .meta-item {
+            text-align: center;
+        }
+        
+        .meta-label {
+            font-size: 0.8rem;
+            color: #999;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .meta-value {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .seller-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .seller-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .seller-details h4 {
+            margin-bottom: 4px;
+            color: #333;
+        }
+        
+        .seller-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        .stars {
+            color: #ffc107;
+        }
+        
+        .listing-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+        
+        .description-section {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .description {
+            margin-bottom: 32px;
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        .specifications {
+            margin-bottom: 32px;
+        }
+        
+        .spec-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .spec-label {
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .spec-value {
+            color: #333;
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .security-section {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .security-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .security-icon {
+            width: 32px;
+            height: 32px;
+            background: #e8f5e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4caf50;
+        }
+        
+        .location-section {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .map-placeholder {
+            width: 100%;
+            height: 200px;
+            background: #ddd;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            margin-bottom: 16px;
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 24px;
+        }
+        
+        .tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <div class="nav-content">
+            <a href="marketplace-categories.html" class="nav-link">← Back to Marketplace</a>
+            <span class="breadcrumb">For Sale > Electronics > Cameras > Vintage Canon AE-1</span>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="listing-header">
+            <div class="image-gallery">
+                <div class="main-image">📷</div>
+                <div class="thumbnail-strip">
+                    <div class="thumbnail active"></div>
+                    <div class="thumbnail"></div>
+                    <div class="thumbnail"></div>
+                    <div class="thumbnail"></div>
+                    <div class="thumbnail"></div>
+                </div>
+            </div>
+            
+            <div class="listing-info">
+                <h1 class="listing-title">Vintage Canon AE-1 35mm Film Camera</h1>
+                <div class="listing-price">$289.99</div>
+                <div class="price-crypto">≈ 0.12 BTC • 2.8 ETH • 1,450 XOM</div>
+                
+                <div class="listing-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Condition</div>
+                        <div class="meta-value">Excellent</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Category</div>
+                        <div class="meta-value">Electronics</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Posted</div>
+                        <div class="meta-value">3 days ago</div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary">Buy with SecureSend</button>
+                    <button class="btn btn-secondary">Make Offer</button>
+                </div>
+                
+                <div class="seller-info">
+                    <div class="seller-avatar">JD</div>
+                    <div class="seller-details">
+                        <h4>John Doe</h4>
+                        <div class="seller-rating">
+                            <span class="stars">★★★★★</span>
+                            <span>4.8 rating • 127 reviews</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="listing-content">
+            <div class="description-section">
+                <h2 class="section-title">Description</h2>
+                <div class="description">
+                    <p>This beautiful vintage Canon AE-1 35mm film camera is in excellent working condition. It has been well-maintained and comes with the original 50mm f/1.8 lens. The AE-1 was Canon's most popular camera of the 1970s and remains a favorite among film photography enthusiasts today.</p>
+                    
+                    <p>The camera features Canon's reliable FD mount system and offers both manual and automatic exposure modes. The light meter is fully functional, and all shutter speeds work perfectly. The viewfinder is clear and bright with no fungus or major dust.</p>
+                    
+                    <p>Included in this sale: Canon AE-1 body, Canon FD 50mm f/1.8 lens, original lens cap, camera strap, and a roll of fresh Kodak Gold 200 film to get you started!</p>
+                </div>
+                
+                <div class="specifications">
+                    <h3 class="section-title">Specifications</h3>
+                    <div class="spec-grid">
+                        <div class="spec-item">
+                            <span class="spec-label">Brand</span>
+                            <span class="spec-value">Canon</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Model</span>
+                            <span class="spec-value">AE-1</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Film Format</span>
+                            <span class="spec-value">35mm</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Lens Mount</span>
+                            <span class="spec-value">Canon FD</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Year</span>
+                            <span class="spec-value">1976-1984</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Weight</span>
+                            <span class="spec-value">590g</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tags">
+                    <span class="tag">vintage</span>
+                    <span class="tag">35mm</span>
+                    <span class="tag">canon</span>
+                    <span class="tag">film camera</span>
+                    <span class="tag">photography</span>
+                    <span class="tag">analog</span>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="security-section">
+                    <h3 class="section-title">Security Features</h3>
+                    <div class="security-feature">
+                        <div class="security-icon">🛡️</div>
+                        <div>
+                            <strong>SecureSend Protection</strong><br>
+                            <small>Escrow service protects your payment</small>
+                        </div>
+                    </div>
+                    <div class="security-feature">
+                        <div class="security-icon">✅</div>
+                        <div>
+                            <strong>Verified Seller</strong><br>
+                            <small>Identity confirmed and verified</small>
+                        </div>
+                    </div>
+                    <div class="security-feature">
+                        <div class="security-icon">📦</div>
+                        <div>
+                            <strong>Safe Shipping</strong><br>
+                            <small>Tracked and insured delivery</small>
+                        </div>
+                    </div>
+                    <div class="security-feature">
+                        <div class="security-icon">↩️</div>
+                        <div>
+                            <strong>Return Policy</strong><br>
+                            <small>30-day return guarantee</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="location-section">
+                    <h3 class="section-title">Location</h3>
+                    <div class="map-placeholder">🗺️ Map View</div>
+                    <div>
+                        <strong>San Francisco, CA</strong><br>
+                        Local pickup available<br>
+                        Ships nationwide
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
