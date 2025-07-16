@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniBazaar - Send Money</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .navigation {
+            background: white;
+            padding: 16px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 32px;
+            height: 32px;
+        }
+
+        .brand-text {
+            font-weight: 700;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            margin-left: auto;
+        }
+
+        .nav-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #764ba2;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .transaction-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .transaction-card.success {
+            text-align: center;
+            border: 2px solid #10b981;
+        }
+
+        .transaction-card.error {
+            text-align: center;
+            border: 2px solid #ef4444;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .form-section {
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .amount-input {
+            display: flex;
+            gap: 8px;
+        }
+
+        .currency-select {
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .recipient-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.2s;
+        }
+
+        .suggestion-item:hover {
+            background: #f8f9fa;
+        }
+
+        .suggestion-avatar {
+            width: 32px;
+            height: 32px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .suggestion-details {
+            flex: 1;
+        }
+
+        .suggestion-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .suggestion-username {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .summary-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .summary-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .summary-row.total {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 8px;
+            margin-top: 8px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .security-notice {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .security-icon {
+            font-size: 20px;
+            color: #16a34a;
+        }
+
+        .security-text {
+            flex: 1;
+        }
+
+        .security-text strong {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .security-text p {
+            color: #166534;
+            font-size: 14px;
+            margin-top: 4px;
+            margin-bottom: 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .button {
+            flex: 1;
+            padding: 14px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .button.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .button.primary:hover:not(:disabled) {
+            background: #5a6fd8;
+        }
+
+        .button.secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .button.secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #10b981;
+        }
+
+        .error-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #ef4444;
+        }
+
+        .transaction-details {
+            margin: 24px 0;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .transaction-id {
+            font-family: monospace;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .wallet-balance {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .balance-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .quick-amounts {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .quick-amount {
+            padding: 6px 12px;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-amount:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="nav-content">
+            <div class="nav-brand">
+                <img src="Globe-clear-256x256.png" alt="OmniBazaar" class="logo">
+                <span class="brand-text">OmniBazaar</span>
+            </div>
+            <div class="nav-links">
+                <a href="wallet-dashboard.html" class="nav-link">Dashboard</a>
+                <a href="marketplace-home.html" class="nav-link">Marketplace</a>
+                <a href="auth-login.html" class="nav-link">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Send Money Form -->
+        <div id="sendForm" class="transaction-card">
+            <div class="header">
+                <h1>Send Money</h1>
+                <p>Send funds to another OmniBazaar user</p>
+            </div>
+
+            <!-- Wallet Balance -->
+            <div class="wallet-balance">
+                <div class="balance-label">Available Balance</div>
+                <div class="balance-amount">$1,250.00</div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-group">
+                    <label>Send To</label>
+                    <div style="position: relative;">
+                        <input
+                            id="recipient"
+                            type="text"
+                            class="form-input"
+                            placeholder="Username, email, or address"
+                            oninput="searchRecipients(this.value)"
+                        />
+                        <div id="recipientSuggestions" class="recipient-suggestions">
+                            <div class="suggestion-item" onclick="selectRecipient('johnsmith', 'John Smith')">
+                                <div class="suggestion-avatar">JS</div>
+                                <div class="suggestion-details">
+                                    <div class="suggestion-name">John Smith</div>
+                                    <div class="suggestion-username">johnsmith.omnicoin</div>
+                                </div>
+                            </div>
+                            <div class="suggestion-item" onclick="selectRecipient('alice', 'Alice Johnson')">
+                                <div class="suggestion-avatar">AJ</div>
+                                <div class="suggestion-details">
+                                    <div class="suggestion-name">Alice Johnson</div>
+                                    <div class="suggestion-username">alice.omnicoin</div>
+                                </div>
+                            </div>
+                            <div class="suggestion-item" onclick="selectRecipient('bob_trading', 'Bob's Trading')">
+                                <div class="suggestion-avatar">BT</div>
+                                <div class="suggestion-details">
+                                    <div class="suggestion-name">Bob's Trading</div>
+                                    <div class="suggestion-username">bob_trading.omnicoin</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Amount</label>
+                    <div class="amount-input">
+                        <input
+                            id="amount"
+                            type="number"
+                            class="form-input"
+                            placeholder="0.00"
+                            step="0.01"
+                            oninput="updateSummary()"
+                        />
+                        <select id="currency" class="currency-select" onchange="updateSummary()">
+                            <option value="USD">USD</option>
+                            <option value="XOM">XOM</option>
+                            <option value="ETH">ETH</option>
+                        </select>
+                    </div>
+                    <div class="quick-amounts">
+                        <span class="quick-amount" onclick="setAmount(25)">$25</span>
+                        <span class="quick-amount" onclick="setAmount(50)">$50</span>
+                        <span class="quick-amount" onclick="setAmount(100)">$100</span>
+                        <span class="quick-amount" onclick="setAmount(250)">$250</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Message (optional)</label>
+                    <input
+                        id="message"
+                        type="text"
+                        class="form-input"
+                        placeholder="What's this for?"
+                    />
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h3>Transaction Summary</h3>
+                <div class="summary-row">
+                    <span>Amount</span>
+                    <span id="summaryAmount">$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Network Fee</span>
+                    <span id="summaryFee">$0.50</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="summaryTotal">$0.50</span>
+                </div>
+            </div>
+
+            <div class="security-notice">
+                <div class="security-icon">🔒</div>
+                <div class="security-text">
+                    <strong>Secure Transfer</strong>
+                    <p>All transfers are secured by blockchain technology and cannot be reversed once confirmed.</p>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="button secondary" onclick="goBack()">
+                    Cancel
+                </button>
+                <button 
+                    id="sendButton" 
+                    class="button primary" 
+                    onclick="processSend()"
+                    disabled
+                >
+                    Send Money
+                </button>
+            </div>
+        </div>
+
+        <!-- Success State -->
+        <div id="successCard" class="transaction-card success hidden">
+            <div class="success-icon">✅</div>
+            <h2>Money Sent Successfully!</h2>
+            <p id="successMessage">You've successfully sent money to the recipient.</p>
+            
+            <div class="transaction-details">
+                <div class="detail-row">
+                    <span>Transaction ID</span>
+                    <span id="transactionId" class="transaction-id">txn_abc123def456</span>
+                </div>
+                <div class="detail-row">
+                    <span>Date</span>
+                    <span id="transactionDate">Jan 15, 2024 at 2:30 PM</span>
+                </div>
+                <div class="detail-row">
+                    <span>Amount Sent</span>
+                    <span id="sentAmount">$0.00</span>
+                </div>
+                <div class="detail-row">
+                    <span>Recipient</span>
+                    <span id="recipientName">-</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="button primary" onclick="goToDashboard()">
+                    Back to Dashboard
+                </button>
+                <button class="button secondary" onclick="viewTransaction()">
+                    View Details
+                </button>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorCard" class="transaction-card error hidden">
+            <div class="error-icon">❌</div>
+            <h2>Transaction Failed</h2>
+            <p id="errorMessage">We couldn't process your transaction. Please try again.</p>
+            
+            <div class="action-buttons">
+                <button class="button secondary" onclick="goBack()">
+                    Close
+                </button>
+                <button class="button primary" onclick="retryTransaction()">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedRecipient = '';
+        let walletBalance = 1250.00;
+
+        function searchRecipients(query) {
+            const suggestions = document.getElementById('recipientSuggestions');
+            
+            if (query.length >= 2) {
+                suggestions.style.display = 'block';
+            } else {
+                suggestions.style.display = 'none';
+            }
+        }
+
+        function selectRecipient(username, displayName) {
+            document.getElementById('recipient').value = username + '.omnicoin';
+            document.getElementById('recipientSuggestions').style.display = 'none';
+            selectedRecipient = displayName;
+            updateSendButton();
+        }
+
+        function setAmount(amount) {
+            document.getElementById('amount').value = amount;
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const amount = parseFloat(document.getElementById('amount').value) || 0;
+            const currency = document.getElementById('currency').value;
+            
+            // Calculate fee (minimum $0.50 or 1% of amount)
+            const fee = Math.max(0.50, amount * 0.01);
+            const total = amount + fee;
+            
+            document.getElementById('summaryAmount').textContent = 
+                currency === 'USD' ? `$${amount.toFixed(2)}` : `${amount.toFixed(2)} ${currency}`;
+            document.getElementById('summaryFee').textContent = `$${fee.toFixed(2)}`;
+            document.getElementById('summaryTotal').textContent = `$${total.toFixed(2)}`;
+            
+            updateSendButton();
+        }
+
+        function updateSendButton() {
+            const recipient = document.getElementById('recipient').value;
+            const amount = parseFloat(document.getElementById('amount').value) || 0;
+            const button = document.getElementById('sendButton');
+            
+            const isValid = recipient && amount > 0;
+            button.disabled = !isValid;
+            
+            if (isValid) {
+                const total = amount + Math.max(0.50, amount * 0.01);
+                button.innerHTML = `Send $${total.toFixed(2)}`;
+            } else {
+                button.innerHTML = 'Send Money';
+            }
+        }
+
+        function processSend() {
+            const recipient = document.getElementById('recipient').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const currency = document.getElementById('currency').value;
+            const message = document.getElementById('message').value;
+            
+            const total = amount + Math.max(0.50, amount * 0.01);
+            
+            // Check balance
+            if (total > walletBalance) {
+                showError('Insufficient balance. Please reduce the amount or add funds to your wallet.');
+                return;
+            }
+            
+            // Show loading state
+            const button = document.getElementById('sendButton');
+            button.innerHTML = '<span class="loading-spinner"></span> Processing...';
+            button.disabled = true;
+            
+            // Simulate processing delay
+            setTimeout(() => {
+                // Show success
+                showSuccess(recipient, amount, currency, message);
+            }, 2000);
+        }
+
+        function showSuccess(recipient, amount, currency, message) {
+            document.getElementById('sendForm').classList.add('hidden');
+            document.getElementById('errorCard').classList.add('hidden');
+            
+            const successCard = document.getElementById('successCard');
+            const recipientDisplay = selectedRecipient || recipient;
+            
+            document.getElementById('successMessage').textContent = 
+                `You've successfully sent $${amount.toFixed(2)} to ${recipientDisplay}.`;
+            document.getElementById('transactionId').textContent = 'txn_' + Math.random().toString(36).substr(2, 9);
+            document.getElementById('transactionDate').textContent = new Date().toLocaleString();
+            document.getElementById('sentAmount').textContent = 
+                currency === 'USD' ? `$${amount.toFixed(2)}` : `${amount.toFixed(2)} ${currency}`;
+            document.getElementById('recipientName').textContent = recipientDisplay;
+            
+            successCard.classList.remove('hidden');
+        }
+
+        function showError(errorText) {
+            document.getElementById('sendForm').classList.add('hidden');
+            document.getElementById('successCard').classList.add('hidden');
+            
+            document.getElementById('errorMessage').textContent = errorText;
+            document.getElementById('errorCard').classList.remove('hidden');
+        }
+
+        function retryTransaction() {
+            document.getElementById('errorCard').classList.add('hidden');
+            document.getElementById('sendForm').classList.remove('hidden');
+            
+            // Reset button
+            const button = document.getElementById('sendButton');
+            button.disabled = false;
+            updateSendButton();
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function goToDashboard() {
+            window.location.href = 'wallet-dashboard.html';
+        }
+
+        function viewTransaction() {
+            alert('Transaction details would be shown in a detailed view.');
+        }
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(event) {
+            const suggestions = document.getElementById('recipientSuggestions');
+            const recipient = document.getElementById('recipient');
+            
+            if (!recipient.contains(event.target) && !suggestions.contains(event.target)) {
+                suggestions.style.display = 'none';
+            }
+        });
+
+        // Initialize
+        updateSummary();
+    </script>
+</body>
+</html>

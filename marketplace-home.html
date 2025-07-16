@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniBazaar - Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .marketplace-app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation Header */
+        .nav-header {
+            background: white;
+            padding: 16px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .brand-text {
+            font-weight: 700;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+            margin-left: 8px;
+        }
+
+        .nav-button:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            background: #f8f9fa;
+        }
+
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+
+        .marketplace-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .search-section {
+            margin-bottom: 32px;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .search-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .filter-chip {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-chip.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .chain-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            overflow-x: auto;
+            padding: 4px 0;
+        }
+
+        .chain-chip {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .chain-chip.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .chain-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .ethereum { background: #627EEA; }
+        .polygon { background: #8247E5; }
+        .solana { background: #9945FF; }
+        .omnicoin { background: #FF6B35; }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            position: relative;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: white;
+            border-radius: 8px;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-info {
+            padding: 16px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-category {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .product-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .price-amount {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .price-chain {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .load-more {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px 32px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            max-width: 400px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .stats-section {
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stats-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="marketplace-app">
+        <!-- Navigation Header -->
+        <nav class="nav-header">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <div class="logo">
+                        <img src="Globe-Clear_Background-64x64.png" alt="OmniBazaar Logo">
+                    </div>
+                    <span class="brand-text">OmniBazaar</span>
+                </div>
+                
+                <div class="nav-actions">
+                    <button class="nav-button">🛒 Cart</button>
+                    <button class="nav-button">👤 Account</button>
+                    <button class="nav-button">⚙️ Settings</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="content-container">
+                <div class="marketplace-header">
+                    <h1 class="page-title">🏪 OmniBazaar Marketplace</h1>
+                    <p style="color: #666; font-size: 18px; margin-bottom: 24px;">Discover products, services, NFTs, and more across multiple blockchains</p>
+                </div>
+
+                <!-- Search Section -->
+                <div class="search-section">
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search products, services, NFTs..." value="camera">
+                        <button class="search-button">🔍</button>
+                    </div>
+                    
+                    <div class="filter-chips">
+                        <div class="filter-chip active">All</div>
+                        <div class="filter-chip">Products</div>
+                        <div class="filter-chip">Services</div>
+                        <div class="filter-chip">NFTs</div>
+                        <div class="filter-chip">RWAs</div>
+                        <div class="filter-chip">Crypto</div>
+                    </div>
+                </div>
+
+                <!-- Chain Selector -->
+                <div class="chain-selector">
+                    <div class="chain-chip active">
+                        <div class="chain-indicator ethereum"></div>
+                        Ethereum
+                    </div>
+                    <div class="chain-chip">
+                        <div class="chain-indicator polygon"></div>
+                        Polygon
+                    </div>
+                    <div class="chain-chip">
+                        <div class="chain-indicator solana"></div>
+                        Solana
+                    </div>
+                    <div class="chain-chip">
+                        <div class="chain-indicator omnicoin"></div>
+                        OmniCoin
+                    </div>
+                </div>
+
+                <!-- Stats Section -->
+                <div class="stats-section">
+                    <div class="stats-title">Multi-Chain Marketplace Stats</div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">12,847</div>
+                            <div class="stat-label">Total Listings</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4</div>
+                            <div class="stat-label">Blockchains</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">5,231</div>
+                            <div class="stat-label">Active Users</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">$2.4M</div>
+                            <div class="stat-label">Total Volume</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Grid -->
+                <div class="product-grid">
+                    <!-- Physical Product -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            📷
+                            <span class="product-badge">Product</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">Vintage Canon AE-1 Camera</div>
+                            <div class="product-category">Electronics • Cameras</div>
+                            <div class="product-price">
+                                <div class="price-amount">$350.00</div>
+                                <div class="price-chain">
+                                    <div class="chain-indicator omnicoin"></div>
+                                    <span>XOM</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            🖥️
+                            <span class="product-badge">Service</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">Web Development - React/Node.js</div>
+                            <div class="product-category">Services • Development</div>
+                            <div class="product-price">
+                                <div class="price-amount">$75/hour</div>
+                                <div class="price-chain">
+                                    <div class="chain-indicator ethereum"></div>
+                                    <span>ETH</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NFT -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            🎨
+                            <span class="product-badge">NFT</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">CryptoPunks #1234</div>
+                            <div class="product-category">NFT • Art Collection</div>
+                            <div class="product-price">
+                                <div class="price-amount">2.5 ETH</div>
+                                <div class="price-chain">
+                                    <div class="chain-indicator ethereum"></div>
+                                    <span>Ethereum</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Real World Asset -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            🏠
+                            <span class="product-badge">RWA</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">Miami Beach Condo - 1BR/1BA</div>
+                            <div class="product-category">RWA • Real Estate</div>
+                            <div class="product-price">
+                                <div class="price-amount">$425,000</div>
+                                <div class="price-chain">
+                                    <div class="chain-indicator polygon"></div>
+                                    <span>USDC</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Crypto Asset -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            💰
+                            <span class="product-badge">Crypto</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">Bitcoin - 0.15 BTC</div>
+                            <div class="product-category">Crypto • P2P Exchange</div>
+                            <div class="product-price">
+                                <div class="price-amount">Market Rate</div>
+                                <div class="price-chain">
+                                    <div class="chain-indicator ethereum"></div>
+                                    <span>USDT</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Digital Product -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            📚
+                            <span class="product-badge">Digital</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">Complete Blockchain Development Course</div>
+                            <div class="product-category">Digital • Education</div>
+                            <div class="product-price">
+                                <div class="price-amount">99 XOM</div>
+                                <div class="price-chain">
+                                    <div class="chain-indicator omnicoin"></div>
+                                    <span>OmniCoin</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="load-more">Load More Items</button>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer style="background: white; padding: 32px 20px; margin-top: 48px; border-top: 1px solid #e5e7eb;">
+            <div style="max-width: 1200px; margin: 0 auto; text-align: center; color: #666;">
+                <p>&copy; 2024 OmniBazaar. Decentralized marketplace for everything.</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

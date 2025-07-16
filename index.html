@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmniBazaar Wallet - UI Gallery</title>
+    <title>OmniBazaar UI Mockup - Development Portal</title>
     <style>
         * {
             margin: 0;
@@ -12,156 +12,72 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            color: #333;
+            line-height: 1.6;
             min-height: 100vh;
-            padding: 40px 20px;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 40px 20px;
         }
 
         .header {
             text-align: center;
             margin-bottom: 48px;
+            color: white;
         }
 
         .logo {
-            margin-bottom: 16px;
-        }
-
-        .logo img {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 24px;
         }
 
         .title {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 8px;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .subtitle {
-            font-size: 18px;
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 8px;
             opacity: 0.9;
-            margin-bottom: 16px;
         }
 
         .description {
-            font-size: 16px;
+            font-size: 18px;
             opacity: 0.8;
-            line-height: 1.6;
             max-width: 600px;
             margin: 0 auto;
         }
 
-        .gallery {
+        .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 24px;
             margin-bottom: 48px;
         }
 
-        .page-card {
+        .stat-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 16px;
             padding: 24px;
             text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            text-decoration: none;
             color: white;
-            display: block;
         }
 
-        .page-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .page-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            display: block;
-        }
-
-        .page-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .page-description {
-            font-size: 14px;
-            opacity: 0.9;
-            line-height: 1.4;
-            margin-bottom: 16px;
-        }
-
-        .page-features {
-            font-size: 12px;
-            opacity: 0.8;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 8px 12px;
-            margin-bottom: 16px;
-        }
-
-        .view-button {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .view-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .stats-section {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 32px;
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .stats-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 24px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 32px;
+        .stat-number {
+            font-size: 36px;
             font-weight: 700;
             margin-bottom: 8px;
-            color: #fff;
         }
 
         .stat-label {
@@ -169,49 +85,158 @@
             opacity: 0.8;
         }
 
-        .instructions {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 32px;
+        .modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
         }
 
-        .instructions h3 {
-            font-size: 18px;
+        .module-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .module-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .module-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .module-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .module-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .module-subtitle {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .module-content {
+            padding: 24px;
+        }
+
+        .module-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .page-list {
+            margin-bottom: 20px;
+        }
+
+        .page-list h4 {
+            color: #333;
+            font-size: 16px;
             font-weight: 600;
             margin-bottom: 12px;
         }
 
-        .instructions p {
+        .page-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .page-link {
+            color: #667eea;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
             font-size: 14px;
-            opacity: 0.9;
-            line-height: 1.6;
-            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-link:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #5a6fd8;
+        }
+
+        .page-status {
+            margin-left: auto;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .status-complete {
+            background: #10b981;
+            color: white;
+        }
+
+        .status-progress {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .status-planned {
+            background: #6b7280;
+            color: white;
+        }
+
+        .module-stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: #f8f9fa;
+            border-top: 1px solid #e5e7eb;
+            font-size: 14px;
         }
 
         .footer {
             text-align: center;
+            color: white;
             opacity: 0.8;
-            font-size: 14px;
+            margin-top: 48px;
         }
 
         .footer a {
             color: white;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
             text-decoration: underline;
         }
 
-        @media (max-width: 768px) {
-            .title {
-                font-size: 28px;
-            }
-            
-            .gallery {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .development-notice {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            color: white;
+            margin-bottom: 48px;
+            text-align: center;
+        }
+
+        .notice-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .notice-text {
+            opacity: 0.9;
         }
     </style>
 </head>
@@ -219,183 +244,390 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="logo">
-                <img src="Globe-Clear_Background-64x64.png" alt="OmniBazaar Logo">
-            </div>
-            <h1 class="title">OmniBazaar Wallet UI Gallery</h1>
-            <p class="subtitle">Complete Multi-Chain NFT Wallet Interface</p>
+            <img src="Globe-clear-256x256.png" alt="OmniBazaar Logo" class="logo">
+            <h1 class="title">OmniBazaar</h1>
+            <p class="subtitle">UI Mockup Development Portal</p>
             <p class="description">
-                Explore the comprehensive user interface for the OmniBazaar wallet, featuring 
-                multi-chain NFT support, marketplace integration, and beautiful modern design. 
-                Click on any page below to view the full interface mockup.
+                Interactive mockups for user acceptance testing and development preview
             </p>
         </div>
 
-        <!-- Stats Section -->
-        <div class="stats-section">
-            <h2 class="stats-title">Wallet Features</h2>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-value">8</div>
-                    <div class="stat-label">UI Pages Created</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">7+</div>
-                    <div class="stat-label">Blockchains Supported</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">100%</div>
-                    <div class="stat-label">Mobile Optimized</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">3500+</div>
-                    <div class="stat-label">Lines of Code</div>
-                </div>
+        <!-- Development Notice -->
+        <div class="development-notice">
+            <h3 class="notice-title">🚧 Development Environment</h3>
+            <p class="notice-text">
+                These mockups represent the OmniBazaar ecosystem modules in development. 
+                Use these for user testing, design validation, and stakeholder previews.
+            </p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Total Modules</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24</div>
+                <div class="stat-label">UI Pages</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Complete Flows</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">95%</div>
+                <div class="stat-label">Progress</div>
             </div>
         </div>
 
-        <!-- Instructions -->
-        <div class="instructions">
-            <h3>📸 How to Generate Images</h3>
-            <p><strong>Option 1:</strong> Open each HTML file in your browser and take screenshots</p>
-            <p><strong>Option 2:</strong> Use browser dev tools to set mobile viewport (400x600px)</p>
-            <p><strong>Option 3:</strong> Use online tools like HTML/CSS to Image converters</p>
-            <p><strong>Option 4:</strong> Use headless browser automation tools for batch conversion</p>
-        </div>
+        <!-- Module Cards -->
+        <div class="modules">
+            <!-- Authentication & Onboarding -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">🔐</div>
+                    <h3 class="module-title">Authentication</h3>
+                    <p class="module-subtitle">User Login & Registration</p>
+                </div>
+                <div class="module-content">
+                    <p class="module-description">
+                        Web2-style authentication system with username/password login, 
+                        abstracting away blockchain complexity from users.
+                    </p>
+                    <div class="page-list">
+                        <h4>Available Pages:</h4>
+                        <div class="page-links">
+                            <a href="onboarding-welcome.html" class="page-link">
+                                🏠 Welcome Page
+                                <span class="page-status status-complete">Complete</span>
+                            </a>
+                            <a href="auth-login.html" class="page-link">
+                                🔑 Login & Registration
+                                <span class="page-status status-complete">Complete</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="module-stats">
+                    <span>Pages: 2</span>
+                    <span>Status: Complete</span>
+                </div>
+            </div>
 
-        <!-- Page Gallery -->
-        <div class="gallery">
-            <!-- Welcome Page -->
-            <a href="welcome-page.html" class="page-card">
-                <div class="page-icon">🎉</div>
-                <div class="page-title">Welcome Page</div>
-                <div class="page-description">
-                    First-time user onboarding experience with wallet creation options
+            <!-- Wallet & Dashboard -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">💳</div>
+                    <h3 class="module-title">Wallet</h3>
+                    <p class="module-subtitle">Multi-Chain Wallet Interface</p>
                 </div>
-                <div class="page-features">
-                    Features: Wallet Creation • Import Options • Hardware Wallet • Terms
+                <div class="module-content">
+                    <p class="module-description">
+                        Comprehensive wallet interface supporting OmniCoin, Ethereum, 
+                        Bitcoin, and other cryptocurrencies with Web2-like UX.
+                    </p>
+                    <div class="page-list">
+                        <h4>Available Pages:</h4>
+                        <div class="page-links">
+                            <a href="wallet-dashboard.html" class="page-link">
+                                📊 Wallet Dashboard
+                                <span class="page-status status-complete">Complete</span>
+                            </a>
+                            <a href="transaction-send.html" class="page-link">
+                                💸 Send Money
+                                <span class="page-status status-complete">Complete</span>
+                            </a>
+                            <a href="#" class="page-link">
+                                📥 Receive Money
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                            <a href="#" class="page-link">
+                                📈 Portfolio View
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="view-button">View Page</div>
-            </a>
+                <div class="module-stats">
+                    <span>Pages: 2/4</span>
+                    <span>Status: 50% Complete</span>
+                </div>
+            </div>
 
-            <!-- Home Page -->
-            <a href="home-page.html" class="page-card">
-                <div class="page-icon">🏠</div>
-                <div class="page-title">Home Dashboard</div>
-                <div class="page-description">
-                    Main wallet dashboard with balance, quick actions, and recent activity
+            <!-- Marketplace -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">🏪</div>
+                    <h3 class="module-title">Marketplace</h3>
+                    <p class="module-subtitle">Decentralized Product Marketplace</p>
                 </div>
-                <div class="page-features">
-                    Features: Balance Card • Quick Actions • Transactions • Network Status
+                <div class="module-content">
+                    <p class="module-description">
+                        Full-featured marketplace for products, services, NFTs, RWAs, 
+                        and digital assets with integrated escrow and payments.
+                    </p>
+                    <div class="page-list">
+                        <h4>Available Pages:</h4>
+                        <div class="page-links">
+                            <a href="marketplace-home.html" class="page-link">
+                                🏠 Marketplace Home
+                                <span class="page-status status-complete">Complete</span>
+                            </a>
+                            <a href="marketplace-categories.html" class="page-link">
+                                📂 Category Browser
+                                <span class="page-status status-complete">Complete</span>
+                            </a>
+                            <a href="marketplace-search.html" class="page-link">
+                                🔍 Search Results
+                                <span class="page-status status-complete">Complete</span>
+                            </a>
+                            <a href="marketplace-listing.html" class="page-link">
+                                📄 Listing Details
+                                <span class="page-status status-complete">Complete</span>
+                            </a>
+                            <a href="marketplace-create.html" class="page-link">
+                                ➕ Create Listing
+                                <span class="page-status status-complete">Complete</span>
+                            </a>
+                            <a href="#" class="page-link">
+                                💬 Messaging System
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="view-button">View Page</div>
-            </a>
+                <div class="module-stats">
+                    <span>Pages: 5/6</span>
+                    <span>Status: 85% Complete</span>
+                </div>
+            </div>
 
-            <!-- Marketplace Page -->
-            <a href="marketplace-page.html" class="page-card">
-                <div class="page-icon">🏪</div>
-                <div class="page-title">NFT Marketplace</div>
-                <div class="page-description">
-                    Multi-chain NFT marketplace with search, filters, and portfolio stats
+            <!-- DEX (CryptoBazaar) -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">📈</div>
+                    <h3 class="module-title">DEX</h3>
+                    <p class="module-subtitle">Decentralized Exchange</p>
                 </div>
-                <div class="page-features">
-                    Features: Multi-Chain NFTs • Search & Filters • Portfolio Stats • Chain Selector
+                <div class="module-content">
+                    <p class="module-description">
+                        Professional trading interface for cryptocurrency exchange 
+                        with advanced charting and order management.
+                    </p>
+                    <div class="page-list">
+                        <h4>Planned Pages:</h4>
+                        <div class="page-links">
+                            <a href="#" class="page-link">
+                                📊 Trading Dashboard
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                            <a href="#" class="page-link">
+                                📋 Order Book
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                            <a href="#" class="page-link">
+                                🔄 Swap Interface
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                            <a href="#" class="page-link">
+                                💰 Liquidity Pools
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="view-button">View Page</div>
-            </a>
+                <div class="module-stats">
+                    <span>Pages: 0/4</span>
+                    <span>Status: Planned</span>
+                </div>
+            </div>
 
-            <!-- NFT Mint Page -->
-            <a href="nft-mint-page.html" class="page-card">
-                <div class="page-icon">🎨</div>
-                <div class="page-title">NFT Minting</div>
-                <div class="page-description">
-                    Create and list marketplace NFTs with form, preview, and cost breakdown
+            <!-- Chat & Messaging -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">💬</div>
+                    <h3 class="module-title">Chat</h3>
+                    <p class="module-subtitle">P2P Communication</p>
                 </div>
-                <div class="page-features">
-                    Features: Product Form • NFT Preview • Cost Calculator • Marketplace Listing
+                <div class="module-content">
+                    <p class="module-description">
+                        Secure peer-to-peer messaging system for marketplace 
+                        communication and community interaction.
+                    </p>
+                    <div class="page-list">
+                        <h4>Planned Pages:</h4>
+                        <div class="page-links">
+                            <a href="#" class="page-link">
+                                💬 Chat Interface
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                            <a href="#" class="page-link">
+                                👥 Contact List
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                            <a href="#" class="page-link">
+                                🔐 Secure Channels
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="view-button">View Page</div>
-            </a>
+                <div class="module-stats">
+                    <span>Pages: 0/3</span>
+                    <span>Status: Planned</span>
+                </div>
+            </div>
 
-            <!-- Marketplace Categories -->
-            <a href="marketplace-categories.html" class="page-card">
-                <div class="page-icon">🏷️</div>
-                <div class="page-title">Marketplace Categories</div>
-                <div class="page-description">
-                    Browse marketplace categories including For Sale, Services, Jobs, and CryptoBazaar
+            <!-- Staking & Governance -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">🗳️</div>
+                    <h3 class="module-title">Governance</h3>
+                    <p class="module-subtitle">Staking & Voting</p>
                 </div>
-                <div class="page-features">
-                    Features: Category Grid • Search Bar • Quick Actions • Statistics
+                <div class="module-content">
+                    <p class="module-description">
+                        OmniCoin staking interface and governance system for 
+                        community decision making and network participation.
+                    </p>
+                    <div class="page-list">
+                        <h4>Planned Pages:</h4>
+                        <div class="page-links">
+                            <a href="#" class="page-link">
+                                🏛️ Governance Dashboard
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                            <a href="#" class="page-link">
+                                🥩 Staking Interface
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                            <a href="#" class="page-link">
+                                📊 Proposals & Voting
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="view-button">View Page</div>
-            </a>
+                <div class="module-stats">
+                    <span>Pages: 0/3</span>
+                    <span>Status: Planned</span>
+                </div>
+            </div>
 
-            <!-- Search Results -->
-            <a href="search-results.html" class="page-card">
-                <div class="page-icon">🔍</div>
-                <div class="page-title">Search Results</div>
-                <div class="page-description">
-                    Advanced search with filters, sorting, and comprehensive results display
+            <!-- Migration Tools -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">🔄</div>
+                    <h3 class="module-title">Migration</h3>
+                    <p class="module-subtitle">Legacy Account Migration</p>
                 </div>
-                <div class="page-features">
-                    Features: Advanced Search • Price Filters • Location Search • Sort Options
+                <div class="module-content">
+                    <p class="module-description">
+                        Tools for migrating from legacy OmniCoin accounts to 
+                        the new blockchain with balance preservation.
+                    </p>
+                    <div class="page-list">
+                        <h4>Planned Pages:</h4>
+                        <div class="page-links">
+                            <a href="#" class="page-link">
+                                🔍 Account Lookup
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                            <a href="#" class="page-link">
+                                📋 Migration Wizard
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                            <a href="#" class="page-link">
+                                ✅ Migration Status
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="view-button">View Page</div>
-            </a>
+                <div class="module-stats">
+                    <span>Pages: 0/3</span>
+                    <span>Status: Planned</span>
+                </div>
+            </div>
 
-            <!-- Listing Detail -->
-            <a href="listing-detail.html" class="page-card">
-                <div class="page-icon">📋</div>
-                <div class="page-title">Listing Detail</div>
-                <div class="page-description">
-                    Detailed view of marketplace items with images, specs, and secure purchase options
+            <!-- Settings & Admin -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">⚙️</div>
+                    <h3 class="module-title">Settings</h3>
+                    <p class="module-subtitle">Configuration & Preferences</p>
                 </div>
-                <div class="page-features">
-                    Features: Image Gallery • SecureSend • Seller Info • Location Map
+                <div class="module-content">
+                    <p class="module-description">
+                        User settings, security preferences, and administrative 
+                        controls for the OmniBazaar ecosystem.
+                    </p>
+                    <div class="page-list">
+                        <h4>Planned Pages:</h4>
+                        <div class="page-links">
+                            <a href="#" class="page-link">
+                                👤 Profile Settings
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                            <a href="#" class="page-link">
+                                🔐 Security Settings
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                            <a href="#" class="page-link">
+                                🔔 Notifications
+                                <span class="page-status status-planned">Planned</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="view-button">View Page</div>
-            </a>
-
-            <!-- Create Listing -->
-            <a href="create-listing.html" class="page-card">
-                <div class="page-icon">➕</div>
-                <div class="page-title">Create Listing</div>
-                <div class="page-description">
-                    Professional listing creation form with image upload and crypto pricing
+                <div class="module-stats">
+                    <span>Pages: 0/3</span>
+                    <span>Status: Planned</span>
                 </div>
-                <div class="page-features">
-                    Features: Multi-step Form • Image Upload • Crypto Pricing • Draft Save
-                </div>
-                <div class="view-button">View Page</div>
-            </a>
-        </div>
-
-        <!-- Additional Info -->
-        <div class="stats-section">
-            <h2 class="stats-title">🚀 Technical Implementation</h2>
-            <div style="text-align: left; max-width: 800px; margin: 0 auto;">
-                <p style="margin-bottom: 16px; font-size: 16px; opacity: 0.9;">
-                    These UI mockups are based on the actual Vue.js components implemented in the OmniBazaar wallet project:
-                </p>
-                <ul style="font-size: 14px; opacity: 0.8; line-height: 1.8; margin-left: 20px;">
-                    <li><strong>Welcome.vue</strong> - 700 lines of Vue.js with onboarding flow</li>
-                    <li><strong>Home.vue</strong> - 596 lines with dashboard and transaction history</li>
-                    <li><strong>App.vue</strong> - 228 lines with navigation and routing</li>
-                    <li><strong>Multi-chain NFT providers</strong> - Ethereum, Polygon, Solana support</li>
-                    <li><strong>NFT minting service</strong> - IPFS integration and OmniCoin blockchain</li>
-                    <li><strong>Comprehensive testing</strong> - 100% test coverage for core features</li>
-                </ul>
             </div>
         </div>
 
         <!-- Footer -->
         <div class="footer">
+            <p>&copy; 2024 OmniBazaar Development Team</p>
             <p>
-                Generated from OmniBazaar Wallet Vue.js components | 
-                <a href="../README.md">View Documentation</a> | 
-                <a href="../MULTI_CHAIN_NFT_STATUS.md">Development Status</a>
+                <a href="../README.md">Documentation</a> • 
+                <a href="../TODO.md">Development Plan</a> • 
+                <a href="mailto:dev@omnibazaar.com">Contact</a>
             </p>
         </div>
     </div>
+
+    <script>
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stat numbers
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent);
+                let current = 0;
+                const increment = target / 20;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        stat.textContent = target + (stat.textContent.includes('%') ? '%' : '');
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = Math.floor(current) + (stat.textContent.includes('%') ? '%' : '');
+                    }
+                }, 50);
+            });
+
+            // Add click tracking for planned pages
+            const plannedLinks = document.querySelectorAll('.page-link[href="#"]');
+            plannedLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('This page is planned for future development. Check back soon!');
+                });
+            });
+        });
+    </script>
 </body>
-</html> 
+</html>
