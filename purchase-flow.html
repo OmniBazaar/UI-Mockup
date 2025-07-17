@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Flow - OmniBazaar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 24px;
+            margin: 0 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .step.completed {
+            background: #10b981;
+            color: white;
+        }
+
+        .step.pending {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .header h2 {
+            color: #1f2937;
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .listing-preview {
+            display: flex;
+            gap: 16px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .listing-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .listing-details {
+            flex: 1;
+        }
+
+        .listing-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .listing-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .listing-seller {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .secureSend-option {
+            margin-bottom: 24px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+
+        .secureSend-description {
+            font-size: 14px;
+            color: #6b7280;
+            margin-left: 26px;
+            padding: 12px;
+            background: #eff6ff;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 32px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .confirmation-text {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .confirmation-text p {
+            margin-bottom: 8px;
+            color: #6b7280;
+        }
+
+        .navigation-links {
+            text-align: center;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .navigation-links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 16px;
+            font-weight: 500;
+        }
+
+        .navigation-links a:hover {
+            text-decoration: underline;
+        }
+
+        .step-content {
+            min-height: 300px;
+        }
+
+        .secureSend-form {
+            background: #f9fafb;
+            padding: 24px;
+            border-radius: 12px;
+            border: 2px solid #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .fee-info {
+            background: #fffbeb;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <div class="step active" id="step1">
+                <div class="step-number">1</div>
+                Review
+            </div>
+            <div class="step pending" id="step2">
+                <div class="step-number">2</div>
+                Payment
+            </div>
+            <div class="step pending" id="step3">
+                <div class="step-number">3</div>
+                Complete
+            </div>
+        </div>
+
+        <!-- Step Content -->
+        <div class="step-content" id="stepContent">
+            <!-- Step 1: Review -->
+            <div id="reviewStep">
+                <div class="header">
+                    <h2>Review Purchase</h2>
+                    <p>Please review the details of your purchase</p>
+                </div>
+
+                <div class="listing-preview">
+                    <img src="Globe-clear-256x256.png" alt="Sample Product" class="listing-image">
+                    <div class="listing-details">
+                        <div class="listing-title">Professional MacBook Pro M3</div>
+                        <div class="listing-price">2,499 OMNI</div>
+                        <div class="listing-seller">Seller: TechStore Pro (★★★★★ 4.8)</div>
+                    </div>
+                </div>
+
+                <div class="secureSend-option">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="securesend" checked>
+                        <label for="securesend">Use SecureSend for transaction protection (recommended)</label>
+                    </div>
+                    <div class="secureSend-description" id="securesendDesc">
+                        SecureSend provides escrow protection with a 1% fee. Funds are held safely until transaction completion.
+                        This ensures both buyer and seller protection through our smart contract system.
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="cancelPurchase()">Cancel</button>
+                    <button class="btn btn-primary" onclick="nextStep()" id="continueBtn">Continue with SecureSend</button>
+                </div>
+            </div>
+
+            <!-- Step 2: SecureSend Payment -->
+            <div id="paymentStep" style="display: none;">
+                <div class="header">
+                    <h2>SecureSend Payment</h2>
+                    <p>Complete your secure transaction</p>
+                </div>
+
+                <div class="secureSend-form">
+                    <div class="fee-info">
+                        <strong>💰 Transaction Summary</strong><br>
+                        Item Price: 2,499 OMNI<br>
+                        SecureSend Fee (1%): 24.99 OMNI<br>
+                        <strong>Total: 2,523.99 OMNI</strong>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="escrowAgent">Escrow Agent</label>
+                        <select id="escrowAgent" required>
+                            <option value="">Select a trusted escrow agent...</option>
+                            <option value="agent1">OmniBazaar Official Agent (⭐⭐⭐⭐⭐)</option>
+                            <option value="agent2">TrustedAgent_Pro (⭐⭐⭐⭐⭐)</option>
+                            <option value="agent3">SecureEscrow_LLC (⭐⭐⭐⭐)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="expirationTime">Escrow Expiration (days)</label>
+                        <input type="number" id="expirationTime" value="90" min="1" max="180" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">Amount (OMNI)</label>
+                        <input type="text" id="amount" value="2,523.99 OMNI" disabled>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button class="btn btn-primary" onclick="completePurchase()">Create SecureSend</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Complete -->
+            <div id="completeStep" style="display: none;">
+                <div class="header">
+                    <h2>Purchase Complete!</h2>
+                    <p>Your transaction has been processed successfully</p>
+                </div>
+
+                <div class="success-icon">✅</div>
+                
+                <div class="confirmation-text">
+                    <p><strong>Transaction ID:</strong> txn_1703123456789</p>
+                    <p><strong>Escrow ID:</strong> esc_abc123def456</p>
+                    <p>You will receive an email confirmation shortly.</p>
+                    <p>The seller has been notified and will process your order.</p>
+                    <p>Your funds are safely held in escrow until you confirm receipt.</p>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="continueShopping()">Continue Shopping</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="navigation-links">
+            <a href="index.html">← Back to Marketplace</a>
+            <a href="my-purchases.html">My Purchases</a>
+            <a href="listing-detail.html">View Listing</a>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const useSecureSend = document.getElementById('securesend');
+        const securesendDesc = document.getElementById('securesendDesc');
+        const continueBtn = document.getElementById('continueBtn');
+
+        // Toggle SecureSend description
+        useSecureSend.addEventListener('change', function() {
+            if (this.checked) {
+                securesendDesc.style.display = 'block';
+                continueBtn.textContent = 'Continue with SecureSend';
+            } else {
+                securesendDesc.style.display = 'none';
+                continueBtn.textContent = 'Purchase Now';
+            }
+        });
+
+        function updateStepIndicator() {
+            for (let i = 1; i <= 3; i++) {
+                const step = document.getElementById(`step${i}`);
+                step.className = 'step';
+                if (i < currentStep) {
+                    step.className += ' completed';
+                } else if (i === currentStep) {
+                    step.className += ' active';
+                } else {
+                    step.className += ' pending';
+                }
+            }
+        }
+
+        function showStep(step) {
+            document.getElementById('reviewStep').style.display = step === 1 ? 'block' : 'none';
+            document.getElementById('paymentStep').style.display = step === 2 ? 'block' : 'none';
+            document.getElementById('completeStep').style.display = step === 3 ? 'block' : 'none';
+        }
+
+        function nextStep() {
+            if (useSecureSend.checked) {
+                currentStep = 2;
+                updateStepIndicator();
+                showStep(2);
+            } else {
+                // Direct purchase simulation
+                currentStep = 3;
+                updateStepIndicator();
+                showStep(3);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepIndicator();
+                showStep(currentStep);
+            }
+        }
+
+        function completePurchase() {
+            const escrowAgent = document.getElementById('escrowAgent').value;
+            if (!escrowAgent) {
+                alert('Please select an escrow agent');
+                return;
+            }
+            
+            currentStep = 3;
+            updateStepIndicator();
+            showStep(3);
+        }
+
+        function cancelPurchase() {
+            if (confirm('Are you sure you want to cancel this purchase?')) {
+                window.location.href = 'listing-detail.html';
+            }
+        }
+
+        function continueShopping() {
+            window.location.href = 'index.html';
+        }
+
+        // Initialize
+        updateStepIndicator();
+        showStep(1);
+    </script>
+</body>
+</html> 
