@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniBazaar - DEX Trading</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 10px;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            color: #3E4153;
+            background-color: #F7F8FA;
+            overflow-x: hidden;
+        }
+        
+        /* Layout */
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            background-color: #fff;
+            border-bottom: 0.1rem solid #D2D3D7;
+            box-shadow: 0 0.2rem 0.5rem -0.2rem rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.6rem 2.4rem;
+        }
+        
+        .trading-pair-selector {
+            display: flex;
+            align-items: center;
+            gap: 3.2rem;
+        }
+        
+        .pair-button {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background-color: #fff;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.4rem;
+            padding: 0.8rem 1.6rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+        
+        .pair-button:hover {
+            background-color: #F3F3F9;
+            border-color: #373373;
+        }
+        
+        .market-stats {
+            display: flex;
+            gap: 2.4rem;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            color: #6F727F;
+            text-transform: uppercase;
+        }
+        
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: 500;
+        }
+        
+        .stat-value.positive {
+            color: #2D844C;
+        }
+        
+        .stat-value.negative {
+            color: #E5262A;
+        }
+        
+        /* Main trading area */
+        .trading-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 28rem 1fr 32rem;
+            grid-template-rows: 1fr auto;
+            gap: 0.1rem;
+            background-color: #D2D3D7;
+            overflow: hidden;
+        }
+        
+        .panel {
+            background-color: #fff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .panel-header {
+            padding: 1.6rem;
+            border-bottom: 0.1rem solid #D2D3D7;
+            flex-shrink: 0;
+        }
+        
+        .panel-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+        
+        /* Order book */
+        .orderbook {
+            grid-row: span 2;
+        }
+        
+        .orderbook-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .orderbook-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            padding: 0.8rem 1.6rem;
+            font-size: 1.2rem;
+            color: #6F727F;
+            text-transform: uppercase;
+            border-bottom: 0.1rem solid #D2D3D7;
+        }
+        
+        .orderbook-section {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .order-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            padding: 0.4rem 1.6rem;
+            font-size: 1.4rem;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .order-row:hover {
+            background-color: #F3F3F9;
+        }
+        
+        .order-row.sell .price {
+            color: #E5262A;
+        }
+        
+        .order-row.buy .price {
+            color: #2D844C;
+        }
+        
+        .order-depth {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+        }
+        
+        .order-row.sell .order-depth {
+            background-color: #E5262A;
+        }
+        
+        .order-row.buy .order-depth {
+            background-color: #2D844C;
+        }
+        
+        .midprice {
+            padding: 1.2rem 1.6rem;
+            background-color: #F7F8FA;
+            text-align: center;
+            font-weight: 800;
+            border-top: 0.1rem solid #D2D3D7;
+            border-bottom: 0.1rem solid #D2D3D7;
+        }
+        
+        /* Chart */
+        .chart {
+            grid-column: 2;
+            grid-row: 1;
+        }
+        
+        .chart-controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.6rem;
+            border-bottom: 0.1rem solid #D2D3D7;
+        }
+        
+        .timeframe-selector {
+            display: flex;
+            background-color: #F7F8FA;
+            border-radius: 0.4rem;
+            padding: 0.4rem;
+        }
+        
+        .timeframe-btn {
+            padding: 0.8rem 1.2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.4rem;
+            color: #6F727F;
+            transition: all 0.3s ease;
+        }
+        
+        .timeframe-btn.active {
+            background-color: #fff;
+            color: #373373;
+            font-weight: 500;
+            border-radius: 0.2rem;
+        }
+        
+        .chart-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6F727F;
+            font-size: 2.4rem;
+        }
+        
+        /* Trading form */
+        .trading-form {
+            grid-column: 3;
+            grid-row: 1;
+        }
+        
+        .form-tabs {
+            display: flex;
+            padding: 1.6rem 1.6rem 0;
+        }
+        
+        .form-tab {
+            flex: 1;
+            padding: 1.2rem;
+            background: none;
+            border: 0.1rem solid #D2D3D7;
+            border-bottom: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .form-tab.buy {
+            border-right: none;
+            border-radius: 0.4rem 0 0 0;
+        }
+        
+        .form-tab.sell {
+            border-radius: 0 0.4rem 0 0;
+        }
+        
+        .form-tab.active.buy {
+            background-color: rgba(45, 132, 76, 0.1);
+            color: #2D844C;
+            border-color: #2D844C;
+        }
+        
+        .form-tab.active.sell {
+            background-color: rgba(229, 38, 42, 0.1);
+            color: #E5262A;
+            border-color: #E5262A;
+        }
+        
+        .form-content {
+            padding: 2.4rem 1.6rem;
+            flex: 1;
+        }
+        
+        .form-group {
+            margin-bottom: 2.4rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 1.4rem;
+            color: #6F727F;
+            margin-bottom: 0.8rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 1.2rem 1.6rem;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.4rem;
+            font-size: 1.6rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #373373;
+        }
+        
+        .percentage-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+        }
+        
+        .percentage-btn {
+            padding: 0.8rem;
+            background-color: #F7F8FA;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.2rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .percentage-btn:hover {
+            background-color: #F3F3F9;
+            border-color: #373373;
+            color: #373373;
+        }
+        
+        .submit-button {
+            width: 100%;
+            padding: 1.2rem;
+            border: none;
+            border-radius: 0.4rem;
+            font-size: 1.6rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-button.buy {
+            background-color: #2D844C;
+            color: white;
+        }
+        
+        .submit-button.buy:hover {
+            background-color: #258143;
+        }
+        
+        .submit-button.sell {
+            background-color: #E5262A;
+            color: white;
+        }
+        
+        .submit-button.sell:hover {
+            background-color: #D91E22;
+        }
+        
+        /* Open orders */
+        .open-orders {
+            grid-column: 3;
+            grid-row: 2;
+        }
+        
+        .order-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .order-item {
+            padding: 1.6rem;
+            border-bottom: 0.1rem solid #D2D3D7;
+            transition: background-color 0.3s ease;
+        }
+        
+        .order-item:hover {
+            background-color: #F3F3F9;
+        }
+        
+        .order-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        
+        .order-type-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .order-side {
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        
+        .order-side.buy {
+            color: #2D844C;
+        }
+        
+        .order-side.sell {
+            color: #E5262A;
+        }
+        
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.6rem;
+            font-size: 1.4rem;
+        }
+        
+        .detail-label {
+            color: #6F727F;
+            font-size: 1.2rem;
+        }
+        
+        .detail-value {
+            font-weight: 500;
+        }
+        
+        /* Bottom panel */
+        .bottom-panel {
+            grid-column: 1 / -1;
+            grid-row: 3;
+            max-height: 30rem;
+        }
+        
+        .bottom-tabs {
+            display: flex;
+            border-bottom: 0.1rem solid #D2D3D7;
+        }
+        
+        .bottom-tab {
+            padding: 1.2rem 2.4rem;
+            background: none;
+            border: none;
+            border-bottom: 0.2rem solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: #6F727F;
+            transition: all 0.3s ease;
+        }
+        
+        .bottom-tab.active {
+            color: #373373;
+            border-bottom-color: #373373;
+        }
+        
+        .tab-content {
+            padding: 2.4rem;
+            overflow-y: auto;
+            max-height: calc(30rem - 5.2rem);
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #6F727F;
+            padding: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="trading-pair-selector">
+                    <button class="pair-button">
+                        ETH/USDC
+                        <span>▼</span>
+                    </button>
+                    
+                    <div class="market-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Last Price</span>
+                            <span class="stat-value">$2,453.78</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">24h Change</span>
+                            <span class="stat-value positive">+1.96%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">24h Volume</span>
+                            <span class="stat-value">$37.2M</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Trading Grid -->
+        <main class="trading-grid">
+            <!-- Order Book -->
+            <div class="panel orderbook">
+                <div class="panel-header">
+                    <h3 class="panel-title">Order Book</h3>
+                </div>
+                
+                <div class="orderbook-content">
+                    <div class="orderbook-header">
+                        <span>Price (USDC)</span>
+                        <span style="text-align: right">Amount (ETH)</span>
+                        <span style="text-align: right">Total</span>
+                    </div>
+                    
+                    <!-- Asks -->
+                    <div class="orderbook-section">
+                        <div class="order-row sell">
+                            <span class="price">2,455.50</span>
+                            <span style="text-align: right">0.5234</span>
+                            <span style="text-align: right">1,284.95</span>
+                            <div class="order-depth" style="width: 75%"></div>
+                        </div>
+                        <div class="order-row sell">
+                            <span class="price">2,455.00</span>
+                            <span style="text-align: right">1.2345</span>
+                            <span style="text-align: right">3,032.48</span>
+                            <div class="order-depth" style="width: 85%"></div>
+                        </div>
+                        <div class="order-row sell">
+                            <span class="price">2,454.50</span>
+                            <span style="text-align: right">0.8765</span>
+                            <span style="text-align: right">2,151.52</span>
+                            <div class="order-depth" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="midprice">
+                        Mid Price: $2,453.78
+                    </div>
+                    
+                    <!-- Bids -->
+                    <div class="orderbook-section">
+                        <div class="order-row buy">
+                            <span class="price">2,452.00</span>
+                            <span style="text-align: right">0.9876</span>
+                            <span style="text-align: right">2,422.79</span>
+                            <div class="order-depth" style="width: 70%"></div>
+                        </div>
+                        <div class="order-row buy">
+                            <span class="price">2,451.50</span>
+                            <span style="text-align: right">1.5432</span>
+                            <span style="text-align: right">3,783.44</span>
+                            <div class="order-depth" style="width: 90%"></div>
+                        </div>
+                        <div class="order-row buy">
+                            <span class="price">2,451.00</span>
+                            <span style="text-align: right">0.6543</span>
+                            <span style="text-align: right">1,603.71</span>
+                            <div class="order-depth" style="width: 55%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chart -->
+            <div class="panel chart">
+                <div class="chart-controls">
+                    <div class="timeframe-selector">
+                        <button class="timeframe-btn">1m</button>
+                        <button class="timeframe-btn">5m</button>
+                        <button class="timeframe-btn">15m</button>
+                        <button class="timeframe-btn active">1h</button>
+                        <button class="timeframe-btn">4h</button>
+                        <button class="timeframe-btn">1d</button>
+                    </div>
+                </div>
+                
+                <div class="chart-area">
+                    📊 Chart Area
+                </div>
+            </div>
+            
+            <!-- Trading Form -->
+            <div class="panel trading-form">
+                <div class="form-tabs">
+                    <button class="form-tab buy active">Buy ETH</button>
+                    <button class="form-tab sell">Sell ETH</button>
+                </div>
+                
+                <div class="form-content">
+                    <div class="form-group">
+                        <label class="form-label">Price</label>
+                        <input type="number" class="form-input" placeholder="2,453.78">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Amount</label>
+                        <input type="number" class="form-input" placeholder="0.00">
+                        <div class="percentage-buttons">
+                            <button class="percentage-btn">25%</button>
+                            <button class="percentage-btn">50%</button>
+                            <button class="percentage-btn">75%</button>
+                            <button class="percentage-btn">100%</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Total</label>
+                        <input type="number" class="form-input" placeholder="0.00" readonly>
+                    </div>
+                    
+                    <button class="submit-button buy">Buy ETH</button>
+                </div>
+            </div>
+            
+            <!-- Open Orders -->
+            <div class="panel open-orders">
+                <div class="panel-header">
+                    <h3 class="panel-title">Open Orders (2)</h3>
+                </div>
+                
+                <div class="order-list">
+                    <div class="order-item">
+                        <div class="order-header-row">
+                            <div class="order-type-badge">
+                                <span class="order-side buy">BUY</span>
+                                <span>LIMIT</span>
+                            </div>
+                            <div>
+                                <button style="background: none; border: none; cursor: pointer;">✏️</button>
+                                <button style="background: none; border: none; cursor: pointer;">❌</button>
+                            </div>
+                        </div>
+                        
+                        <div class="order-details">
+                            <div>
+                                <div class="detail-label">Price</div>
+                                <div class="detail-value">$2,400.00</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Amount</div>
+                                <div class="detail-value">0.5 / 1.5</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Total</div>
+                                <div class="detail-value">$3,600.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-item">
+                        <div class="order-header-row">
+                            <div class="order-type-badge">
+                                <span class="order-side sell">SELL</span>
+                                <span>LIMIT</span>
+                            </div>
+                            <div>
+                                <button style="background: none; border: none; cursor: pointer;">✏️</button>
+                                <button style="background: none; border: none; cursor: pointer;">❌</button>
+                            </div>
+                        </div>
+                        
+                        <div class="order-details">
+                            <div>
+                                <div class="detail-label">Price</div>
+                                <div class="detail-value">$2,500.00</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Amount</div>
+                                <div class="detail-value">0 / 2.0</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Total</div>
+                                <div class="detail-value">$5,000.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

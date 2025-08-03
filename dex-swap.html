@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniBazaar - DEX Swap</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 10px;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            color: #3E4153;
+            background-color: #F7F8FA;
+        }
+        
+        /* Layout */
+        .container {
+            max-width: 144rem;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        /* Header */
+        .header {
+            background-color: #fff;
+            border-top: 0.5rem solid #373373;
+            box-shadow: 0 0.2rem 0.5rem -0.2rem rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 6.4rem;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #373373;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 3.2rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: #373373;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+        
+        .nav-link.active {
+            font-weight: 800;
+        }
+        
+        .wallet-button {
+            background-color: #373373;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.6rem;
+            border-radius: 0.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .wallet-button:hover {
+            background-color: #4B4881;
+        }
+        
+        /* Main content */
+        .main {
+            min-height: calc(100vh - 7.4rem);
+            padding: 4rem 0;
+        }
+        
+        .swap-container {
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+        
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3.2rem;
+        }
+        
+        /* Swap card */
+        .swap-card {
+            background-color: #fff;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.8rem;
+            padding: 2.4rem;
+            box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.05);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.4rem;
+        }
+        
+        .card-title {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+        
+        .settings-button {
+            background: none;
+            border: none;
+            color: #6F727F;
+            cursor: pointer;
+            padding: 0.8rem;
+            border-radius: 0.4rem;
+            transition: all 0.3s ease;
+        }
+        
+        .settings-button:hover {
+            background-color: #F3F3F9;
+            color: #3E4153;
+        }
+        
+        /* Token sections */
+        .token-section {
+            background-color: #F7F8FA;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.4rem;
+            padding: 1.6rem;
+            margin-bottom: 1.6rem;
+        }
+        
+        .token-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.6rem;
+        }
+        
+        .token-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background-color: #fff;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.4rem;
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .token-selector:hover {
+            background-color: #F3F3F9;
+            border-color: #373373;
+        }
+        
+        .token-icon {
+            width: 2.4rem;
+            height: 2.4rem;
+            border-radius: 50%;
+            background-color: #E7E7F3;
+        }
+        
+        .token-input {
+            flex: 1;
+            background: none;
+            border: none;
+            font-size: 2.4rem;
+            font-weight: 500;
+            text-align: right;
+            outline: none;
+        }
+        
+        .token-input::placeholder {
+            color: #8E909B;
+        }
+        
+        .balance {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.8rem;
+            font-size: 1.4rem;
+            color: #6F727F;
+        }
+        
+        .max-button {
+            background: none;
+            border: none;
+            color: #373373;
+            font-size: 1.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .max-button:hover {
+            background-color: #F3F3F9;
+        }
+        
+        /* Swap arrow */
+        .arrow-container {
+            display: flex;
+            justify-content: center;
+            margin: -0.8rem 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .arrow-button {
+            background-color: #fff;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 50%;
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .arrow-button:hover {
+            background-color: #F3F3F9;
+            transform: rotate(180deg);
+        }
+        
+        /* Swap button */
+        .swap-button {
+            width: 100%;
+            background-color: #373373;
+            color: white;
+            border: none;
+            padding: 1.2rem 1.6rem;
+            border-radius: 0.4rem;
+            font-size: 1.6rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 2.4rem;
+            transition: all 0.3s ease;
+        }
+        
+        .swap-button:hover:not(:disabled) {
+            background-color: #4B4881;
+        }
+        
+        .swap-button:disabled {
+            background-color: #D2D3D7;
+            color: #8E909B;
+            cursor: not-allowed;
+        }
+        
+        /* Price info */
+        .price-info {
+            background-color: #fff;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.8rem;
+            margin-top: 2.4rem;
+            overflow: hidden;
+        }
+        
+        .price-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.6rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .price-header:hover {
+            background-color: #F3F3F9;
+        }
+        
+        .price-display {
+            font-size: 1.4rem;
+            color: #6F727F;
+        }
+        
+        .price-value {
+            color: #3E4153;
+            font-weight: 500;
+        }
+        
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.6rem;
+            margin-top: 2.4rem;
+        }
+        
+        .stats-card {
+            background-color: #fff;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.8rem;
+            padding: 1.6rem;
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .stats-card:hover {
+            box-shadow: 0 0.2rem 0.5rem -0.2rem rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-label {
+            font-size: 1.4rem;
+            color: #6F727F;
+            margin-bottom: 0.8rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #3E4153;
+        }
+        
+        /* Transaction history */
+        .history-section {
+            margin-top: 4rem;
+        }
+        
+        .section-title {
+            font-size: 2.4rem;
+            font-weight: 800;
+            margin-bottom: 1.6rem;
+        }
+        
+        .transaction-list {
+            background-color: #fff;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.8rem;
+            overflow: hidden;
+        }
+        
+        .transaction {
+            padding: 1.6rem;
+            border-bottom: 0.1rem solid #D2D3D7;
+            transition: background-color 0.3s ease;
+        }
+        
+        .transaction:hover {
+            background-color: #F3F3F9;
+        }
+        
+        .transaction:last-child {
+            border-bottom: none;
+        }
+        
+        .transaction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        
+        .transaction-type {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .status-icon.success {
+            background-color: #E8F5E9;
+            color: #2D844C;
+        }
+        
+        .status-icon.pending {
+            background-color: #FFF8E1;
+            color: #F8AA17;
+        }
+        
+        .transaction-details {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.4rem;
+            color: #6F727F;
+        }
+        
+        .token-amount {
+            color: #3E4153;
+            font-weight: 500;
+        }
+        
+        .timestamp {
+            font-size: 1.2rem;
+            color: #8E909B;
+            margin-top: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="index.html" class="logo">OmniBazaar</a>
+                
+                <div class="nav-links">
+                    <a href="marketplace.html" class="nav-link">Marketplace</a>
+                    <a href="dex-swap.html" class="nav-link active">DEX</a>
+                    <a href="wallet.html" class="nav-link">Wallet</a>
+                    <a href="chat.html" class="nav-link">Chat</a>
+                    <button class="wallet-button">Connect Wallet</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Main content -->
+    <main class="main">
+        <div class="swap-container">
+            <h1 class="page-title">Swap Tokens</h1>
+            
+            <!-- Swap card -->
+            <div class="swap-card">
+                <div class="card-header">
+                    <h3 class="card-title">Swap</h3>
+                    <button class="settings-button">⚙️</button>
+                </div>
+                
+                <!-- From token -->
+                <div class="token-section">
+                    <div class="token-row">
+                        <button class="token-selector">
+                            <div class="token-icon"></div>
+                            <span>ETH</span>
+                            <span>▼</span>
+                        </button>
+                        
+                        <input type="number" class="token-input" placeholder="0.00">
+                    </div>
+                    
+                    <div class="balance">
+                        <span>Balance: 5.2847</span>
+                        <button class="max-button">MAX</button>
+                    </div>
+                </div>
+                
+                <!-- Swap arrow -->
+                <div class="arrow-container">
+                    <button class="arrow-button">↓</button>
+                </div>
+                
+                <!-- To token -->
+                <div class="token-section">
+                    <div class="token-row">
+                        <button class="token-selector">
+                            <div class="token-icon"></div>
+                            <span>USDC</span>
+                            <span>▼</span>
+                        </button>
+                        
+                        <input type="number" class="token-input" placeholder="0.00" readonly>
+                    </div>
+                    
+                    <div class="balance">
+                        <span>Balance: 1,234.56</span>
+                    </div>
+                </div>
+                
+                <button class="swap-button">Connect Wallet</button>
+            </div>
+            
+            <!-- Price info -->
+            <div class="price-info">
+                <div class="price-header">
+                    <div class="price-display">
+                        <span>1 ETH = </span>
+                        <span class="price-value">2,453.78 USDC</span>
+                    </div>
+                    <span>▼</span>
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stats-card">
+                    <div class="stat-label">24h Volume</div>
+                    <div class="stat-value">$15.2M</div>
+                </div>
+                
+                <div class="stats-card">
+                    <div class="stat-label">Total Liquidity</div>
+                    <div class="stat-value">$234.5M</div>
+                </div>
+            </div>
+            
+            <!-- Transaction history -->
+            <section class="history-section">
+                <h2 class="section-title">Recent Transactions</h2>
+                
+                <div class="transaction-list">
+                    <div class="transaction">
+                        <div class="transaction-header">
+                            <div class="transaction-type">
+                                <div class="status-icon success">✓</div>
+                                <span>Swap</span>
+                            </div>
+                            <span>🔗</span>
+                        </div>
+                        
+                        <div class="transaction-details">
+                            <span class="token-amount">1.5 ETH</span>
+                            <span>→</span>
+                            <span class="token-amount">3,680.25 USDC</span>
+                        </div>
+                        
+                        <div class="timestamp">1m ago</div>
+                    </div>
+                    
+                    <div class="transaction">
+                        <div class="transaction-header">
+                            <div class="transaction-type">
+                                <div class="status-icon pending">⏱</div>
+                                <span>Swap</span>
+                            </div>
+                            <span>🔗</span>
+                        </div>
+                        
+                        <div class="transaction-details">
+                            <span class="token-amount">1,000 USDC</span>
+                            <span>→</span>
+                            <span class="token-amount">999.85 DAI</span>
+                        </div>
+                        
+                        <div class="timestamp">2m ago</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>
