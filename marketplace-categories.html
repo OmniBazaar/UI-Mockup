@@ -5,54 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OmniBazaar - Marketplace Categories</title>
     <style>
+        /* Reset and base styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
+        html {
+            font-size: 10px;
+        }
+        
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            color: #3E4153;
+            background-color: #F7F8FA;
             min-height: 100vh;
-            color: #333;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 144rem;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 2rem;
+        }
+        
+        /* Navigation Header */
+        .nav-header {
+            background-color: #fff;
+            border-top: 0.5rem solid #373373;
+            box-shadow: 0 0.2rem 0.5rem -0.2rem rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            margin-bottom: 4rem;
+        }
+        
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 6.4rem;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #373373;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 3.2rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: #373373;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+        
+        .nav-link.active {
+            font-weight: 800;
         }
         
         .header {
             text-align: center;
-            margin-bottom: 40px;
-            color: white;
+            margin-bottom: 4.8rem;
         }
         
         .header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
+            font-size: 3.6rem;
+            font-weight: 800;
+            margin-bottom: 1.2rem;
+            color: #3E4153;
         }
         
         .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
+            font-size: 1.8rem;
+            color: #6F727F;
         }
         
         .categories-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(28rem, 1fr));
+            gap: 2.4rem;
+            margin-bottom: 4.8rem;
         }
         
         .category-card {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: #fff;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.8rem;
+            padding: 2.4rem;
+            box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
@@ -60,8 +115,9 @@
         }
         
         .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-0.4rem);
+            box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
+            background-color: #F3F3F9;
         }
         
         .category-card::before {
@@ -70,68 +126,115 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            height: 0.4rem;
+        }
+        
+        .category-card.for-sale::before {
+            background: #2D844C;
+        }
+        
+        .category-card.services::before {
+            background: #373373;
+        }
+        
+        .category-card.jobs::before {
+            background: #F8AA17;
+        }
+        
+        .category-card.crypto::before {
+            background: #9C27B0;
         }
         
         .category-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 16px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border-radius: 12px;
+            width: 6.4rem;
+            height: 6.4rem;
+            margin: 0 auto 1.6rem;
+            border-radius: 0.8rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 3rem;
+        }
+        
+        .category-card.for-sale .category-icon {
+            background: #2D844C;
+            color: white;
+        }
+        
+        .category-card.services .category-icon {
+            background: #373373;
+            color: white;
+        }
+        
+        .category-card.jobs .category-icon {
+            background: #F8AA17;
+            color: white;
+        }
+        
+        .category-card.crypto .category-icon {
+            background: #9C27B0;
             color: white;
         }
         
         .category-title {
-            font-size: 1.5rem;
-            font-weight: 600;
+            font-size: 2rem;
+            font-weight: 700;
             text-align: center;
-            margin-bottom: 8px;
-            color: #333;
+            margin-bottom: 0.8rem;
+            color: #3E4153;
         }
         
         .category-description {
             text-align: center;
-            color: #666;
-            margin-bottom: 16px;
-            line-height: 1.5;
+            color: #6F727F;
+            font-size: 1.4rem;
+            line-height: 1.4;
         }
         
         .category-stats {
             display: flex;
             justify-content: space-between;
-            padding-top: 16px;
-            border-top: 1px solid #eee;
-            font-size: 0.9rem;
-            color: #999;
+            padding-top: 1.6rem;
+            margin-top: 1.6rem;
+            border-top: 0.1rem solid #E5E5E5;
+            font-size: 1.3rem;
+            color: #8E909B;
         }
         
         .subcategories {
-            margin-top: 12px;
+            margin-top: 1.6rem;
+            text-align: center;
         }
         
         .subcategory-tag {
             display: inline-block;
-            background: #f8f9fa;
-            color: #666;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            margin: 2px;
+            background: #F7F8FA;
+            color: #6F727F;
+            padding: 0.4rem 1.2rem;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            margin: 0.4rem;
+            border: 0.1rem solid #E5E5E5;
         }
         
         .search-bar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 50px;
-            padding: 16px 24px;
-            margin-bottom: 40px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            background: #fff;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.8rem;
+            padding: 1.6rem 2.4rem;
+            margin-bottom: 4rem;
+            box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 1.6rem;
+            max-width: 60rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .search-icon {
+            color: #6F727F;
+            font-size: 2rem;
         }
         
         .search-input {
@@ -139,80 +242,86 @@
             border: none;
             outline: none;
             background: transparent;
-            font-size: 1.1rem;
-            color: #333;
+            font-size: 1.6rem;
+            color: #3E4153;
         }
         
         .search-input::placeholder {
-            color: #999;
+            color: #8E909B;
         }
         
         .quick-actions {
             display: flex;
-            gap: 16px;
+            gap: 1.6rem;
             justify-content: center;
-            margin-top: 40px;
+            margin-top: 4.8rem;
+            flex-wrap: wrap;
         }
         
         .action-btn {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
+            background: #fff;
+            border: 0.1rem solid #D2D3D7;
+            color: #373373;
+            padding: 1.2rem 2.4rem;
+            border-radius: 0.4rem;
             text-decoration: none;
             font-weight: 500;
+            font-size: 1.6rem;
             transition: all 0.3s ease;
+            display: inline-block;
         }
         
         .action-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
+            background: #F3F3F9;
+            border-color: #373373;
+            transform: translateY(-0.1rem);
         }
         
         .action-btn.primary {
-            background: white;
-            color: #667eea;
+            background: #373373;
+            color: white;
+            border-color: #373373;
         }
         
         .action-btn.primary:hover {
-            background: #f8f9fa;
+            background: #4B4881;
+            border-color: #4B4881;
         }
         
-        .navigation {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
-        }
-        
-        .nav-link {
+        .wallet-button {
+            background-color: #373373;
             color: white;
-            text-decoration: none;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            padding: 8px 16px;
-            border-radius: 20px;
+            border: none;
+            padding: 0.8rem 1.6rem;
+            border-radius: 0.4rem;
             font-weight: 500;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
         
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .wallet-button:hover {
+            background-color: #4B4881;
         }
-        
-        /* Category-specific colors */
-        .for-sale .category-icon { background: linear-gradient(45deg, #4CAF50, #45a049); }
-        .services .category-icon { background: linear-gradient(45deg, #2196F3, #1976D2); }
-        .jobs .category-icon { background: linear-gradient(45deg, #FF9800, #F57C00); }
-        .cryptobazaar .category-icon { background: linear-gradient(45deg, #9C27B0, #7B1FA2); }
     </style>
 </head>
 <body>
-    <div class="navigation">
-        <a href="index.html" class="nav-link">← Back to Home</a>
-    </div>
+    <!-- Navigation Header -->
+    <header class="nav-header">
+        <div class="container">
+            <nav class="nav">
+                <a href="index.html" class="logo" style="display: flex; align-items: center; text-decoration: none;">
+                    <img src="OmniBazaar Clear and black-- Global network.png" alt="OmniBazaar Logo" style="height: 3.2rem;">
+                </a>
+                <div class="nav-links">
+                    <a href="marketplace-categories.html" class="nav-link active">Marketplace</a>
+                    <a href="dex-swap.html" class="nav-link">DEX</a>
+                    <a href="wallet-dashboard.html" class="nav-link">Wallet</a>
+                    <a href="#" class="nav-link">Chat</a>
+                    <button class="wallet-button">Connect Wallet</button>
+                </div>
+            </nav>
+        </div>
+    </header>
     
     <div class="container">
         <div class="header">
@@ -221,6 +330,7 @@
         </div>
         
         <div class="search-bar">
+            <span class="search-icon">🔍</span>
             <input type="text" class="search-input" placeholder="Search for anything...">
         </div>
         
@@ -285,7 +395,7 @@
                 </div>
             </div>
             
-            <div class="category-card cryptobazaar" onclick="window.location.href='marketplace-crypto.html'">
+            <div class="category-card crypto" onclick="window.location.href='marketplace-crypto.html'">
                 <div class="category-icon">₿</div>
                 <div class="category-title">CryptoBazaar</div>
                 <div class="category-description">

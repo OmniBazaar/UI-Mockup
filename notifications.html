@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - OmniBazaar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #373373;
+            --primary-dark: #2a2858;
+            --primary-light: #4a46a3;
+            --background: #F7F8FA;
+            --surface: #FFFFFF;
+            --text-primary: #3E4153;
+            --text-secondary: #6F727F;
+            --text-muted: #8E909B;
+            --border: #E5E7EB;
+            --hover: #F3F4F6;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --spacing-unit: 0.8rem;
+        }
+
+        html {
+            font-size: 10px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+            background-color: var(--background);
+        }
+
+        .page-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: var(--surface);
+            box-shadow: 0 0.2rem 0.4rem rgba(0,0,0,0.1);
+            padding: calc(var(--spacing-unit) * 2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-top: 0.5rem solid var(--primary-color);
+        }
+
+        .navbar-content {
+            max-width: 120rem;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 2.4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 3);
+            align-items: center;
+        }
+
+        .navbar-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .navbar-links a:hover,
+        .navbar-links a.active {
+            color: var(--primary-color);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -0.8rem;
+            right: -1.2rem;
+            background: var(--error);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            min-width: 2rem;
+            text-align: center;
+        }
+
+        .content-wrapper {
+            max-width: 120rem;
+            margin: 0 auto;
+            padding: calc(var(--spacing-unit) * 3);
+            flex: 1;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: calc(var(--spacing-unit) * 4);
+        }
+
+        .page-title {
+            font-size: 3.2rem;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .button {
+            padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--spacing-unit);
+            font-size: 1.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 1);
+        }
+
+        .button:hover {
+            background: var(--hover);
+            border-color: var(--primary-color);
+        }
+
+        .button.primary {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .button.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 24rem 1fr;
+            gap: calc(var(--spacing-unit) * 4);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--surface);
+            border-radius: calc(var(--spacing-unit) * 2);
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+            padding: calc(var(--spacing-unit) * 3);
+            height: fit-content;
+            position: sticky;
+            top: calc(var(--spacing-unit) * 10);
+        }
+
+        .sidebar-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 3);
+        }
+
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--spacing-unit) * 1);
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
+            border-radius: var(--spacing-unit);
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+
+        .category-item:hover {
+            background: var(--hover);
+            color: var(--text-primary);
+        }
+
+        .category-item.active {
+            background: #F3F2FF;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .category-icon {
+            font-size: 2rem;
+        }
+
+        .category-count {
+            background: var(--text-muted);
+            color: white;
+            font-size: 1.2rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 1rem;
+            min-width: 2rem;
+            text-align: center;
+        }
+
+        .category-item.active .category-count {
+            background: var(--primary-color);
+        }
+
+        /* Notifications List */
+        .notifications-section {
+            background: var(--surface);
+            border-radius: calc(var(--spacing-unit) * 2);
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .notifications-header {
+            padding: calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 4);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notifications-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .select-all {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 2);
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .checkbox {
+            width: 2rem;
+            height: 2rem;
+            cursor: pointer;
+        }
+
+        .notifications-list {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .date-group {
+            padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 4);
+            background: var(--background);
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            padding: calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 4);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.2s;
+            cursor: pointer;
+            gap: calc(var(--spacing-unit) * 3);
+        }
+
+        .notification-item:hover {
+            background: var(--hover);
+        }
+
+        .notification-item.unread {
+            background: #F9FAFB;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .notification-checkbox {
+            margin-top: calc(var(--spacing-unit) * 0.5);
+        }
+
+        .notification-icon {
+            width: 4.8rem;
+            height: 4.8rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.order {
+            background: #DBEAFE;
+            color: var(--info);
+        }
+
+        .notification-icon.message {
+            background: #D1FAE5;
+            color: var(--success);
+        }
+
+        .notification-icon.system {
+            background: #FEF3C7;
+            color: var(--warning);
+        }
+
+        .notification-icon.promotion {
+            background: #EDE9FE;
+            color: var(--primary-color);
+        }
+
+        .notification-icon.security {
+            background: #FEE2E2;
+            color: var(--error);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 1);
+        }
+
+        .notification-message {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: calc(var(--spacing-unit) * 1);
+        }
+
+        .notification-meta {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 3);
+            font-size: 1.3rem;
+            color: var(--text-muted);
+        }
+
+        .notification-action {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .notification-action:hover {
+            text-decoration: underline;
+        }
+
+        .bulk-actions {
+            position: sticky;
+            bottom: 0;
+            background: var(--surface);
+            border-top: 2px solid var(--border);
+            padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 -0.2rem 1rem rgba(0,0,0,0.1);
+        }
+
+        .selected-count {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .bulk-buttons {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: calc(var(--spacing-unit) * 10);
+        }
+
+        .empty-icon {
+            font-size: 6rem;
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            opacity: 0.3;
+        }
+
+        .empty-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .empty-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: calc(var(--spacing-unit) * 2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="navbar-content">
+                <a href="index.html" class="navbar-brand">
+                    <img src="OmniBazaar Clear and black-- Global network.png" alt="OmniBazaar Logo" style="height: 3.2rem; vertical-align: middle;">
+                </a>
+                <div class="navbar-links">
+                    <a href="marketplace-home.html">Marketplace</a>
+                    <a href="orders.html">Orders</a>
+                    <a href="wallet.html">Wallet</a>
+                    <a href="messages.html">Messages</a>
+                    <a href="notifications.html" class="active">
+                        Notifications
+                        <span class="notification-badge">8</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h1 class="page-title">Notifications</h1>
+                <div class="header-actions">
+                    <button class="button">
+                        <span>⚙️</span>
+                        Settings
+                    </button>
+                    <button class="button primary">
+                        Mark All as Read
+                    </button>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <h2 class="sidebar-title">Categories</h2>
+                    <div class="category-list">
+                        <div class="category-item active">
+                            <div class="category-info">
+                                <span class="category-icon">📬</span>
+                                <span>All</span>
+                            </div>
+                            <span class="category-count">8</span>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-info">
+                                <span class="category-icon">📦</span>
+                                <span>Orders</span>
+                            </div>
+                            <span class="category-count">3</span>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-info">
+                                <span class="category-icon">💬</span>
+                                <span>Messages</span>
+                            </div>
+                            <span class="category-count">2</span>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-info">
+                                <span class="category-icon">⚙️</span>
+                                <span>System</span>
+                            </div>
+                            <span class="category-count">1</span>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-info">
+                                <span class="category-icon">🎉</span>
+                                <span>Promotions</span>
+                            </div>
+                            <span class="category-count">1</span>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-info">
+                                <span class="category-icon">🔐</span>
+                                <span>Security</span>
+                            </div>
+                            <span class="category-count">1</span>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Notifications List -->
+                <div class="notifications-section">
+                    <div class="notifications-header">
+                        <h2 class="notifications-title">All Notifications</h2>
+                        <label class="select-all">
+                            <input type="checkbox" class="checkbox">
+                            Select All
+                        </label>
+                    </div>
+
+                    <div class="notifications-list">
+                        <!-- Today -->
+                        <div class="date-group">Today</div>
+
+                        <!-- Notification 1 - Unread -->
+                        <div class="notification-item unread">
+                            <input type="checkbox" class="checkbox notification-checkbox">
+                            <div class="notification-icon order">📦</div>
+                            <div class="notification-content">
+                                <div class="notification-title">Your order has been shipped!</div>
+                                <div class="notification-message">
+                                    Order #ORD-001 for MacBook Pro M3 is on its way. Track your shipment for real-time updates.
+                                </div>
+                                <div class="notification-meta">
+                                    <span>2 hours ago</span>
+                                    <a href="#" class="notification-action">Track Order</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification 2 - Unread -->
+                        <div class="notification-item unread">
+                            <input type="checkbox" class="checkbox notification-checkbox">
+                            <div class="notification-icon message">💬</div>
+                            <div class="notification-content">
+                                <div class="notification-title">New message from John Doe</div>
+                                <div class="notification-message">
+                                    "Thanks for the quick delivery! Everything looks perfect."
+                                </div>
+                                <div class="notification-meta">
+                                    <span>3 hours ago</span>
+                                    <a href="#" class="notification-action">View Message</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification 3 -->
+                        <div class="notification-item">
+                            <input type="checkbox" class="checkbox notification-checkbox">
+                            <div class="notification-icon promotion">🎉</div>
+                            <div class="notification-content">
+                                <div class="notification-title">Weekend Sale: 20% off Electronics!</div>
+                                <div class="notification-message">
+                                    Don't miss out on amazing deals this weekend. Use code WEEKEND20 at checkout.
+                                </div>
+                                <div class="notification-meta">
+                                    <span>5 hours ago</span>
+                                    <a href="#" class="notification-action">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Yesterday -->
+                        <div class="date-group">Yesterday</div>
+
+                        <!-- Notification 4 -->
+                        <div class="notification-item">
+                            <input type="checkbox" class="checkbox notification-checkbox">
+                            <div class="notification-icon order">📦</div>
+                            <div class="notification-content">
+                                <div class="notification-title">Order completed successfully</div>
+                                <div class="notification-message">
+                                    Your purchase of Web Development Services has been marked as complete. Please leave a review.
+                                </div>
+                                <div class="notification-meta">
+                                    <span>Yesterday at 4:30 PM</span>
+                                    <a href="#" class="notification-action">Leave Review</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification 5 -->
+                        <div class="notification-item">
+                            <input type="checkbox" class="checkbox notification-checkbox">
+                            <div class="notification-icon security">🔐</div>
+                            <div class="notification-content">
+                                <div class="notification-title">New login from Chrome on Windows</div>
+                                <div class="notification-message">
+                                    We noticed a new login to your account. If this wasn't you, please secure your account immediately.
+                                </div>
+                                <div class="notification-meta">
+                                    <span>Yesterday at 2:15 PM</span>
+                                    <a href="#" class="notification-action">Review Activity</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification 6 -->
+                        <div class="notification-item">
+                            <input type="checkbox" class="checkbox notification-checkbox">
+                            <div class="notification-icon message">💬</div>
+                            <div class="notification-content">
+                                <div class="notification-title">Sarah Johnson wants to buy your item</div>
+                                <div class="notification-message">
+                                    "Is this item still available? I'm very interested!"
+                                </div>
+                                <div class="notification-meta">
+                                    <span>Yesterday at 11:00 AM</span>
+                                    <a href="#" class="notification-action">Respond</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Last Week -->
+                        <div class="date-group">Last Week</div>
+
+                        <!-- Notification 7 -->
+                        <div class="notification-item">
+                            <input type="checkbox" class="checkbox notification-checkbox">
+                            <div class="notification-icon system">⚙️</div>
+                            <div class="notification-content">
+                                <div class="notification-title">System maintenance completed</div>
+                                <div class="notification-message">
+                                    We've completed scheduled maintenance. All systems are now running normally. Thank you for your patience.
+                                </div>
+                                <div class="notification-meta">
+                                    <span>Jan 8, 2024</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification 8 -->
+                        <div class="notification-item">
+                            <input type="checkbox" class="checkbox notification-checkbox">
+                            <div class="notification-icon order">📦</div>
+                            <div class="notification-content">
+                                <div class="notification-title">Dispute resolved in your favor</div>
+                                <div class="notification-message">
+                                    The dispute for Order #ORD-003 has been resolved. Funds will be released to your wallet within 24 hours.
+                                </div>
+                                <div class="notification-meta">
+                                    <span>Jan 7, 2024</span>
+                                    <a href="#" class="notification-action">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bulk Actions (shown when items selected) -->
+                    <div class="bulk-actions" style="display: none;">
+                        <span class="selected-count">2 notifications selected</span>
+                        <div class="bulk-buttons">
+                            <button class="button">Mark as Read</button>
+                            <button class="button">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show/hide bulk actions based on checkbox selection
+        const checkboxes = document.querySelectorAll('.notification-checkbox');
+        const bulkActions = document.querySelector('.bulk-actions');
+        const selectedCount = document.querySelector('.selected-count');
+        const selectAllCheckbox = document.querySelector('.select-all input');
+
+        function updateBulkActions() {
+            const checkedCount = document.querySelectorAll('.notification-checkbox:checked').length;
+            if (checkedCount > 0) {
+                bulkActions.style.display = 'flex';
+                selectedCount.textContent = `${checkedCount} notification${checkedCount > 1 ? 's' : ''} selected`;
+            } else {
+                bulkActions.style.display = 'none';
+            }
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateBulkActions);
+        });
+
+        // Select all functionality
+        selectAllCheckbox.addEventListener('change', function() {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+            updateBulkActions();
+        });
+
+        // Category filtering
+        const categoryItems = document.querySelectorAll('.category-item');
+        categoryItems.forEach(item => {
+            item.addEventListener('click', function() {
+                categoryItems.forEach(cat => cat.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniBazaar - My Listings</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 10px;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            color: #3E4153;
+            background-color: #F7F8FA;
+        }
+        
+        /* Layout */
+        .container {
+            max-width: 144rem;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        /* Header */
+        .header {
+            background-color: #fff;
+            border-top: 0.5rem solid #373373;
+            box-shadow: 0 0.2rem 0.5rem -0.2rem rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 6.4rem;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #373373;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 3.2rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: #373373;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+        
+        .nav-link.active {
+            font-weight: 800;
+        }
+        
+        .wallet-button {
+            background-color: #373373;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.6rem;
+            border-radius: 0.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .wallet-button:hover {
+            background-color: #4B4881;
+        }
+        
+        /* Main content */
+        .main {
+            min-height: calc(100vh - 7.4rem);
+            padding: 4rem 0;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3.2rem;
+        }
+        
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1.6rem;
+        }
+        
+        .create-button {
+            background-color: #373373;
+            color: white;
+            border: none;
+            padding: 1.2rem 2.4rem;
+            border-radius: 0.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .create-button:hover {
+            background-color: #4B4881;
+        }
+        
+        /* Filters and view toggle */
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.4rem;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            background-color: #fff;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.4rem;
+            overflow: hidden;
+        }
+        
+        .filter-tab {
+            background: none;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #6F727F;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .filter-tab:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0.1rem;
+            height: 2rem;
+            background-color: #D2D3D7;
+        }
+        
+        .filter-tab:hover {
+            background-color: #F3F3F9;
+        }
+        
+        .filter-tab.active {
+            background-color: #373373;
+            color: white;
+        }
+        
+        .filter-tab span {
+            margin-left: 0.4rem;
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        
+        .view-controls {
+            display: flex;
+            gap: 1.6rem;
+            align-items: center;
+        }
+        
+        .view-toggle {
+            display: flex;
+            background-color: #fff;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.4rem;
+            overflow: hidden;
+        }
+        
+        .view-button {
+            background: none;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            color: #6F727F;
+            transition: all 0.3s ease;
+        }
+        
+        .view-button:hover {
+            background-color: #F3F3F9;
+        }
+        
+        .view-button.active {
+            background-color: #373373;
+            color: white;
+        }
+        
+        /* Bulk actions bar */
+        .bulk-actions {
+            background-color: #F3F3F9;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.4rem;
+            padding: 1.2rem 1.6rem;
+            margin-bottom: 2.4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .bulk-select {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        
+        .bulk-buttons {
+            display: flex;
+            gap: 1.2rem;
+        }
+        
+        .bulk-button {
+            background: none;
+            border: 0.1rem solid #D2D3D7;
+            padding: 0.6rem 1.6rem;
+            border-radius: 0.4rem;
+            font-size: 1.4rem;
+            color: #3E4153;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .bulk-button:hover {
+            background-color: #fff;
+            border-color: #373373;
+            color: #373373;
+        }
+        
+        .bulk-button.danger:hover {
+            border-color: #E53E3E;
+            color: #E53E3E;
+        }
+        
+        /* Listings table */
+        .listings-table {
+            background-color: #fff;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.8rem;
+            overflow: hidden;
+        }
+        
+        .table-header {
+            display: grid;
+            grid-template-columns: 4rem 10rem 1fr 12rem 10rem 10rem 10rem 12rem;
+            padding: 1.6rem;
+            background-color: #F7F8FA;
+            border-bottom: 0.1rem solid #D2D3D7;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #6F727F;
+        }
+        
+        .listing-row {
+            display: grid;
+            grid-template-columns: 4rem 10rem 1fr 12rem 10rem 10rem 10rem 12rem;
+            padding: 1.6rem;
+            border-bottom: 0.1rem solid #D2D3D7;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        .listing-row:hover {
+            background-color: #F3F3F9;
+        }
+        
+        .listing-row:last-child {
+            border-bottom: none;
+        }
+        
+        .listing-image {
+            width: 8rem;
+            height: 6rem;
+            object-fit: cover;
+            border-radius: 0.4rem;
+        }
+        
+        .listing-title {
+            font-weight: 500;
+            color: #3E4153;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .listing-title:hover {
+            color: #373373;
+        }
+        
+        .listing-category {
+            font-size: 1.4rem;
+            color: #6F727F;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .status-badge.active {
+            background-color: #E8F5E9;
+            color: #2D844C;
+        }
+        
+        .status-badge.expired {
+            background-color: #FFF8E1;
+            color: #F8AA17;
+        }
+        
+        .status-badge.sold {
+            background-color: #E7E7F3;
+            color: #373373;
+        }
+        
+        .price {
+            font-weight: 800;
+            color: #3E4153;
+        }
+        
+        .metric {
+            text-align: center;
+            color: #6F727F;
+            font-size: 1.4rem;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: flex-end;
+        }
+        
+        .action-button {
+            background: none;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.4rem;
+            padding: 0.6rem 1.2rem;
+            font-size: 1.4rem;
+            color: #6F727F;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .action-button:hover {
+            background-color: #fff;
+            border-color: #373373;
+            color: #373373;
+        }
+        
+        /* Analytics sidebar */
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 32rem;
+            gap: 2.4rem;
+        }
+        
+        .analytics-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2.4rem;
+        }
+        
+        .analytics-card {
+            background-color: #fff;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.8rem;
+            padding: 2.4rem;
+        }
+        
+        .analytics-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 1.6rem;
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.6rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1.2rem;
+            background-color: #F7F8FA;
+            border-radius: 0.4rem;
+        }
+        
+        .stat-value {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #3E4153;
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            color: #6F727F;
+            margin-top: 0.4rem;
+        }
+        
+        .trend {
+            font-size: 1.2rem;
+            margin-top: 0.4rem;
+        }
+        
+        .trend.positive {
+            color: #2D844C;
+        }
+        
+        .trend.negative {
+            color: #E53E3E;
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 3.2rem;
+        }
+        
+        .page-button {
+            background: none;
+            border: 0.1rem solid #D2D3D7;
+            padding: 0.8rem 1.2rem;
+            border-radius: 0.4rem;
+            color: #6F727F;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .page-button:hover {
+            background-color: #F3F3F9;
+            border-color: #373373;
+            color: #373373;
+        }
+        
+        .page-button.active {
+            background-color: #373373;
+            color: white;
+            border-color: #373373;
+        }
+        
+        .page-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="index.html" class="logo" style="display: flex; align-items: center; text-decoration: none;">
+                    <img src="OmniBazaar Clear and black-- Global network.png" alt="OmniBazaar Logo" style="height: 3.2rem;">
+                </a>
+                
+                <div class="nav-links">
+                    <a href="marketplace-categories.html" class="nav-link active">Marketplace</a>
+                    <a href="dex-swap.html" class="nav-link">DEX</a>
+                    <a href="wallet-dashboard.html" class="nav-link">Wallet</a>
+                    <a href="chat.html" class="nav-link">Chat</a>
+                    <button class="wallet-button">0x1234...5678</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Main content -->
+    <main class="main">
+        <div class="container">
+            <!-- Page header -->
+            <div class="page-header">
+                <h1 class="page-title">My Listings</h1>
+                <div class="header-actions">
+                    <button class="create-button">
+                        <span>+</span>
+                        Create New Listing
+                    </button>
+                </div>
+            </div>
+            
+            <div class="content-wrapper">
+                <!-- Main content area -->
+                <div class="listings-section">
+                    <!-- Filter tabs -->
+                    <div class="controls-bar">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active">
+                                All
+                                <span>(24)</span>
+                            </button>
+                            <button class="filter-tab">
+                                Active
+                                <span>(18)</span>
+                            </button>
+                            <button class="filter-tab">
+                                Sold
+                                <span>(4)</span>
+                            </button>
+                            <button class="filter-tab">
+                                Expired
+                                <span>(2)</span>
+                            </button>
+                        </div>
+                        
+                        <div class="view-controls">
+                            <div class="view-toggle">
+                                <button class="view-button active">📋</button>
+                                <button class="view-button">📊</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bulk actions -->
+                    <div class="bulk-actions">
+                        <div class="bulk-select">
+                            <input type="checkbox" id="select-all">
+                            <label for="select-all">Select All</label>
+                            <span style="color: #6F727F; font-size: 1.4rem;">3 selected</span>
+                        </div>
+                        
+                        <div class="bulk-buttons">
+                            <button class="bulk-button">Renew</button>
+                            <button class="bulk-button">Edit</button>
+                            <button class="bulk-button">Export</button>
+                            <button class="bulk-button danger">Delete</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Listings table -->
+                    <div class="listings-table">
+                        <div class="table-header">
+                            <div></div>
+                            <div>Image</div>
+                            <div>Title & Category</div>
+                            <div>Status</div>
+                            <div>Price</div>
+                            <div>Views</div>
+                            <div>Messages</div>
+                            <div>Actions</div>
+                        </div>
+                        
+                        <!-- Listing rows -->
+                        <div class="listing-row">
+                            <input type="checkbox">
+                            <img src="https://via.placeholder.com/80x60" alt="iPhone 13 Pro" class="listing-image">
+                            <div>
+                                <a href="listing-detail.html" class="listing-title">iPhone 13 Pro - Excellent Condition</a>
+                                <div class="listing-category">Electronics > Phones</div>
+                            </div>
+                            <div><span class="status-badge active">Active</span></div>
+                            <div class="price">$899</div>
+                            <div class="metric">1,234</div>
+                            <div class="metric">12</div>
+                            <div class="actions">
+                                <button class="action-button">Edit</button>
+                                <button class="action-button">Promote</button>
+                            </div>
+                        </div>
+                        
+                        <div class="listing-row">
+                            <input type="checkbox">
+                            <img src="https://via.placeholder.com/80x60" alt="MacBook Pro" class="listing-image">
+                            <div>
+                                <a href="listing-detail.html" class="listing-title">MacBook Pro 16" M1 Max</a>
+                                <div class="listing-category">Electronics > Computers</div>
+                            </div>
+                            <div><span class="status-badge active">Active</span></div>
+                            <div class="price">$2,499</div>
+                            <div class="metric">856</div>
+                            <div class="metric">8</div>
+                            <div class="actions">
+                                <button class="action-button">Edit</button>
+                                <button class="action-button">Promote</button>
+                            </div>
+                        </div>
+                        
+                        <div class="listing-row">
+                            <input type="checkbox">
+                            <img src="https://via.placeholder.com/80x60" alt="Web Development" class="listing-image">
+                            <div>
+                                <a href="listing-detail.html" class="listing-title">Professional Web Development Services</a>
+                                <div class="listing-category">Services > Technology</div>
+                            </div>
+                            <div><span class="status-badge active">Active</span></div>
+                            <div class="price">$75/hr</div>
+                            <div class="metric">423</div>
+                            <div class="metric">5</div>
+                            <div class="actions">
+                                <button class="action-button">Edit</button>
+                                <button class="action-button">Promote</button>
+                            </div>
+                        </div>
+                        
+                        <div class="listing-row">
+                            <input type="checkbox">
+                            <img src="https://via.placeholder.com/80x60" alt="Vintage Chair" class="listing-image">
+                            <div>
+                                <a href="listing-detail.html" class="listing-title">Mid-Century Modern Chair</a>
+                                <div class="listing-category">For Sale > Furniture</div>
+                            </div>
+                            <div><span class="status-badge sold">Sold</span></div>
+                            <div class="price">$450</div>
+                            <div class="metric">234</div>
+                            <div class="metric">3</div>
+                            <div class="actions">
+                                <button class="action-button">View</button>
+                                <button class="action-button">Relist</button>
+                            </div>
+                        </div>
+                        
+                        <div class="listing-row">
+                            <input type="checkbox">
+                            <img src="https://via.placeholder.com/80x60" alt="Bitcoin Exchange" class="listing-image">
+                            <div>
+                                <a href="listing-detail.html" class="listing-title">Bitcoin for Cash - Local Exchange</a>
+                                <div class="listing-category">CryptoBazaar > BTC</div>
+                            </div>
+                            <div><span class="status-badge expired">Expired</span></div>
+                            <div class="price">Market Rate</div>
+                            <div class="metric">567</div>
+                            <div class="metric">15</div>
+                            <div class="actions">
+                                <button class="action-button">Renew</button>
+                                <button class="action-button">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <button class="page-button" disabled>←</button>
+                        <button class="page-button active">1</button>
+                        <button class="page-button">2</button>
+                        <button class="page-button">3</button>
+                        <button class="page-button">→</button>
+                    </div>
+                </div>
+                
+                <!-- Analytics sidebar -->
+                <div class="analytics-sidebar">
+                    <!-- Performance overview -->
+                    <div class="analytics-card">
+                        <h3 class="analytics-title">Performance Overview</h3>
+                        <div class="stat-grid">
+                            <div class="stat-item">
+                                <div class="stat-value">3,482</div>
+                                <div class="stat-label">Total Views</div>
+                                <div class="trend positive">↑ 12% this week</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">43</div>
+                                <div class="stat-label">Messages</div>
+                                <div class="trend positive">↑ 8% this week</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">156</div>
+                                <div class="stat-label">Favorites</div>
+                                <div class="trend negative">↓ 2% this week</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">$4,298</div>
+                                <div class="stat-label">Total Sales</div>
+                                <div class="trend positive">↑ 25% this month</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick actions -->
+                    <div class="analytics-card">
+                        <h3 class="analytics-title">Quick Actions</h3>
+                        <div style="display: flex; flex-direction: column; gap: 1.2rem;">
+                            <button class="create-button" style="width: 100%; justify-content: center;">
+                                Import Listings
+                            </button>
+                            <button class="bulk-button" style="width: 100%;">
+                                Export All Listings
+                            </button>
+                            <button class="bulk-button" style="width: 100%;">
+                                Listing Templates
+                            </button>
+                            <button class="bulk-button" style="width: 100%;">
+                                Promotion Tools
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Tips -->
+                    <div class="analytics-card">
+                        <h3 class="analytics-title">Tips to Improve</h3>
+                        <ul style="list-style: none; font-size: 1.4rem; color: #6F727F; line-height: 2;">
+                            <li>✓ Add more photos to increase views by 40%</li>
+                            <li>✓ Use featured listings for 3x more visibility</li>
+                            <li>✓ Update prices to match market rates</li>
+                            <li>✓ Respond to messages within 1 hour</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

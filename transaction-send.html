@@ -10,147 +10,157 @@
             padding: 0;
             box-sizing: border-box;
         }
+        
+        html {
+            font-size: 10px;
+        }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f8f9fa;
-            color: #333;
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            color: #3E4153;
+            background-color: #F7F8FA;
         }
 
         .navigation {
             background: white;
-            padding: 16px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-top: 0.5rem solid #373373;
+            padding: 1.6rem 2rem;
+            box-shadow: 0 0.2rem 0.5rem -0.2rem rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
         .nav-content {
-            max-width: 1200px;
+            max-width: 144rem;
             margin: 0 auto;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 2rem;
         }
 
         .nav-brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 1.2rem;
         }
 
         .logo {
-            width: 32px;
-            height: 32px;
+            width: 3.2rem;
+            height: 3.2rem;
         }
 
         .brand-text {
-            font-weight: 700;
-            font-size: 20px;
-            color: #333;
+            font-weight: 800;
+            font-size: 2.4rem;
+            color: #373373;
         }
 
         .nav-links {
             display: flex;
-            gap: 24px;
+            gap: 3.2rem;
             margin-left: auto;
         }
 
         .nav-link {
-            color: #667eea;
+            color: #373373;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
         }
 
         .nav-link:hover {
-            color: #764ba2;
+            text-decoration: underline;
         }
 
         .container {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 0 20px;
+            max-width: 60rem;
+            margin: 4rem auto;
+            padding: 0 2rem;
         }
 
         .transaction-card {
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 32px;
-            margin-bottom: 24px;
+            border-radius: 0.8rem;
+            box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
+            padding: 3.2rem;
+            margin-bottom: 2.4rem;
+            border: 0.1rem solid #D2D3D7;
         }
 
         .transaction-card.success {
             text-align: center;
-            border: 2px solid #10b981;
+            border: 0.2rem solid #2D844C;
         }
 
         .transaction-card.error {
             text-align: center;
-            border: 2px solid #ef4444;
+            border: 0.2rem solid #DC2626;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 3.2rem;
         }
 
         .header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 8px;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #3E4153;
+            margin-bottom: 0.8rem;
         }
 
         .header p {
-            color: #666;
-            font-size: 16px;
+            color: #6F727F;
+            font-size: 1.6rem;
         }
 
         .form-section {
-            margin-bottom: 24px;
+            margin-bottom: 2.4rem;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 2rem;
         }
 
         .form-group label {
             display: block;
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 6px;
+            font-weight: 600;
+            color: #3E4153;
+            margin-bottom: 0.6rem;
+            font-size: 1.4rem;
         }
 
         .form-input {
             width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 1.2rem 1.6rem;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.8rem;
+            font-size: 1.6rem;
             transition: border-color 0.2s;
+            background: #fff;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #373373;
+            box-shadow: 0 0 0 0.3rem rgba(55, 51, 115, 0.1);
         }
 
         .amount-input {
             display: flex;
-            gap: 8px;
+            gap: 0.8rem;
         }
 
         .currency-select {
-            padding: 12px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
+            padding: 1.2rem;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.8rem;
             background: white;
             cursor: pointer;
+            font-size: 1.6rem;
         }
 
         .recipient-suggestions {
@@ -206,47 +216,50 @@
         }
 
         .summary-section {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 24px;
+            background: #F7F8FA;
+            border-radius: 0.8rem;
+            padding: 2rem;
+            margin-bottom: 2.4rem;
+            border: 0.1rem solid #E5E5E5;
         }
 
         .summary-section h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 16px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #3E4153;
+            margin-bottom: 1.6rem;
         }
 
         .summary-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 0.8rem;
+            font-size: 1.4rem;
+            color: #6F727F;
         }
 
         .summary-row.total {
-            border-top: 1px solid #e5e7eb;
-            padding-top: 8px;
-            margin-top: 8px;
-            font-weight: 600;
-            font-size: 16px;
+            border-top: 0.1rem solid #E5E5E5;
+            padding-top: 0.8rem;
+            margin-top: 0.8rem;
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #3E4153;
         }
 
         .security-notice {
             display: flex;
-            gap: 12px;
-            padding: 16px;
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 12px;
-            margin-bottom: 24px;
+            gap: 1.2rem;
+            padding: 1.6rem;
+            background: #F0FDF4;
+            border: 0.1rem solid #BBF7D0;
+            border-radius: 0.8rem;
+            margin-bottom: 2.4rem;
         }
 
         .security-icon {
-            font-size: 20px;
-            color: #16a34a;
+            font-size: 2rem;
+            color: #2D844C;
         }
 
         .security-text {
@@ -254,53 +267,57 @@
         }
 
         .security-text strong {
-            color: #16a34a;
-            font-weight: 600;
+            color: #2D844C;
+            font-weight: 700;
         }
 
         .security-text p {
-            color: #166534;
-            font-size: 14px;
-            margin-top: 4px;
+            color: #2D844C;
+            font-size: 1.4rem;
+            margin-top: 0.4rem;
             margin-bottom: 0;
+            opacity: 0.9;
         }
 
         .action-buttons {
             display: flex;
-            gap: 12px;
+            gap: 1.2rem;
         }
 
         .button {
             flex: 1;
-            padding: 14px 24px;
-            border-radius: 8px;
+            padding: 1.4rem 2.4rem;
+            border-radius: 0.8rem;
             border: none;
-            font-size: 16px;
-            font-weight: 500;
+            font-size: 1.6rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 0.8rem;
         }
 
         .button.primary {
-            background: #667eea;
+            background: #373373;
             color: white;
         }
 
         .button.primary:hover:not(:disabled) {
-            background: #5a6fd8;
+            background: #4B4881;
+            transform: translateY(-0.1rem);
         }
 
         .button.secondary {
-            background: #f3f4f6;
-            color: #374151;
+            background: #fff;
+            color: #3E4153;
+            border: 0.1rem solid #D2D3D7;
         }
 
         .button.secondary:hover {
-            background: #e5e7eb;
+            background: #F3F3F9;
+            border-color: #373373;
         }
 
         .button:disabled {
@@ -322,29 +339,30 @@
         }
 
         .success-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            color: #10b981;
+            font-size: 4.8rem;
+            margin-bottom: 1.6rem;
+            color: #2D844C;
         }
 
         .error-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            color: #ef4444;
+            font-size: 4.8rem;
+            margin-bottom: 1.6rem;
+            color: #DC2626;
         }
 
         .transaction-details {
-            margin: 24px 0;
-            padding: 16px;
-            background: #f8f9fa;
-            border-radius: 8px;
+            margin: 2.4rem 0;
+            padding: 1.6rem;
+            background: #F7F8FA;
+            border-radius: 0.8rem;
             text-align: left;
         }
 
         .detail-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 0.8rem;
+            font-size: 1.4rem;
         }
 
         .transaction-id {
@@ -354,45 +372,47 @@
         }
 
         .wallet-balance {
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 24px;
+            background: #373373;
+            border-radius: 0.8rem;
+            padding: 1.6rem;
+            margin-bottom: 2.4rem;
             text-align: center;
+            color: white;
         }
 
         .balance-label {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 4px;
+            font-size: 1.4rem;
+            color: white;
+            opacity: 0.9;
+            margin-bottom: 0.4rem;
         }
 
         .balance-amount {
-            font-size: 24px;
-            font-weight: 700;
-            color: #667eea;
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: white;
         }
 
         .quick-amounts {
             display: flex;
-            gap: 8px;
-            margin-top: 8px;
+            gap: 0.8rem;
+            margin-top: 0.8rem;
         }
 
         .quick-amount {
-            padding: 6px 12px;
-            background: #f3f4f6;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            font-size: 14px;
+            padding: 0.6rem 1.2rem;
+            background: #F7F8FA;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .quick-amount:hover {
-            background: #667eea;
+            background: #373373;
             color: white;
-            border-color: #667eea;
+            border-color: #373373;
         }
 
         .hidden {
@@ -405,7 +425,7 @@
     <nav class="navigation">
         <div class="nav-content">
             <div class="nav-brand">
-                <img src="Globe-clear-256x256.png" alt="OmniBazaar" class="logo">
+                <img src="OmniBazaar Globe-clear-256x256.png" alt="OmniBazaar" class="logo">
                 <span class="brand-text">OmniBazaar</span>
             </div>
             <div class="nav-links">

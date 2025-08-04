@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmniBazaar - Create Listing</title>
+    <title>Create Listing - OmniBazaar</title>
     <style>
         * {
             margin: 0;
@@ -11,241 +11,263 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f8f9fa;
-            color: #333;
-            min-height: 100vh;
-            margin: 0;
+        :root {
+            --primary-color: #373373;
+            --primary-dark: #2a2858;
+            --primary-light: #4a46a3;
+            --background: #F7F8FA;
+            --surface: #FFFFFF;
+            --text-primary: #3E4153;
+            --text-secondary: #6F727F;
+            --text-muted: #8E909B;
+            --border: #E5E7EB;
+            --hover: #F3F4F6;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --spacing-unit: 0.8rem;
         }
 
-        .create-app {
+        html {
+            font-size: 10px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+            background-color: var(--background);
+        }
+
+        .page-container {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* Navigation Header */
-        .nav-header {
-            background: white;
-            padding: 16px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        .navbar {
+            background: var(--surface);
+            box-shadow: 0 0.2rem 0.4rem rgba(0,0,0,0.1);
+            padding: calc(var(--spacing-unit) * 2);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-top: 0.5rem solid var(--primary-color);
         }
 
-        .nav-container {
-            max-width: 1200px;
+        .navbar-content {
+            max-width: 120rem;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .nav-brand {
+        .navbar-brand {
+            font-size: 2.4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 8px;
         }
 
-        .logo img {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+        .navbar-links {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 3);
+            align-items: center;
         }
 
-        .brand-text {
-            font-weight: 700;
-            font-size: 20px;
-            color: #333;
+        .navbar-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
         }
 
-        .nav-button {
-            background: none;
-            border: none;
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.2s;
+        .navbar-links a:hover,
+        .navbar-links a.active {
+            color: var(--primary-color);
         }
 
-        .nav-button:hover {
-            background: rgba(0, 0, 0, 0.1);
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            background: #f8f9fa;
-        }
-
-        .content-container {
-            max-width: 800px;
+        .content-wrapper {
+            max-width: 80rem;
             margin: 0 auto;
-            padding: 32px 20px;
+            padding: calc(var(--spacing-unit) * 3);
+            flex: 1;
         }
 
-        .mint-header {
+        .page-header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: calc(var(--spacing-unit) * 4);
         }
 
         .page-title {
-            font-size: 32px;
-            font-weight: 800;
-            color: #333;
-            margin-bottom: 16px;
+            font-size: 3.2rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 2);
         }
 
         .page-subtitle {
-            font-size: 14px;
-            color: #666;
+            font-size: 1.8rem;
+            color: var(--text-secondary);
             line-height: 1.4;
         }
 
         .form-section {
-            margin-bottom: 24px;
+            margin-bottom: calc(var(--spacing-unit) * 3);
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: calc(var(--spacing-unit) * 2);
         }
 
         .form-label {
             display: block;
-            font-size: 14px;
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 6px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 1);
         }
 
         .form-input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: calc(var(--spacing-unit) * 1.5);
+            border: 1px solid var(--border);
+            border-radius: var(--spacing-unit);
+            font-size: 1.6rem;
+            background: var(--surface);
             transition: border-color 0.2s;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(55, 51, 115, 0.1);
         }
 
         .form-textarea {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: calc(var(--spacing-unit) * 1.5);
+            border: 1px solid var(--border);
+            border-radius: var(--spacing-unit);
+            font-size: 1.6rem;
+            font-family: inherit;
             resize: vertical;
-            min-height: 80px;
+            min-height: 10rem;
+            background: var(--surface);
             transition: border-color 0.2s;
         }
 
         .form-textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(55, 51, 115, 0.1);
         }
 
         .form-select {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 14px;
-            background: white;
+            padding: calc(var(--spacing-unit) * 1.5);
+            border: 1px solid var(--border);
+            border-radius: var(--spacing-unit);
+            font-size: 1.6rem;
+            background: var(--surface);
             transition: border-color 0.2s;
         }
 
         .form-select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(55, 51, 115, 0.1);
         }
 
         .image-upload {
-            border: 2px dashed #e5e7eb;
-            border-radius: 8px;
-            padding: 24px;
+            border: 2px dashed var(--border);
+            border-radius: calc(var(--spacing-unit) * 2);
+            padding: calc(var(--spacing-unit) * 3);
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
+            background: var(--surface);
         }
 
         .image-upload:hover {
-            border-color: #667eea;
-            background: rgba(102, 126, 234, 0.05);
+            border-color: var(--primary-color);
+            background: var(--hover);
         }
 
         .upload-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-            color: #667eea;
+            font-size: 4.8rem;
+            margin-bottom: calc(var(--spacing-unit) * 1.5);
+            color: var(--primary-color);
         }
 
         .upload-text {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 4px;
+            font-size: 1.6rem;
+            color: var(--text-secondary);
+            margin-bottom: calc(var(--spacing-unit) * 0.5);
         }
 
         .upload-hint {
-            font-size: 12px;
-            color: #999;
+            font-size: 1.3rem;
+            color: var(--text-muted);
         }
 
         .preview-section {
-            background: rgba(102, 126, 234, 0.05);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: calc(var(--spacing-unit) * 2);
+            padding: calc(var(--spacing-unit) * 3);
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
         }
 
         .preview-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 12px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 2);
             text-align: center;
         }
 
         .nft-preview {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: calc(var(--spacing-unit) * 2);
             overflow: hidden;
-            max-width: 200px;
+            max-width: 25rem;
             margin: 0 auto;
         }
 
         .preview-image {
             width: 100%;
-            height: 150px;
-            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            height: 20rem;
+            background: linear-gradient(45deg, var(--background), var(--border));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
+            font-size: 4.8rem;
         }
 
         .preview-info {
-            padding: 12px;
+            padding: calc(var(--spacing-unit) * 2);
+            background: var(--surface);
         }
 
         .preview-name {
-            font-size: 14px;
+            font-size: 1.6rem;
             font-weight: 600;
-            color: #333;
-            margin-bottom: 4px;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 0.5);
         }
 
         .preview-description {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 8px;
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: calc(var(--spacing-unit) * 1);
             line-height: 1.4;
         }
 
@@ -256,78 +278,78 @@
         }
 
         .price-amount {
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
         }
 
         .price-currency {
-            font-size: 12px;
-            color: #667eea;
-            background: rgba(102, 126, 234, 0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            background: #F3F2FF;
+            padding: calc(var(--spacing-unit) * 0.5) calc(var(--spacing-unit) * 1);
+            border-radius: var(--spacing-unit);
         }
 
         .cost-breakdown {
-            background: rgba(255, 193, 7, 0.1);
-            border: 1px solid rgba(255, 193, 7, 0.3);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 16px;
+            background: #FEF3C7;
+            border: 1px solid #FCD34D;
+            border-radius: calc(var(--spacing-unit) * 2);
+            padding: calc(var(--spacing-unit) * 2);
+            margin-bottom: calc(var(--spacing-unit) * 2);
         }
 
         .cost-title {
-            font-size: 14px;
+            font-size: 1.6rem;
             font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 1);
         }
 
         .cost-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 4px;
-            font-size: 12px;
+            margin-bottom: calc(var(--spacing-unit) * 0.5);
+            font-size: 1.4rem;
         }
 
         .cost-label {
-            color: #666;
+            color: var(--text-secondary);
         }
 
         .cost-value {
-            color: #333;
+            color: var(--text-primary);
             font-weight: 500;
         }
 
         .cost-total {
-            border-top: 1px solid rgba(255, 193, 7, 0.3);
-            padding-top: 8px;
-            margin-top: 8px;
+            border-top: 1px solid #FCD34D;
+            padding-top: calc(var(--spacing-unit) * 1);
+            margin-top: calc(var(--spacing-unit) * 1);
             font-weight: 600;
         }
 
-        .mint-button {
+        .create-button {
             width: 100%;
-            background: #667eea;
+            background: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 12px;
-            padding: 16px;
-            font-size: 16px;
+            border-radius: calc(var(--spacing-unit) * 1.5);
+            padding: calc(var(--spacing-unit) * 2);
+            font-size: 1.6rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            margin-bottom: 16px;
+            margin-bottom: calc(var(--spacing-unit) * 2);
         }
 
-        .mint-button:hover {
-            background: #5a67d8;
+        .create-button:hover {
+            background: var(--primary-dark);
             transform: translateY(-1px);
         }
 
-        .mint-button:disabled {
-            background: #9ca3af;
+        .create-button:disabled {
+            background: var(--text-muted);
             cursor: not-allowed;
             transform: none;
         }
@@ -335,85 +357,69 @@
         .checkbox-group {
             display: flex;
             align-items: flex-start;
-            gap: 8px;
-            margin-bottom: 16px;
+            gap: calc(var(--spacing-unit) * 1);
+            margin-bottom: calc(var(--spacing-unit) * 2);
         }
 
         .checkbox {
-            margin-top: 2px;
+            margin-top: 0.2rem;
+            width: 1.8rem;
+            height: 1.8rem;
+            cursor: pointer;
         }
 
         .checkbox-label {
-            font-size: 12px;
-            color: #666;
+            font-size: 1.4rem;
+            color: var(--text-secondary);
             line-height: 1.4;
         }
 
-        /* Bottom Navigation */
-        .bottom-nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            padding: 8px 0;
-            display: flex;
-            justify-content: space-around;
+        .footer {
+            background: var(--surface);
+            padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 3);
+            margin-top: calc(var(--spacing-unit) * 6);
+            border-top: 1px solid var(--border);
+            text-align: center;
         }
 
-        .nav-tab {
-            background: none;
-            border: none;
-            padding: 8px 4px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            min-width: 60px;
-            transition: all 0.2s;
-            border-radius: 8px;
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 1.4rem;
         }
 
-        .nav-tab.active {
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-        }
+        @media (max-width: 768px) {
+            .navbar-links {
+                display: none;
+            }
 
-        .nav-icon {
-            font-size: 18px;
-        }
-
-        .nav-label {
-            font-size: 11px;
-            font-weight: 500;
+            .content-wrapper {
+                padding: calc(var(--spacing-unit) * 2);
+            }
         }
     </style>
 </head>
 <body>
-    <div class="wallet-app">
-        <!-- Navigation Header -->
-        <nav class="nav-header">
-            <div class="nav-container">
-                <div class="nav-brand">
-                    <div class="logo">
-                        <img src="Globe-Clear_Background-64x64.png" alt="OmniBazaar Logo">
-                    </div>
-                    <span class="brand-text">OmniBazaar</span>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="navbar-content">
+                <a href="index.html" class="navbar-brand">
+                    <img src="OmniBazaar Clear and black-- Global network.png" alt="OmniBazaar Logo" style="height: 3.2rem; vertical-align: middle;">
+                </a>
+                <div class="navbar-links">
+                    <a href="marketplace-home.html" class="active">Marketplace</a>
+                    <a href="orders.html">Orders</a>
+                    <a href="wallet.html">Wallet</a>
+                    <a href="messages.html">Messages</a>
+                    <a href="profile.html">Profile</a>
                 </div>
-            
-            <div class="nav-actions">
-                <button class="nav-button">🏪 Marketplace</button>
-                <button class="nav-button">👤 Account</button>
-                <button class="nav-button">⚙️ Settings</button>
             </div>
         </nav>
 
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <div class="content-container">
-                <div class="mint-header">
-                    <h1 class="page-title">🎨 Create Listing</h1>
-                    <p class="page-subtitle">List your product, service, NFT, or asset on OmniBazaar</p>
-                </div>
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h1 class="page-title">Create Listing</h1>
+                <p class="page-subtitle">List your product, service, NFT, or asset on OmniBazaar</p>
+            </div>
 
             <!-- NFT Form -->
             <div class="form-section">
@@ -478,9 +484,9 @@
 
             <!-- Cost Breakdown -->
             <div class="cost-breakdown">
-                <div class="cost-title">Minting Costs</div>
+                <div class="cost-title">Listing Costs</div>
                 <div class="cost-item">
-                    <span class="cost-label">NFT Minting Fee:</span>
+                    <span class="cost-label">Listing Fee:</span>
                     <span class="cost-value">0.02 XOM</span>
                 </div>
                 <div class="cost-item">
@@ -501,23 +507,15 @@
             <div class="checkbox-group">
                 <input type="checkbox" id="terms" class="checkbox" checked>
                 <label for="terms" class="checkbox-label">
-                    I agree to list this NFT immediately on OmniBazaar marketplace and understand that minting costs are non-refundable.
+                    I agree to list this item immediately on OmniBazaar marketplace and understand that listing costs are non-refundable.
                 </label>
             </div>
 
-            <!-- Mint Button -->
-            <button class="mint-button">
-                🚀 Create Listing
+            <!-- Create Listing Button -->
+            <button class="create-button">
+                Create Listing
             </button>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer style="background: white; padding: 32px 20px; margin-top: 48px; border-top: 1px solid #e5e7eb;">
-            <div style="max-width: 1200px; margin: 0 auto; text-align: center; color: #666;">
-                <p>&copy; 2024 OmniBazaar. Decentralized marketplace for everything.</p>
-            </div>
-        </footer>
+        </div>
     </div>
 </body>
 </html> 

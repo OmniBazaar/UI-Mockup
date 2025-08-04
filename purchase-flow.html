@@ -5,102 +5,187 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purchase Flow - OmniBazaar</title>
     <style>
+        /* Reset and base styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+        
+        html {
+            font-size: 10px;
         }
 
-        .container {
-            max-width: 600px;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            color: #3E4153;
+            background-color: #F7F8FA;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Navigation Header */
+        .nav-header {
+            background-color: #fff;
+            border-top: 0.5rem solid #373373;
+            box-shadow: 0 0.2rem 0.5rem -0.2rem rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 144rem;
             margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 6.4rem;
+        }
+        
+        .logo {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #373373;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 3.2rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: #373373;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+        
+        .nav-link.active {
+            font-weight: 800;
+        }
+        
+        .wallet-button {
+            background-color: #373373;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.6rem;
+            border-radius: 0.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .wallet-button:hover {
+            background-color: #4B4881;
+        }
+        
+        .container {
+            max-width: 60rem;
+            margin: 8rem auto 2rem;
             background: white;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border-radius: 0.8rem;
+            padding: 3.2rem;
+            border: 0.1rem solid #D2D3D7;
+            box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.05);
         }
 
         .step-indicator {
             display: flex;
             justify-content: center;
-            margin-bottom: 32px;
+            margin-bottom: 3.2rem;
         }
 
         .step {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            border-radius: 24px;
-            margin: 0 8px;
-            font-weight: 500;
+            gap: 0.8rem;
+            padding: 1.2rem 2rem;
+            border-radius: 2.4rem;
+            margin: 0 0.8rem;
+            font-weight: 600;
+            font-size: 1.4rem;
             transition: all 0.3s ease;
         }
 
         .step.active {
-            background: #667eea;
+            background: #373373;
             color: white;
         }
 
         .step.completed {
-            background: #10b981;
+            background: #2D844C;
             color: white;
         }
 
         .step.pending {
-            background: #f3f4f6;
-            color: #6b7280;
+            background: #E5E5E5;
+            color: #8E909B;
         }
 
         .step-number {
-            width: 24px;
-            height: 24px;
+            width: 2.4rem;
+            height: 2.4rem;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 1.4rem;
             font-weight: bold;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 3.2rem;
         }
 
         .header h2 {
-            color: #1f2937;
-            margin-bottom: 8px;
-            font-size: 28px;
+            color: #3E4153;
+            margin-bottom: 0.8rem;
+            font-size: 2.8rem;
+            font-weight: 800;
         }
 
         .header p {
-            color: #6b7280;
-            font-size: 16px;
+            color: #6F727F;
+            font-size: 1.6rem;
         }
 
         .listing-preview {
             display: flex;
-            gap: 16px;
-            padding: 20px;
-            background: #f9fafb;
-            border-radius: 12px;
-            margin-bottom: 24px;
+            gap: 1.6rem;
+            padding: 2rem;
+            background: #F7F8FA;
+            border-radius: 0.8rem;
+            margin-bottom: 2.4rem;
+            border: 0.1rem solid #E5E5E5;
         }
 
         .listing-image {
-            width: 80px;
-            height: 80px;
+            width: 8rem;
+            height: 8rem;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 0.4rem;
+            background: #E5E5E5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
         }
 
         .listing-details {
@@ -108,115 +193,118 @@
         }
 
         .listing-title {
-            font-size: 18px;
+            font-size: 1.8rem;
             font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 4px;
+            color: #3E4153;
+            margin-bottom: 0.4rem;
         }
 
         .listing-price {
-            font-size: 20px;
+            font-size: 2rem;
             font-weight: 700;
-            color: #667eea;
-            margin-bottom: 8px;
+            color: #373373;
+            margin-bottom: 0.8rem;
         }
 
         .listing-seller {
-            color: #6b7280;
-            font-size: 14px;
+            color: #6F727F;
+            font-size: 1.4rem;
         }
 
         .secureSend-option {
-            margin-bottom: 24px;
+            margin-bottom: 2.4rem;
         }
 
         .checkbox-container {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 16px;
+            gap: 0.8rem;
+            margin-bottom: 1.6rem;
         }
 
         .checkbox-container input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #667eea;
+            width: 1.8rem;
+            height: 1.8rem;
+            accent-color: #373373;
         }
 
         .secureSend-description {
-            font-size: 14px;
-            color: #6b7280;
-            margin-left: 26px;
-            padding: 12px;
-            background: #eff6ff;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
+            font-size: 1.4rem;
+            color: #6F727F;
+            margin-left: 2.6rem;
+            padding: 1.2rem;
+            background: #F3F3F9;
+            border-radius: 0.4rem;
+            border-left: 0.4rem solid #373373;
         }
 
         .button-group {
             display: flex;
-            gap: 16px;
+            gap: 1.6rem;
             justify-content: center;
-            margin-top: 32px;
+            margin-top: 3.2rem;
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 1.2rem 2.4rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 0.4rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 16px;
+            font-size: 1.6rem;
         }
 
         .btn-primary {
-            background: #667eea;
+            background: #373373;
             color: white;
         }
 
         .btn-primary:hover {
-            background: #5a6fd8;
-            transform: translateY(-1px);
+            background: #4B4881;
+            transform: translateY(-0.1rem);
         }
 
         .btn-secondary {
-            background: #f3f4f6;
-            color: #374151;
-            border: 1px solid #d1d5db;
+            background: #fff;
+            color: #3E4153;
+            border: 0.1rem solid #D2D3D7;
         }
 
         .btn-secondary:hover {
-            background: #e5e7eb;
+            background: #F3F3F9;
+            border-color: #373373;
         }
 
         .success-icon {
-            font-size: 48px;
+            font-size: 4.8rem;
             text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: 1.6rem;
+            color: #2D844C;
         }
 
         .confirmation-text {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 2.4rem;
         }
 
         .confirmation-text p {
-            margin-bottom: 8px;
-            color: #6b7280;
+            margin-bottom: 0.8rem;
+            color: #6F727F;
+            font-size: 1.6rem;
         }
 
         .navigation-links {
             text-align: center;
-            margin-top: 32px;
-            padding-top: 24px;
-            border-top: 1px solid #e5e7eb;
+            margin-top: 3.2rem;
+            padding-top: 2.4rem;
+            border-top: 0.1rem solid #E5E5E5;
         }
 
         .navigation-links a {
-            color: #667eea;
+            color: #373373;
             text-decoration: none;
-            margin: 0 16px;
+            margin: 0 1.6rem;
             font-weight: 500;
         }
 
@@ -225,53 +313,72 @@
         }
 
         .step-content {
-            min-height: 300px;
+            min-height: 30rem;
         }
 
         .secureSend-form {
-            background: #f9fafb;
-            padding: 24px;
-            border-radius: 12px;
-            border: 2px solid #667eea;
+            background: #F7F8FA;
+            padding: 2.4rem;
+            border-radius: 0.8rem;
+            border: 0.2rem solid #373373;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 2rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #374151;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: #3E4153;
+            font-size: 1.4rem;
         }
 
         .form-group input, .form-group select {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 1.2rem;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.4rem;
+            font-size: 1.6rem;
+            background: #fff;
         }
 
         .form-group input:focus, .form-group select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #373373;
         }
 
         .fee-info {
-            background: #fffbeb;
-            border: 1px solid #f59e0b;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            color: #92400e;
+            background: #FFF8E1;
+            border: 0.1rem solid #F8AA17;
+            border-radius: 0.4rem;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            font-size: 1.4rem;
+            color: #6F727F;
         }
     </style>
 </head>
 <body>
+    <!-- Navigation Header -->
+    <header class="nav-header">
+        <div class="nav-container">
+            <nav class="nav">
+                <a href="index.html" class="logo" style="display: flex; align-items: center; text-decoration: none;">
+                    <img src="OmniBazaar Clear and black-- Global network.png" alt="OmniBazaar Logo" style="height: 3.2rem;">
+                </a>
+                <div class="nav-links">
+                    <a href="marketplace-categories.html" class="nav-link active">Marketplace</a>
+                    <a href="dex-swap.html" class="nav-link">DEX</a>
+                    <a href="wallet-dashboard.html" class="nav-link">Wallet</a>
+                    <a href="#" class="nav-link">Chat</a>
+                    <button class="wallet-button">Connect Wallet</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
     <div class="container">
         <!-- Step Indicator -->
         <div class="step-indicator">
@@ -299,7 +406,7 @@
                 </div>
 
                 <div class="listing-preview">
-                    <img src="Globe-clear-256x256.png" alt="Sample Product" class="listing-image">
+                    <div class="listing-image">💻</div>
                     <div class="listing-details">
                         <div class="listing-title">Professional MacBook Pro M3</div>
                         <div class="listing-price">2,499 OMNI</div>
@@ -333,10 +440,10 @@
 
                 <div class="secureSend-form">
                     <div class="fee-info">
-                        <strong>💰 Transaction Summary</strong><br>
+                        <strong style="color: #3E4153; font-size: 1.6rem;">💰 Transaction Summary</strong><br>
                         Item Price: 2,499 OMNI<br>
                         SecureSend Fee (1%): 24.99 OMNI<br>
-                        <strong>Total: 2,523.99 OMNI</strong>
+                        <strong style="color: #3E4153;">Total: 2,523.99 OMNI</strong>
                     </div>
 
                     <div class="form-group">
@@ -391,9 +498,9 @@
 
         <!-- Navigation Links -->
         <div class="navigation-links">
-            <a href="index.html">← Back to Marketplace</a>
-            <a href="my-purchases.html">My Purchases</a>
-            <a href="listing-detail.html">View Listing</a>
+            <a href="marketplace-categories.html">← Back to Marketplace</a>
+            <a href="my-listings.html">My Purchases</a>
+            <a href="marketplace-listing.html">View Listing</a>
         </div>
     </div>
 

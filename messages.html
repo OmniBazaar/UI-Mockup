@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - OmniBazaar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #373373;
+            --primary-dark: #2a2858;
+            --primary-light: #4a46a3;
+            --background: #F7F8FA;
+            --surface: #FFFFFF;
+            --text-primary: #3E4153;
+            --text-secondary: #6F727F;
+            --text-muted: #8E909B;
+            --border: #E5E7EB;
+            --hover: #F3F4F6;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --spacing-unit: 0.8rem;
+        }
+
+        html {
+            font-size: 10px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+            background-color: var(--background);
+        }
+
+        .page-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: var(--surface);
+            box-shadow: 0 0.2rem 0.4rem rgba(0,0,0,0.1);
+            padding: calc(var(--spacing-unit) * 2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-top: 0.5rem solid var(--primary-color);
+        }
+
+        .navbar-content {
+            max-width: 144rem;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 2.4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 3);
+            align-items: center;
+        }
+
+        .navbar-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .navbar-links a:hover,
+        .navbar-links a.active {
+            color: var(--primary-color);
+        }
+
+        .content-wrapper {
+            max-width: 144rem;
+            margin: 0 auto;
+            padding: calc(var(--spacing-unit) * 3);
+            flex: 1;
+            display: flex;
+            gap: calc(var(--spacing-unit) * 3);
+            height: calc(100vh - 10rem);
+        }
+
+        .messages-container {
+            display: grid;
+            grid-template-columns: 36rem 1fr;
+            gap: calc(var(--spacing-unit) * 3);
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Conversations Sidebar */
+        .conversations-sidebar {
+            background: var(--surface);
+            border-radius: calc(var(--spacing-unit) * 2);
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: calc(var(--spacing-unit) * 3);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-title {
+            font-size: 2.4rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 5);
+            border: 1px solid var(--border);
+            border-radius: var(--spacing-unit);
+            font-size: 1.4rem;
+            background: var(--background);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: calc(var(--spacing-unit) * 2);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .conversation-item {
+            display: flex;
+            align-items: center;
+            padding: calc(var(--spacing-unit) * 3);
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.2s;
+            position: relative;
+        }
+
+        .conversation-item:hover {
+            background: var(--hover);
+        }
+
+        .conversation-item.active {
+            background: #F3F2FF;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .user-avatar {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.8rem;
+            margin-right: calc(var(--spacing-unit) * 2);
+            position: relative;
+        }
+
+        .online-indicator {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 1.4rem;
+            height: 1.4rem;
+            background: var(--success);
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+
+        .conversation-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .conversation-name {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 0.5);
+        }
+
+        .last-message {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: calc(var(--spacing-unit) * 1);
+        }
+
+        .message-time {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+        }
+
+        .unread-badge {
+            background: var(--primary-color);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: calc(var(--spacing-unit) * 0.5) calc(var(--spacing-unit) * 1);
+            border-radius: 1rem;
+            min-width: 2rem;
+            text-align: center;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            background: var(--surface);
+            border-radius: calc(var(--spacing-unit) * 2);
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: calc(var(--spacing-unit) * 3);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-user-info {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .chat-user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-user-name {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .chat-user-status {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .chat-action-button {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            background: var(--background);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 2rem;
+        }
+
+        .chat-action-button:hover {
+            background: var(--hover);
+            transform: scale(1.1);
+        }
+
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: calc(var(--spacing-unit) * 3);
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .message {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 2);
+            max-width: 70%;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(1rem); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 3.6rem;
+            height: 3.6rem;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--spacing-unit) * 1);
+        }
+
+        .message-bubble {
+            padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
+            border-radius: calc(var(--spacing-unit) * 2);
+            font-size: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .message.received .message-bubble {
+            background: var(--background);
+            color: var(--text-primary);
+            border-bottom-left-radius: calc(var(--spacing-unit) * 0.5);
+        }
+
+        .message.sent .message-bubble {
+            background: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: calc(var(--spacing-unit) * 0.5);
+        }
+
+        .message-time {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            padding: 0 calc(var(--spacing-unit) * 1);
+        }
+
+        .message.sent .message-time {
+            text-align: right;
+        }
+
+        .order-context {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: var(--spacing-unit);
+            padding: calc(var(--spacing-unit) * 2);
+            margin: calc(var(--spacing-unit) * 2) 0;
+            font-size: 1.4rem;
+        }
+
+        .order-context-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: calc(var(--spacing-unit) * 1);
+        }
+
+        .order-context-details {
+            color: var(--text-secondary);
+        }
+
+        .message-input-area {
+            padding: calc(var(--spacing-unit) * 3);
+            border-top: 1px solid var(--border);
+            background: var(--background);
+        }
+
+        .message-input-container {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 2);
+            align-items: flex-end;
+        }
+
+        .attachment-button {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 2rem;
+        }
+
+        .attachment-button:hover {
+            background: var(--hover);
+            border-color: var(--primary-color);
+        }
+
+        .message-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .message-input {
+            width: 100%;
+            padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
+            border: 1px solid var(--border);
+            border-radius: calc(var(--spacing-unit) * 3);
+            font-size: 1.5rem;
+            resize: none;
+            max-height: 12rem;
+            background: var(--surface);
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .send-button {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 2rem;
+        }
+
+        .send-button:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .send-button:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        @media (max-width: 1024px) {
+            .messages-container {
+                grid-template-columns: 30rem 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .messages-container {
+                grid-template-columns: 1fr;
+            }
+
+            .conversations-sidebar {
+                display: none;
+            }
+
+            .conversations-sidebar.mobile-active {
+                display: flex;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 10;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="navbar-content">
+                <a href="index.html" class="navbar-brand">
+                    <img src="OmniBazaar Clear and black-- Global network.png" alt="OmniBazaar Logo" style="height: 3.2rem; vertical-align: middle;">
+                </a>
+                <div class="navbar-links">
+                    <a href="marketplace-home.html">Marketplace</a>
+                    <a href="orders.html">Orders</a>
+                    <a href="wallet.html">Wallet</a>
+                    <a href="messages.html" class="active">Messages</a>
+                    <a href="profile.html">Profile</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="content-wrapper">
+            <div class="messages-container">
+                <!-- Conversations Sidebar -->
+                <div class="conversations-sidebar">
+                    <div class="sidebar-header">
+                        <h2 class="sidebar-title">Messages</h2>
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" class="search-input" placeholder="Search conversations...">
+                        </div>
+                    </div>
+
+                    <div class="conversations-list">
+                        <!-- Active Conversation -->
+                        <div class="conversation-item active">
+                            <div class="user-avatar">
+                                JD
+                                <span class="online-indicator"></span>
+                            </div>
+                            <div class="conversation-info">
+                                <div class="conversation-name">John Doe</div>
+                                <div class="last-message">Thanks for the quick delivery!</div>
+                            </div>
+                            <div class="conversation-meta">
+                                <div class="message-time">2m ago</div>
+                                <div class="unread-badge">2</div>
+                            </div>
+                        </div>
+
+                        <!-- Conversation 2 -->
+                        <div class="conversation-item">
+                            <div class="user-avatar" style="background: #10B981;">
+                                TS
+                            </div>
+                            <div class="conversation-info">
+                                <div class="conversation-name">TechStore</div>
+                                <div class="last-message">Your order has been shipped</div>
+                            </div>
+                            <div class="conversation-meta">
+                                <div class="message-time">1h ago</div>
+                            </div>
+                        </div>
+
+                        <!-- Conversation 3 -->
+                        <div class="conversation-item">
+                            <div class="user-avatar" style="background: #EF4444;">
+                                SJ
+                                <span class="online-indicator"></span>
+                            </div>
+                            <div class="conversation-info">
+                                <div class="conversation-name">Sarah Johnson</div>
+                                <div class="last-message">Is this item still available?</div>
+                            </div>
+                            <div class="conversation-meta">
+                                <div class="message-time">3h ago</div>
+                                <div class="unread-badge">1</div>
+                            </div>
+                        </div>
+
+                        <!-- Conversation 4 -->
+                        <div class="conversation-item">
+                            <div class="user-avatar" style="background: #F59E0B;">
+                                RF
+                            </div>
+                            <div class="conversation-info">
+                                <div class="conversation-name">RetroFashion</div>
+                                <div class="last-message">We've updated the dispute status</div>
+                            </div>
+                            <div class="conversation-meta">
+                                <div class="message-time">Yesterday</div>
+                            </div>
+                        </div>
+
+                        <!-- Conversation 5 -->
+                        <div class="conversation-item">
+                            <div class="user-avatar" style="background: #3B82F6;">
+                                DP
+                            </div>
+                            <div class="conversation-info">
+                                <div class="conversation-name">DevPro</div>
+                                <div class="last-message">Project completed successfully!</div>
+                            </div>
+                            <div class="conversation-meta">
+                                <div class="message-time">Jan 8</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Area -->
+                <div class="chat-area">
+                    <div class="chat-header">
+                        <div class="chat-user-info">
+                            <div class="user-avatar">
+                                JD
+                                <span class="online-indicator"></span>
+                            </div>
+                            <div class="chat-user-details">
+                                <div class="chat-user-name">John Doe</div>
+                                <div class="chat-user-status">Online</div>
+                            </div>
+                        </div>
+                        <div class="chat-actions">
+                            <button class="chat-action-button">📞</button>
+                            <button class="chat-action-button">📹</button>
+                            <button class="chat-action-button">ℹ️</button>
+                        </div>
+                    </div>
+
+                    <div class="messages-area">
+                        <!-- Order Context -->
+                        <div class="order-context">
+                            <div class="order-context-title">📦 Order #ORD-001 - MacBook Pro M3</div>
+                            <div class="order-context-details">Transaction started on Jan 12, 2024</div>
+                        </div>
+
+                        <!-- Message 1 -->
+                        <div class="message received">
+                            <div class="message-avatar">JD</div>
+                            <div class="message-content">
+                                <div class="message-bubble">
+                                    Hi! I'm interested in the MacBook Pro you have listed. Is it still available?
+                                </div>
+                                <div class="message-time">Jan 12, 10:30 AM</div>
+                            </div>
+                        </div>
+
+                        <!-- Message 2 -->
+                        <div class="message sent">
+                            <div class="message-avatar">Me</div>
+                            <div class="message-content">
+                                <div class="message-bubble">
+                                    Yes, it's still available! It's in excellent condition with all original accessories.
+                                </div>
+                                <div class="message-time">Jan 12, 10:35 AM</div>
+                            </div>
+                        </div>
+
+                        <!-- Message 3 -->
+                        <div class="message received">
+                            <div class="message-avatar">JD</div>
+                            <div class="message-content">
+                                <div class="message-bubble">
+                                    Great! Can you tell me more about the specs and warranty status?
+                                </div>
+                                <div class="message-time">Jan 12, 10:40 AM</div>
+                            </div>
+                        </div>
+
+                        <!-- Message 4 -->
+                        <div class="message sent">
+                            <div class="message-avatar">Me</div>
+                            <div class="message-content">
+                                <div class="message-bubble">
+                                    It's the M3 Pro model with 16GB RAM and 512GB SSD. AppleCare+ is valid until Dec 2024.
+                                </div>
+                                <div class="message-time">Jan 12, 10:45 AM</div>
+                            </div>
+                        </div>
+
+                        <!-- Message 5 -->
+                        <div class="message received">
+                            <div class="message-avatar">JD</div>
+                            <div class="message-content">
+                                <div class="message-bubble">
+                                    Perfect! I'll place the order now. Looking forward to receiving it.
+                                </div>
+                                <div class="message-time">Jan 12, 11:00 AM</div>
+                            </div>
+                        </div>
+
+                        <!-- Today's Messages -->
+                        <div style="text-align: center; color: var(--text-muted); margin: 2rem 0; font-size: 1.4rem;">
+                            Today
+                        </div>
+
+                        <!-- Message 6 -->
+                        <div class="message received">
+                            <div class="message-avatar">JD</div>
+                            <div class="message-content">
+                                <div class="message-bubble">
+                                    Just received the MacBook! Everything looks great 👍
+                                </div>
+                                <div class="message-time">2:15 PM</div>
+                            </div>
+                        </div>
+
+                        <!-- Message 7 -->
+                        <div class="message received">
+                            <div class="message-avatar">JD</div>
+                            <div class="message-content">
+                                <div class="message-bubble">
+                                    Thanks for the quick delivery!
+                                </div>
+                                <div class="message-time">2:16 PM</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="message-input-area">
+                        <div class="message-input-container">
+                            <button class="attachment-button">📎</button>
+                            <div class="message-input-wrapper">
+                                <textarea class="message-input" placeholder="Type a message..." rows="1"></textarea>
+                            </div>
+                            <button class="send-button">➤</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-resize textarea
+        const messageInput = document.querySelector('.message-input');
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Enable/disable send button
+        const sendButton = document.querySelector('.send-button');
+        messageInput.addEventListener('input', function() {
+            sendButton.disabled = this.value.trim() === '';
+        });
+    </script>
+</body>
+</html>
