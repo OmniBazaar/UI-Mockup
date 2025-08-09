@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
     <style>
         * {
             margin: 0;
@@ -517,22 +519,11 @@
     </style>
 </head>
 <body>
-    <div class="page-container">
-        <nav class="navbar">
-            <div class="navbar-content">
-                <a href="index.html" class="navbar-brand">
-                    <img src="OmniBazaar Clear and black-- Global network.png" alt="OmniBazaar Logo" style="height: 3.2rem; vertical-align: middle;">
-                </a>
-                <div class="navbar-links">
-                    <a href="marketplace-home.html">Marketplace</a>
-                    <a href="orders.html">Orders</a>
-                    <a href="wallet.html">Wallet</a>
-                    <a href="messages.html">Messages</a>
-                    <a href="profile.html" class="active">Profile</a>
-                </div>
-            </div>
-        </nav>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
 
+    <!-- Main Content -->
+    <main class="main">
         <div class="content-wrapper">
             <div class="profile-header">
                 <div class="avatar-section">
@@ -718,33 +709,12 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <script>
-        function showTab(tabName) {
-            // Hide all tabs
-            document.getElementById('overview-tab').style.display = 'none';
-            document.getElementById('settings-tab').style.display = 'none';
-            document.getElementById('security-tab').style.display = 'none';
-            
-            // Remove active class from all tabs
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            
-            // Show selected tab
-            document.getElementById(tabName + '-tab').style.display = 'block';
-            
-            // Add active class to clicked tab
-            event.target.classList.add('active');
-        }
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
 
-        // Toggle switches functionality
-        document.querySelectorAll('.toggle').forEach(toggle => {
-            toggle.addEventListener('click', function() {
-                const toggleSwitch = this.querySelector('.toggle-switch');
-                toggleSwitch.classList.toggle('active');
-            });
-        });
-    </script>
+    <!-- Template system -->
+    <script src="template.js"></script>
 </body>
 </html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .blog-card {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-0.4rem);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 20rem;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        }
+
+        .blog-content {
+            padding: 2.4rem;
+        }
+
+        .blog-category {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .blog-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .blog-excerpt {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.3rem;
+            color: var(--text-muted);
+        }
+
+        .blog-author {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .author-avatar {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .featured-post {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            background: var(--surface);
+            border-radius: 1.2rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 3rem;
+        }
+
+        .featured-image {
+            height: 100%;
+            min-height: 30rem;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        }
+
+        .featured-content {
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .featured-badge {
+            display: inline-block;
+            background: var(--warning);
+            color: white;
+            padding: 0.6rem 1.4rem;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            width: fit-content;
+        }
+
+        .featured-title {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .featured-excerpt {
+            font-size: 1.6rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .read-more {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.2s;
+        }
+
+        .read-more:hover {
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .featured-post {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-content {
+                padding: 2.4rem;
+            }
+
+            .featured-title {
+                font-size: 2.4rem;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="page-header">
+            <h1 class="page-title">OmniBazaar Blog</h1>
+            <p class="page-subtitle">Updates, tutorials, and insights from the decentralized marketplace</p>
+        </div>
+
+        <!-- Featured Post -->
+        <div class="featured-post">
+            <img src="https://via.placeholder.com/600x400/373373/ffffff?text=Featured+Post" alt="Featured" class="featured-image">
+            <div class="featured-content">
+                <span class="featured-badge">Featured</span>
+                <h2 class="featured-title">The Future of Decentralized Commerce</h2>
+                <p class="featured-excerpt">
+                    Explore how blockchain technology and peer-to-peer networks are revolutionizing online commerce. 
+                    Learn about OmniBazaar's role in creating a truly decentralized marketplace ecosystem.
+                </p>
+                <div class="blog-meta">
+                    <div class="blog-author">
+                        <div class="author-avatar">JD</div>
+                        <span>John Doe • January 15, 2025</span>
+                    </div>
+                    <a href="#" class="read-more">Read More →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blog Grid -->
+        <div class="blog-grid">
+            <!-- Blog Post 1 -->
+            <article class="blog-card">
+                <img src="https://via.placeholder.com/400x200/10B981/ffffff?text=Smart+Contracts" alt="Smart Contracts" class="blog-image">
+                <div class="blog-content">
+                    <span class="blog-category">Technology</span>
+                    <h3 class="blog-title">Understanding Smart Contract Escrow</h3>
+                    <p class="blog-excerpt">
+                        Learn how OmniBazaar's smart contract escrow system protects both buyers and sellers in every transaction.
+                    </p>
+                    <div class="blog-meta">
+                        <div class="blog-author">
+                            <div class="author-avatar">AS</div>
+                            <span>Alice Smith</span>
+                        </div>
+                        <span>Jan 12, 2025</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Blog Post 2 -->
+            <article class="blog-card">
+                <img src="https://via.placeholder.com/400x200/F59E0B/ffffff?text=XOM+Token" alt="XOM Token" class="blog-image">
+                <div class="blog-content">
+                    <span class="blog-category">Cryptocurrency</span>
+                    <h3 class="blog-title">XOM Token Economics Explained</h3>
+                    <p class="blog-excerpt">
+                        Deep dive into the tokenomics of XOM, OmniBazaar's native cryptocurrency and its role in the ecosystem.
+                    </p>
+                    <div class="blog-meta">
+                        <div class="blog-author">
+                            <div class="author-avatar">BC</div>
+                            <span>Bob Chen</span>
+                        </div>
+                        <span>Jan 10, 2025</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Blog Post 3 -->
+            <article class="blog-card">
+                <img src="https://via.placeholder.com/400x200/3B82F6/ffffff?text=NFT+Guide" alt="NFT Marketplace" class="blog-image">
+                <div class="blog-content">
+                    <span class="blog-category">NFTs</span>
+                    <h3 class="blog-title">Complete Guide to NFT Trading</h3>
+                    <p class="blog-excerpt">
+                        Everything you need to know about buying, selling, and creating NFTs on the OmniBazaar platform.
+                    </p>
+                    <div class="blog-meta">
+                        <div class="blog-author">
+                            <div class="author-avatar">EP</div>
+                            <span>Emma Park</span>
+                        </div>
+                        <span>Jan 8, 2025</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Blog Post 4 -->
+            <article class="blog-card">
+                <img src="https://via.placeholder.com/400x200/EF4444/ffffff?text=Security" alt="Security" class="blog-image">
+                <div class="blog-content">
+                    <span class="blog-category">Security</span>
+                    <h3 class="blog-title">Protecting Your Digital Assets</h3>
+                    <p class="blog-excerpt">
+                        Best practices for securing your wallet and staying safe while trading on decentralized platforms.
+                    </p>
+                    <div class="blog-meta">
+                        <div class="blog-author">
+                            <div class="author-avatar">MJ</div>
+                            <span>Mike Jones</span>
+                        </div>
+                        <span>Jan 5, 2025</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Blog Post 5 -->
+            <article class="blog-card">
+                <img src="https://via.placeholder.com/400x200/8B5CF6/ffffff?text=DeFi" alt="DeFi" class="blog-image">
+                <div class="blog-content">
+                    <span class="blog-category">DeFi</span>
+                    <h3 class="blog-title">Yield Farming with XOM</h3>
+                    <p class="blog-excerpt">
+                        Maximize your returns by participating in OmniBazaar's liquidity pools and staking programs.
+                    </p>
+                    <div class="blog-meta">
+                        <div class="blog-author">
+                            <div class="author-avatar">SL</div>
+                            <span>Sarah Lee</span>
+                        </div>
+                        <span>Jan 3, 2025</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Blog Post 6 -->
+            <article class="blog-card">
+                <img src="https://via.placeholder.com/400x200/06B6D4/ffffff?text=Tutorial" alt="Tutorial" class="blog-image">
+                <div class="blog-content">
+                    <span class="blog-category">Tutorial</span>
+                    <h3 class="blog-title">Setting Up Your First Store</h3>
+                    <p class="blog-excerpt">
+                        Step-by-step guide to creating your vendor profile and listing your first products on OmniBazaar.
+                    </p>
+                    <div class="blog-meta">
+                        <div class="blog-author">
+                            <div class="author-avatar">TW</div>
+                            <span>Tom Wilson</span>
+                        </div>
+                        <span>Dec 28, 2024</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Load More -->
+        <div style="text-align: center; margin: 4rem 0;">
+            <button class="btn btn-primary">Load More Articles</button>
+        </div>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniBazaar Wallet - Home</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 10px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            color: #3E4153;
+            background-color: #F7F8FA;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .wallet-app {
+            width: 100%;
+            max-width: 40rem;
+            height: 60rem;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 0.8rem;
+            overflow: hidden;
+            border: 0.1rem solid #D2D3D7;
+            box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
+        }
+
+        /* Navigation Header */
+        .nav-header {
+            background-color: #fff;
+            border-top: 0.5rem solid #373373;
+            padding: 1.2rem 1.6rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 0.1rem solid #E5E5E5;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #373373;
+            text-decoration: none;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 0.4rem;
+            cursor: pointer;
+            font-size: 1.6rem;
+            color: #373373;
+            transition: background-color 0.2s;
+        }
+
+        .nav-button:hover {
+            background: #F3F3F9;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background: #F7F8FA;
+            padding: 1.6rem;
+        }
+
+        .home-page {
+            max-width: 40rem;
+            margin: 0 auto;
+        }
+
+        .account-section {
+            margin-bottom: 2.4rem;
+        }
+
+        .account-header {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .account-avatar {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            background: #373373;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            font-weight: 700;
+        }
+
+        .account-info {
+            flex: 1;
+        }
+
+        .account-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            color: #3E4153;
+        }
+
+        .account-address {
+            font-size: 1.4rem;
+            color: #6F727F;
+            margin: 0.2rem 0 0 0;
+            font-family: monospace;
+        }
+
+        .copy-button {
+            background: none;
+            border: none;
+            padding: 0.8rem;
+            cursor: pointer;
+            border-radius: 0.4rem;
+            font-size: 1.6rem;
+            color: #373373;
+            transition: background-color 0.2s;
+        }
+
+        .copy-button:hover {
+            background: #F3F3F9;
+        }
+
+        .balance-card {
+            background: #373373;
+            border-radius: 0.8rem;
+            padding: 2.4rem;
+            text-align: center;
+            color: white;
+            box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.1);
+        }
+
+        .balance-label {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            margin-bottom: 0.8rem;
+        }
+
+        .balance-amount {
+            font-size: 3.2rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+        }
+
+        .balance-usd {
+            font-size: 1.6rem;
+            opacity: 0.8;
+        }
+
+        .actions-section {
+            margin-bottom: 2.4rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 0 1.6rem 0;
+            color: #3E4153;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+        }
+
+        .action-button {
+            background: white;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.8rem;
+            padding: 1.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .action-button:hover {
+            border-color: #373373;
+            transform: translateY(-0.1rem);
+            box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
+            background: #F3F3F9;
+        }
+
+        .action-icon {
+            font-size: 2.4rem;
+            color: #373373;
+        }
+
+        .action-label {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #3E4153;
+        }
+
+        .transactions-section {
+            margin-bottom: 2.4rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.6rem;
+        }
+
+        .view-all-button {
+            background: none;
+            border: none;
+            color: #373373;
+            font-size: 1.4rem;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .view-all-button:hover {
+            text-decoration: underline;
+        }
+
+        .transaction-item {
+            background: white;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.8rem;
+            padding: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .transaction-item:hover {
+            border-color: #373373;
+            transform: translateY(-0.1rem);
+            background: #F3F3F9;
+        }
+
+        .tx-icon {
+            font-size: 2rem;
+            color: #373373;
+        }
+
+        .tx-details {
+            flex: 1;
+        }
+
+        .tx-type {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #3E4153;
+        }
+
+        .tx-time {
+            font-size: 1.2rem;
+            color: #8E909B;
+        }
+
+        .tx-amount {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2D844C;
+        }
+
+        .tx-status {
+            font-size: 1.2rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 0.4rem;
+            background: #E8F5E9;
+            color: #2D844C;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            background: #fff;
+            border-top: 0.1rem solid #E5E5E5;
+            padding: 0.8rem 0;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .nav-tab {
+            background: none;
+            border: none;
+            padding: 0.8rem 0.4rem;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            min-width: 6rem;
+            transition: all 0.2s;
+            border-radius: 0.4rem;
+            color: #6F727F;
+        }
+
+        .nav-tab.active {
+            background: #F3F3F9;
+            color: #373373;
+        }
+
+        .nav-icon {
+            font-size: 1.8rem;
+        }
+
+        .nav-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .network-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            background: #F3F3F9;
+            border-radius: 0.4rem;
+            margin-top: 1.6rem;
+            border: 0.1rem solid #E5E5E5;
+        }
+
+        .network-indicator {
+            width: 0.8rem;
+            height: 0.8rem;
+            background: #2D844C;
+            border-radius: 50%;
+        }
+
+        .network-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #3E4153;
+        }
+
+        .switch-network {
+            background: none;
+            border: 0.1rem solid #373373;
+            color: #373373;
+            border-radius: 0.4rem;
+            padding: 0.4rem 0.8rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .switch-network:hover {
+            background: #373373;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="wallet-app">
+        <!-- Navigation Header -->
+        <nav class="nav-header">
+            <div class="nav-brand">
+                <a href="index.html" class="logo">
+                    <img src="OmniBazaar Clear and black-- Global network.png" alt="OmniBazaar Logo" style="height: 3.2rem;">
+                </a>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="nav-button">⚙️</button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="home-page">
+                <!-- Account Overview -->
+                <div class="account-section">
+                    <div class="account-header">
+                        <div class="account-avatar">👤</div>
+                        <div class="account-info">
+                            <h2 class="account-name">Account 1</h2>
+                            <p class="account-address">0x1234...5678</p>
+                        </div>
+                        <button class="copy-button">📋</button>
+                    </div>
+                    
+                    <div class="balance-card">
+                        <div class="balance-label">Total Balance</div>
+                        <div class="balance-amount">2.4567 ETH</div>
+                        <div class="balance-usd">≈ $4,913.40</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="actions-section">
+                    <h3 class="section-title">Quick Actions</h3>
+                    <div class="action-grid">
+                        <button class="action-button">
+                            <div class="action-icon">📤</div>
+                            <span class="action-label">Send</span>
+                        </button>
+                        
+                        <button class="action-button">
+                            <div class="action-icon">📥</div>
+                            <span class="action-label">Receive</span>
+                        </button>
+                        
+                        <button class="action-button">
+                            <div class="action-icon">🎨</div>
+                            <span class="action-label">Mint NFT</span>
+                        </button>
+                        
+                        <button class="action-button">
+                            <div class="action-icon">🏪</div>
+                            <span class="action-label">Market</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="transactions-section">
+                    <div class="section-header">
+                        <h3 class="section-title">Recent Activity</h3>
+                        <button class="view-all-button">View All</button>
+                    </div>
+                    
+                    <div class="transaction-item">
+                        <div class="tx-icon">📥</div>
+                        <div class="tx-details">
+                            <div class="tx-type">Received</div>
+                            <div class="tx-time">2h ago</div>
+                        </div>
+                        <div class="tx-amount">+0.5 ETH</div>
+                        <div class="tx-status">confirmed</div>
+                    </div>
+
+                    <div class="transaction-item">
+                        <div class="tx-icon">🎨</div>
+                        <div class="tx-details">
+                            <div class="tx-type">Minted NFT</div>
+                            <div class="tx-time">1d ago</div>
+                        </div>
+                        <div class="tx-amount">-0.02 ETH</div>
+                        <div class="tx-status">confirmed</div>
+                    </div>
+
+                    <div class="transaction-item">
+                        <div class="tx-icon">📤</div>
+                        <div class="tx-details">
+                            <div class="tx-type">Sent</div>
+                            <div class="tx-time">3d ago</div>
+                        </div>
+                        <div class="tx-amount">-1.0 ETH</div>
+                        <div class="tx-status">confirmed</div>
+                    </div>
+                </div>
+
+                <!-- Network Status -->
+                <div class="network-section">
+                    <div class="network-indicator"></div>
+                    <span class="network-name">Ethereum</span>
+                    <button class="switch-network">Switch</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-tab active">
+                <div class="nav-icon">🏠</div>
+                <span class="nav-label">Home</span>
+            </button>
+            
+            <button class="nav-tab">
+                <div class="nav-icon">📤</div>
+                <span class="nav-label">Send</span>
+            </button>
+            
+            <button class="nav-tab">
+                <div class="nav-icon">📥</div>
+                <span class="nav-label">Receive</span>
+            </button>
+            
+            <button class="nav-tab">
+                <div class="nav-icon">🏪</div>
+                <span class="nav-label">Market</span>
+            </button>
+            
+            <button class="nav-tab">
+                <div class="nav-icon">🎨</div>
+                <span class="nav-label">Mint</span>
+            </button>
+        </nav>
+    </div>
+</body>
+</html> 

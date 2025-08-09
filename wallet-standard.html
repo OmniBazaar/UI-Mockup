@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💰 Wallet - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <style>
+        /* Standard Page Template Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #373373;
+            --primary-dark: #2a2858;
+            --primary-light: #4a46a3;
+            --background: #F7F8FA;
+            --surface: #FFFFFF;
+            --text-primary: #3E4153;
+            --text-secondary: #6F727F;
+            --text-muted: #8E909B;
+            --border: #E5E7EB;
+            --hover: #F3F4F6;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --spacing-unit: 0.8rem;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+            background-color: var(--background);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Fixed Header */
+        .header {
+            background: var(--surface);
+            border-top: 0.5rem solid var(--primary-color);
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 128rem;
+            margin: 0 auto;
+            padding: 0 calc(var(--spacing-unit) * 3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: calc(var(--spacing-unit) * 8);
+        }
+
+        .header-brand {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 1);
+        }
+
+        .header-logo {
+            height: 3.2rem;
+            width: auto;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 4);
+            align-items: center;
+        }
+
+        .header-nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: calc(var(--spacing-unit) * 1) 0;
+            border-radius: calc(var(--spacing-unit) * 0.5);
+            transition: color 0.2s;
+        }
+
+        .header-nav-link:hover,
+        .header-nav-link.active {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .header-user-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .header-user-btn {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 1);
+            padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2);
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: calc(var(--spacing-unit) * 1);
+            color: var(--text-primary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .header-user-btn:hover {
+            background-color: var(--hover);
+            border-color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .header-nav {
+                display: none;
+            }
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            width: 100%;
+            position: relative;
+        }
+
+        .content-container {
+            max-width: 120rem;
+            margin: 0 auto;
+            padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 3);
+        }
+
+        .page-title {
+            font-size: 3.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            line-height: 1.2;
+        }
+
+        .page-description {
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+            line-height: 1.5;
+            max-width: 60ch;
+        }
+
+        /* Wallet Address */
+        .wallet-address {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 1);
+            color: var(--text-secondary);
+            font-size: 1.6rem;
+            margin-bottom: calc(var(--spacing-unit) * 3);
+        }
+
+        .copy-button {
+            background: transparent;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: calc(var(--spacing-unit) * 1);
+            display: flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
+
+        .copy-button:hover {
+            color: var(--primary-dark);
+        }
+
+        /* Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border-radius: calc(var(--spacing-unit) * 2);
+            box-shadow: 0 0.8rem 3rem rgba(0,0,0,0.15);
+            padding: calc(var(--spacing-unit) * 6);
+            color: white;
+            margin-bottom: calc(var(--spacing-unit) * 4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .balance-label {
+            font-size: 1.6rem;
+            opacity: 0.9;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .total-balance {
+            font-size: 4.8rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .balance-change {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 1);
+            font-size: 1.6rem;
+            margin-bottom: calc(var(--spacing-unit) * 4);
+        }
+
+        .change-positive {
+            color: #4ade80;
+        }
+
+        .change-negative {
+            color: #f87171;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .action-button {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 1);
+            padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: calc(var(--spacing-unit) * 1);
+            color: white;
+            font-size: 1.6rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .action-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Main Grid Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 36rem;
+            gap: calc(var(--spacing-unit) * 4);
+        }
+
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Assets Section */
+        .assets-section {
+            background: var(--surface);
+            border-radius: calc(var(--spacing-unit) * 2);
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: calc(var(--spacing-unit) * 3);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: var(--background);
+            border-radius: calc(var(--spacing-unit) * 1);
+            padding: 0.2rem;
+        }
+
+        .toggle-button {
+            padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2);
+            background: transparent;
+            border: none;
+            border-radius: calc(var(--spacing-unit) * 0.5);
+            color: var(--text-secondary);
+            font-size: 1.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-button.active {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .toggle-button:hover {
+            color: var(--primary-color);
+        }
+
+        .assets-list {
+            max-height: 50rem;
+            overflow-y: auto;
+        }
+
+        .asset-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: calc(var(--spacing-unit) * 3);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .asset-item:hover {
+            background: var(--hover);
+        }
+
+        .asset-item:last-child {
+            border-bottom: none;
+        }
+
+        .asset-info {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .asset-icon {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .asset-details {
+            
+        }
+
+        .asset-name {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .asset-symbol {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .asset-balance {
+            text-align: right;
+        }
+
+        .balance-amount {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .balance-value {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        /* Activity Section */
+        .activity-section {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--spacing-unit) * 4);
+        }
+
+        .staking-card {
+            background: var(--surface);
+            border-radius: calc(var(--spacing-unit) * 2);
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+            padding: calc(var(--spacing-unit) * 3);
+        }
+
+        .staking-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .staking-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .staking-apy {
+            font-size: 1.4rem;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .staking-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(var(--spacing-unit) * 2);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .stat-box {
+            background: var(--background);
+            border-radius: calc(var(--spacing-unit) * 1);
+            padding: calc(var(--spacing-unit) * 2);
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: calc(var(--spacing-unit) * 1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .primary-button {
+            width: 100%;
+            padding: calc(var(--spacing-unit) * 2);
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: calc(var(--spacing-unit) * 1);
+            font-size: 1.6rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .primary-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .transaction-history {
+            background: var(--surface);
+            border-radius: calc(var(--spacing-unit) * 2);
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+            padding: calc(var(--spacing-unit) * 3);
+        }
+
+        .transaction-list {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .transaction-info {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .transaction-icon {
+            width: 3.6rem;
+            height: 3.6rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+        }
+
+        .transaction-icon.sent {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .transaction-icon.received {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .transaction-icon.swap {
+            background: rgba(55, 51, 115, 0.2);
+            color: var(--primary-color);
+        }
+
+        .transaction-details {
+            
+        }
+
+        .transaction-type {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .transaction-time {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .transaction-amount {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .transaction-amount.sent {
+            color: #ef4444;
+        }
+
+        .transaction-amount.received {
+            color: #10b981;
+        }
+
+        .transaction-amount.swap {
+            color: var(--text-primary);
+        }
+
+        .view-all-button {
+            width: 100%;
+            padding: calc(var(--spacing-unit) * 1);
+            background: transparent;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: calc(var(--spacing-unit) * 2);
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+
+        .view-all-button:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer Styles - Same as marketplace */
+        .footer {
+            background-color: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 3);
+            margin-top: calc(var(--spacing-unit) * 8);
+        }
+
+        .footer-container {
+            max-width: 128rem;
+            margin: 0 auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: calc(var(--spacing-unit) * 4);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+        }
+
+        .footer-section h3 {
+            color: var(--text-primary);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--spacing-unit) * 1);
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.6rem;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .footer-social-links {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 2);
+            margin-top: calc(var(--spacing-unit) * 2);
+        }
+
+        .footer-social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 4rem;
+            height: 4rem;
+            background-color: var(--background);
+            border: 1px solid var(--border);
+            border-radius: calc(var(--spacing-unit) * 1);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 2rem;
+        }
+
+        .footer-social-link:hover {
+            background-color: var(--hover);
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        .footer-bottom {
+            padding-top: calc(var(--spacing-unit) * 3);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-copyright {
+            color: var(--text-secondary);
+            font-size: 1.4rem;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .footer-bottom-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.4rem;
+            transition: color 0.2s;
+        }
+
+        .footer-bottom-links a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: calc(var(--spacing-unit) * 3);
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: calc(var(--spacing-unit) * 2);
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo and Brand -->
+            <a href="index.html" class="header-brand">
+                <img src="OmniBazaar Globe-clear-256x256.png" alt="OmniBazaar Logo" class="header-logo">
+                OmniBazaar
+            </a>
+            
+            <!-- Navigation Links (EXACT as specified) -->
+            <nav class="header-nav">
+                <a href="products.html" class="header-nav-link">Products</a>
+                <a href="services.html" class="header-nav-link">Services</a>
+                <a href="art.html" class="header-nav-link">Art</a>
+                <a href="gaming.html" class="header-nav-link">Gaming</a>
+                <a href="financial.html" class="header-nav-link">Financial</a>
+                <a href="crypto.html" class="header-nav-link">Crypto</a>
+                <a href="personal.html" class="header-nav-link">Personal</a>
+                <a href="wallet.html" class="header-nav-link active">Wallet</a>
+            </nav>
+            
+            <!-- User Profile Dropdown (right side) -->
+            <div class="header-user-menu">
+                <button class="header-user-btn">
+                    <span>👤</span>
+                    <span>Profile</span>
+                    <span>▼</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <div class="content-container">
+            <h1 class="page-title">💰 Wallet</h1>
+            <p class="page-description">Manage your digital assets across multiple blockchains</p>
+
+            <div class="wallet-address">
+                0x1234...5678
+                <button class="copy-button" onclick="copyAddress()">
+                    <span id="copy-icon">📋</span>
+                </button>
+            </div>
+
+            <div class="balance-card">
+                <div class="balance-label">Total Balance</div>
+                <div class="total-balance">$37,433.26</div>
+                <div class="balance-change">
+                    <span class="change-positive">↑ 12.5%</span>
+                    <span>24h</span>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="#" class="action-button">
+                        <span>↑</span> Send
+                    </a>
+                    <a href="#" class="action-button">
+                        <span>↓</span> Receive
+                    </a>
+                    <a href="#" class="action-button">
+                        <span>⇄</span> Swap
+                    </a>
+                    <a href="#" class="action-button">
+                        <span>+</span> Buy
+                    </a>
+                </div>
+            </div>
+
+            <div class="main-grid">
+                <div class="assets-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Assets</h2>
+                        <div class="view-toggle">
+                            <button class="toggle-button active">Tokens</button>
+                            <button class="toggle-button">NFTs</button>
+                        </div>
+                    </div>
+
+                    <div class="assets-list">
+                        <div class="asset-item">
+                            <div class="asset-info">
+                                <div class="asset-icon">🪙</div>
+                                <div class="asset-details">
+                                    <div class="asset-name">OmniCoin</div>
+                                    <div class="asset-symbol">OMNI</div>
+                                </div>
+                            </div>
+                            <div class="asset-balance">
+                                <div class="balance-amount">12,500.50 OMNI</div>
+                                <div class="balance-value">$25,001</div>
+                            </div>
+                        </div>
+
+                        <div class="asset-item">
+                            <div class="asset-info">
+                                <div class="asset-icon">⟠</div>
+                                <div class="asset-details">
+                                    <div class="asset-name">Ethereum</div>
+                                    <div class="asset-symbol">ETH</div>
+                                </div>
+                            </div>
+                            <div class="asset-balance">
+                                <div class="balance-amount">3.2456 ETH</div>
+                                <div class="balance-value">$7,846</div>
+                            </div>
+                        </div>
+
+                        <div class="asset-item">
+                            <div class="asset-info">
+                                <div class="asset-icon">₿</div>
+                                <div class="asset-details">
+                                    <div class="asset-name">Bitcoin</div>
+                                    <div class="asset-symbol">BTC</div>
+                                </div>
+                            </div>
+                            <div class="asset-balance">
+                                <div class="balance-amount">0.0834 BTC</div>
+                                <div class="balance-value">$3,588</div>
+                            </div>
+                        </div>
+
+                        <div class="asset-item">
+                            <div class="asset-info">
+                                <div class="asset-icon">💵</div>
+                                <div class="asset-details">
+                                    <div class="asset-name">USD Coin</div>
+                                    <div class="asset-symbol">USDC</div>
+                                </div>
+                            </div>
+                            <div class="asset-balance">
+                                <div class="balance-amount">1,000.00 USDC</div>
+                                <div class="balance-value">$1,000</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activity-section">
+                    <div class="staking-card">
+                        <div class="staking-header">
+                            <h3 class="staking-title">Staking Rewards</h3>
+                            <div class="staking-apy">12.5% APY</div>
+                        </div>
+
+                        <div class="staking-stats">
+                            <div class="stat-box">
+                                <div class="stat-label">Staked Amount</div>
+                                <div class="stat-value">5,000 OMNI</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-label">Rewards Earned</div>
+                                <div class="stat-value">125.5 OMNI</div>
+                            </div>
+                        </div>
+
+                        <a href="#" class="primary-button">Manage Staking</a>
+                    </div>
+
+                    <div class="transaction-history">
+                        <h2 class="section-title" style="margin-bottom: 2rem;">
+                            Recent Activity
+                        </h2>
+
+                        <div class="transaction-list">
+                            <div class="transaction-item">
+                                <div class="transaction-info">
+                                    <div class="transaction-icon received">↓</div>
+                                    <div class="transaction-details">
+                                        <div class="transaction-type">Payment from MarketSale</div>
+                                        <div class="transaction-time">2 hours ago</div>
+                                    </div>
+                                </div>
+                                <div class="transaction-amount received">+299 OMNI</div>
+                            </div>
+
+                            <div class="transaction-item">
+                                <div class="transaction-info">
+                                    <div class="transaction-icon sent">↑</div>
+                                    <div class="transaction-details">
+                                        <div class="transaction-type">Purchase MacBook Pro</div>
+                                        <div class="transaction-time">1 day ago</div>
+                                    </div>
+                                </div>
+                                <div class="transaction-amount sent">-2499 OMNI</div>
+                            </div>
+
+                            <div class="transaction-item">
+                                <div class="transaction-info">
+                                    <div class="transaction-icon swap">⇄</div>
+                                    <div class="transaction-details">
+                                        <div class="transaction-type">Swap ETH to OMNI</div>
+                                        <div class="transaction-time">3 days ago</div>
+                                    </div>
+                                </div>
+                                <div class="transaction-amount swap">+500 OMNI</div>
+                            </div>
+                        </div>
+
+                        <a href="#" class="view-all-button">View All Transactions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Fixed Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <!-- About Section -->
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">Company</a>
+                        <a href="#" class="footer-link">Mission</a>
+                        <a href="#" class="footer-link">Careers</a>
+                        <a href="#" class="footer-link">Press</a>
+                    </div>
+                </div>
+
+                <!-- Support Section -->
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">Help Center</a>
+                        <a href="#" class="footer-link">Safety</a>
+                        <a href="#" class="footer-link">Contact</a>
+                        <a href="#" class="footer-link">FAQ</a>
+                    </div>
+                </div>
+
+                <!-- Legal Section -->
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">Terms</a>
+                        <a href="#" class="footer-link">Privacy</a>
+                        <a href="#" class="footer-link">Cookies</a>
+                        <a href="#" class="footer-link">Licenses</a>
+                    </div>
+                </div>
+
+                <!-- Connect Section -->
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <div class="footer-social-links">
+                        <a href="https://twitter.com/omnibazaar" class="footer-social-link" aria-label="Twitter">🐦</a>
+                        <a href="https://discord.gg/omnibazaar" class="footer-social-link" aria-label="Discord">💬</a>
+                        <a href="https://t.me/omnibazaar" class="footer-social-link" aria-label="Telegram">📱</a>
+                        <a href="https://github.com/omnibazaar" class="footer-social-link" aria-label="GitHub">🐙</a>
+                        <a href="https://medium.com/@omnibazaar" class="footer-social-link" aria-label="Medium">📝</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    &copy; 2025 OmniBazaar. All rights reserved.
+                </div>
+                <div class="footer-bottom-links">
+                    <a href="#" aria-label="Privacy Policy">Privacy</a>
+                    <a href="#" aria-label="Terms of Service">Terms</a>
+                    <a href="#" aria-label="Support">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function copyAddress() {
+            const address = '0x1234567890abcdef1234567890abcdef12345678';
+            navigator.clipboard.writeText(address).then(function() {
+                const icon = document.getElementById('copy-icon');
+                icon.textContent = '✓';
+                setTimeout(() => {
+                    icon.textContent = '📋';
+                }, 2000);
+            });
+        }
+
+        // Toggle functionality
+        document.querySelectorAll('.toggle-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.toggle-button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Asset item clicks
+        document.querySelectorAll('.asset-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const assetName = this.querySelector('.asset-name').textContent;
+                console.log('Asset clicked:', assetName);
+                // Navigate to asset details
+            });
+        });
+
+        // User menu toggle functionality
+        document.querySelector('.header-user-btn')?.addEventListener('click', function() {
+            console.log('User menu clicked');
+            // Implementation would show/hide user dropdown menu
+        });
+    </script>
+</body>
+</html>

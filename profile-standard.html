@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👤 Profile - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <style>
+        /* Standard Page Template Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #373373;
+            --primary-dark: #2a2858;
+            --primary-light: #4a46a3;
+            --background: #F7F8FA;
+            --surface: #FFFFFF;
+            --text-primary: #3E4153;
+            --text-secondary: #6F727F;
+            --text-muted: #8E909B;
+            --border: #E5E7EB;
+            --hover: #F3F4F6;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --spacing-unit: 0.8rem;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+            background-color: var(--background);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Fixed Header - Same as other pages */
+        .header {
+            background: var(--surface);
+            border-top: 0.5rem solid var(--primary-color);
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 128rem;
+            margin: 0 auto;
+            padding: 0 calc(var(--spacing-unit) * 3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: calc(var(--spacing-unit) * 8);
+        }
+
+        .header-brand {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 1);
+        }
+
+        .header-logo {
+            height: 3.2rem;
+            width: auto;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 4);
+            align-items: center;
+        }
+
+        .header-nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: calc(var(--spacing-unit) * 1) 0;
+            border-radius: calc(var(--spacing-unit) * 0.5);
+            transition: color 0.2s;
+        }
+
+        .header-nav-link:hover,
+        .header-nav-link.active {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .header-user-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .header-user-btn {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 1);
+            padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2);
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: calc(var(--spacing-unit) * 1);
+            color: var(--text-primary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .header-user-btn:hover {
+            background-color: var(--hover);
+            border-color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .header-nav {
+                display: none;
+            }
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            width: 100%;
+            position: relative;
+        }
+
+        .content-container {
+            max-width: 120rem;
+            margin: 0 auto;
+            padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 3);
+        }
+
+        .page-title {
+            font-size: 3.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            line-height: 1.2;
+        }
+
+        .page-description {
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+            line-height: 1.5;
+            max-width: 60ch;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            background: var(--surface);
+            border-radius: calc(var(--spacing-unit) * 2);
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+            padding: calc(var(--spacing-unit) * 6);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 6);
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .avatar-section {
+            position: relative;
+        }
+
+        .avatar {
+            width: 12rem;
+            height: 12rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-edit-button {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 3.6rem;
+            height: 3.6rem;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .avatar-edit-button:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .username {
+            font-size: 3.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 calc(var(--spacing-unit) * 2) 0;
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.4rem;
+            height: 2.4rem;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.2rem;
+        }
+
+        .wallet-address {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 2);
+            color: var(--text-secondary);
+            font-size: 1.6rem;
+            margin-bottom: calc(var(--spacing-unit) * 3);
+        }
+
+        .copy-button {
+            background: transparent;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: calc(var(--spacing-unit) * 1);
+            display: flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
+
+        .copy-button:hover {
+            color: var(--primary-dark);
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 4);
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: left;
+        }
+
+        .stat-value {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-label {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        /* Tab Container */
+        .tab-container {
+            background: var(--surface);
+            border-radius: calc(var(--spacing-unit) * 2);
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .tab-header {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 4);
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-size: 1.6rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            background: white;
+        }
+
+        .tab:hover {
+            color: var(--primary-color);
+            background: var(--hover);
+        }
+
+        .tab-content {
+            padding: calc(var(--spacing-unit) * 4);
+        }
+
+        .section {
+            margin-bottom: calc(var(--spacing-unit) * 6);
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 calc(var(--spacing-unit) * 3) 0;
+        }
+
+        .form-group {
+            margin-bottom: calc(var(--spacing-unit) * 4);
+        }
+
+        .label {
+            display: block;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .input,
+        .textarea {
+            width: 100%;
+            padding: calc(var(--spacing-unit) * 3);
+            border: 1px solid var(--border);
+            border-radius: calc(var(--spacing-unit) * 1);
+            font-size: 1.6rem;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .textarea {
+            min-height: 10rem;
+            resize: vertical;
+        }
+
+        .input:focus,
+        .textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(55, 51, 115, 0.1);
+        }
+
+        .input:disabled {
+            background: var(--background);
+            cursor: not-allowed;
+        }
+
+        .reputation-card {
+            background: var(--background);
+            border-radius: calc(var(--spacing-unit) * 1);
+            padding: calc(var(--spacing-unit) * 4);
+            text-align: center;
+        }
+
+        .reputation-score {
+            font-size: 4.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .reputation-label {
+            font-size: 2rem;
+            color: var(--text-secondary);
+            margin-bottom: calc(var(--spacing-unit) * 3);
+        }
+
+        .reputation-breakdown {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: calc(var(--spacing-unit) * 3);
+            margin-top: calc(var(--spacing-unit) * 4);
+        }
+
+        .breakdown-item {
+            text-align: center;
+        }
+
+        .breakdown-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .breakdown-label {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        /* Buttons */
+        .button {
+            padding: calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 4);
+            border: none;
+            border-radius: calc(var(--spacing-unit) * 1);
+            font-size: 1.6rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .button-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .button-secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .button-secondary:hover {
+            background: var(--hover);
+            transform: translateY(-1px);
+        }
+
+        .button-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .button-danger:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        /* Toggle Switches */
+        .toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: calc(var(--spacing-unit) * 3);
+            background: var(--background);
+            border-radius: calc(var(--spacing-unit) * 1);
+            cursor: pointer;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .toggle-info {
+            flex: 1;
+        }
+
+        .toggle-title {
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 1);
+        }
+
+        .toggle-description {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .toggle-switch {
+            appearance: none;
+            width: 4.8rem;
+            height: 2.4rem;
+            background: var(--text-muted);
+            border-radius: 2.4rem;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toggle-switch:checked {
+            background: var(--primary-color);
+        }
+
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            width: 1.8rem;
+            height: 1.8rem;
+            border-radius: 50%;
+            background: white;
+            top: 0.3rem;
+            left: 0.3rem;
+            transition: all 0.3s;
+        }
+
+        .toggle-switch:checked::before {
+            left: 2.7rem;
+        }
+
+        /* Wallet Cards */
+        .wallet-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: calc(var(--spacing-unit) * 3);
+            background: var(--background);
+            border-radius: calc(var(--spacing-unit) * 1);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .wallet-info {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 3);
+        }
+
+        .wallet-icon {
+            width: 4rem;
+            height: 4rem;
+            border-radius: calc(var(--spacing-unit) * 1);
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .wallet-details {
+            
+        }
+
+        .wallet-name {
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .wallet-address-small {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .disconnect-button {
+            padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
+            background: transparent;
+            color: var(--error);
+            border: 1px solid var(--error);
+            border-radius: calc(var(--spacing-unit) * 1);
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .disconnect-button:hover {
+            background: var(--error);
+            color: white;
+        }
+
+        /* Hidden tab content */
+        .tab-content-hidden {
+            display: none;
+        }
+
+        /* Footer - Same as other pages */
+        .footer {
+            background-color: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 3);
+            margin-top: calc(var(--spacing-unit) * 8);
+        }
+
+        .footer-container {
+            max-width: 128rem;
+            margin: 0 auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: calc(var(--spacing-unit) * 4);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+        }
+
+        .footer-section h3 {
+            color: var(--text-primary);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--spacing-unit) * 1);
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.6rem;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .footer-social-links {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 2);
+            margin-top: calc(var(--spacing-unit) * 2);
+        }
+
+        .footer-social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 4rem;
+            height: 4rem;
+            background-color: var(--background);
+            border: 1px solid var(--border);
+            border-radius: calc(var(--spacing-unit) * 1);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 2rem;
+        }
+
+        .footer-social-link:hover {
+            background-color: var(--hover);
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        .footer-bottom {
+            padding-top: calc(var(--spacing-unit) * 3);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-copyright {
+            color: var(--text-secondary);
+            font-size: 1.4rem;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .footer-bottom-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.4rem;
+            transition: color 0.2s;
+        }
+
+        .footer-bottom-links a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: calc(var(--spacing-unit) * 3);
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: calc(var(--spacing-unit) * 2);
+                text-align: center;
+            }
+
+            .profile-stats {
+                gap: calc(var(--spacing-unit) * 2);
+            }
+
+            .reputation-breakdown {
+                grid-template-columns: 1fr;
+                gap: calc(var(--spacing-unit) * 2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo and Brand -->
+            <a href="index.html" class="header-brand">
+                <img src="OmniBazaar Globe-clear-256x256.png" alt="OmniBazaar Logo" class="header-logo">
+                OmniBazaar
+            </a>
+            
+            <!-- Navigation Links (EXACT as specified) -->
+            <nav class="header-nav">
+                <a href="products.html" class="header-nav-link">Products</a>
+                <a href="services.html" class="header-nav-link">Services</a>
+                <a href="art.html" class="header-nav-link">Art</a>
+                <a href="gaming.html" class="header-nav-link">Gaming</a>
+                <a href="financial.html" class="header-nav-link">Financial</a>
+                <a href="crypto.html" class="header-nav-link">Crypto</a>
+                <a href="personal.html" class="header-nav-link">Personal</a>
+                <a href="wallet.html" class="header-nav-link">Wallet</a>
+            </nav>
+            
+            <!-- User Profile Dropdown (right side) -->
+            <div class="header-user-menu">
+                <button class="header-user-btn">
+                    <span>👤</span>
+                    <span>Profile</span>
+                    <span>▼</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <div class="content-container">
+            <h1 class="page-title">👤 Profile</h1>
+            <p class="page-description">Manage your account settings and preferences</p>
+
+            <div class="profile-header">
+                <div class="avatar-section">
+                    <div class="avatar">
+                        👤
+                    </div>
+                    <button class="avatar-edit-button">
+                        📷
+                    </button>
+                </div>
+
+                <div class="profile-info">
+                    <h1 class="username">
+                        CryptoTrader
+                        <span class="verified-badge">✓</span>
+                    </h1>
+                    
+                    <div class="wallet-address">
+                        0x1234...5678
+                        <button class="copy-button" onclick="copyAddress()">
+                            <span id="copy-icon">📋</span>
+                        </button>
+                    </div>
+
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">4.8</div>
+                            <div class="stat-label">Reputation Score</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">47</div>
+                            <div class="stat-label">Total Listings</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">38</div>
+                            <div class="stat-label">Completed Sales</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">125</div>
+                            <div class="stat-label">Total Purchases</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab-header">
+                    <button class="tab active" onclick="switchTab('overview')">
+                        Overview
+                    </button>
+                    <button class="tab" onclick="switchTab('settings')">
+                        Settings
+                    </button>
+                    <button class="tab" onclick="switchTab('security')">
+                        Security
+                    </button>
+                </div>
+
+                <!-- Overview Tab -->
+                <div class="tab-content" id="overview-content">
+                    <div class="section">
+                        <h2 class="section-title">About</h2>
+                        <div class="form-group">
+                            <label class="label">Bio</label>
+                            <textarea class="textarea" disabled>Professional trader and marketplace enthusiast. Specializing in electronics and digital services.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="label">Member Since</label>
+                            <input class="input" type="text" value="June 15, 2023" disabled />
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">Reputation Breakdown</h2>
+                        <div class="reputation-card">
+                            <div class="reputation-score">4.8</div>
+                            <div class="reputation-label">Overall Score</div>
+                            <div class="reputation-breakdown">
+                                <div class="breakdown-item">
+                                    <div class="breakdown-value">98%</div>
+                                    <div class="breakdown-label">Positive Reviews</div>
+                                </div>
+                                <div class="breakdown-item">
+                                    <div class="breakdown-value">2h</div>
+                                    <div class="breakdown-label">Avg Response</div>
+                                </div>
+                                <div class="breakdown-item">
+                                    <div class="breakdown-value">100%</div>
+                                    <div class="breakdown-label">Completion Rate</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="button button-secondary" onclick="toggleEdit()" style="margin-top: 2rem;">
+                        Edit Profile
+                    </button>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="tab-content tab-content-hidden" id="settings-content">
+                    <div class="section">
+                        <h2 class="section-title">Contact Information</h2>
+                        <div class="form-group">
+                            <label class="label">Email Address</label>
+                            <input class="input" type="email" value="trader@example.com" placeholder="your@email.com" />
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">Notifications</h2>
+                        <label class="toggle">
+                            <div class="toggle-info">
+                                <div class="toggle-title">Order Updates</div>
+                                <div class="toggle-description">
+                                    Receive notifications about your orders
+                                </div>
+                            </div>
+                            <input class="toggle-switch" type="checkbox" checked />
+                        </label>
+                        <label class="toggle">
+                            <div class="toggle-info">
+                                <div class="toggle-title">Messages</div>
+                                <div class="toggle-description">
+                                    Get notified when you receive new messages
+                                </div>
+                            </div>
+                            <input class="toggle-switch" type="checkbox" checked />
+                        </label>
+                        <label class="toggle">
+                            <div class="toggle-info">
+                                <div class="toggle-title">Price Alerts</div>
+                                <div class="toggle-description">
+                                    Notifications for price changes on watched items
+                                </div>
+                            </div>
+                            <input class="toggle-switch" type="checkbox" />
+                        </label>
+                        <label class="toggle">
+                            <div class="toggle-info">
+                                <div class="toggle-title">Newsletter</div>
+                                <div class="toggle-description">
+                                    Receive updates about new features and promotions
+                                </div>
+                            </div>
+                            <input class="toggle-switch" type="checkbox" checked />
+                        </label>
+                    </div>
+
+                    <button class="button button-primary">
+                        Save Settings
+                    </button>
+                </div>
+
+                <!-- Security Tab -->
+                <div class="tab-content tab-content-hidden" id="security-content">
+                    <div class="section">
+                        <h2 class="section-title">Security Settings</h2>
+                        <label class="toggle">
+                            <div class="toggle-info">
+                                <div class="toggle-title">Two-Factor Authentication</div>
+                                <div class="toggle-description">
+                                    Add an extra layer of security to your account
+                                </div>
+                            </div>
+                            <input class="toggle-switch" type="checkbox" checked />
+                        </label>
+                        <label class="toggle">
+                            <div class="toggle-info">
+                                <div class="toggle-title">Biometric Login</div>
+                                <div class="toggle-description">
+                                    Use fingerprint or face recognition to log in
+                                </div>
+                            </div>
+                            <input class="toggle-switch" type="checkbox" />
+                        </label>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">Connected Wallets</h2>
+                        <div class="wallet-card">
+                            <div class="wallet-info">
+                                <div class="wallet-icon">🦊</div>
+                                <div class="wallet-details">
+                                    <div class="wallet-name">MetaMask</div>
+                                    <div class="wallet-address-small">0x1234...5678</div>
+                                </div>
+                            </div>
+                            <button class="disconnect-button" onclick="disconnectWallet('MetaMask')">
+                                Disconnect
+                            </button>
+                        </div>
+                        <div class="wallet-card">
+                            <div class="wallet-info">
+                                <div class="wallet-icon">💰</div>
+                                <div class="wallet-details">
+                                    <div class="wallet-name">OmniWallet</div>
+                                    <div class="wallet-address-small">0xabcd...ef01</div>
+                                </div>
+                            </div>
+                            <button class="disconnect-button" onclick="disconnectWallet('OmniWallet')">
+                                Disconnect
+                            </button>
+                        </div>
+                        <button class="button button-secondary" style="margin-top: 1rem;">
+                            Connect New Wallet
+                        </button>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">Account Actions</h2>
+                        <button class="button button-secondary" style="margin-right: 1rem;">
+                            Export Account Data
+                        </button>
+                        <button class="button button-danger">
+                            Delete Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Fixed Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <!-- About Section -->
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">Company</a>
+                        <a href="#" class="footer-link">Mission</a>
+                        <a href="#" class="footer-link">Careers</a>
+                        <a href="#" class="footer-link">Press</a>
+                    </div>
+                </div>
+
+                <!-- Support Section -->
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">Help Center</a>
+                        <a href="#" class="footer-link">Safety</a>
+                        <a href="#" class="footer-link">Contact</a>
+                        <a href="#" class="footer-link">FAQ</a>
+                    </div>
+                </div>
+
+                <!-- Legal Section -->
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">Terms</a>
+                        <a href="#" class="footer-link">Privacy</a>
+                        <a href="#" class="footer-link">Cookies</a>
+                        <a href="#" class="footer-link">Licenses</a>
+                    </div>
+                </div>
+
+                <!-- Connect Section -->
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <div class="footer-social-links">
+                        <a href="https://twitter.com/omnibazaar" class="footer-social-link" aria-label="Twitter">🐦</a>
+                        <a href="https://discord.gg/omnibazaar" class="footer-social-link" aria-label="Discord">💬</a>
+                        <a href="https://t.me/omnibazaar" class="footer-social-link" aria-label="Telegram">📱</a>
+                        <a href="https://github.com/omnibazaar" class="footer-social-link" aria-label="GitHub">🐙</a>
+                        <a href="https://medium.com/@omnibazaar" class="footer-social-link" aria-label="Medium">📝</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    &copy; 2025 OmniBazaar. All rights reserved.
+                </div>
+                <div class="footer-bottom-links">
+                    <a href="#" aria-label="Privacy Policy">Privacy</a>
+                    <a href="#" aria-label="Terms of Service">Terms</a>
+                    <a href="#" aria-label="Support">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function copyAddress() {
+            const address = '0x1234567890abcdef1234567890abcdef12345678';
+            navigator.clipboard.writeText(address).then(function() {
+                const icon = document.getElementById('copy-icon');
+                icon.textContent = '✓';
+                setTimeout(() => {
+                    icon.textContent = '📋';
+                }, 2000);
+            });
+        }
+
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('tab-content-hidden');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-content').classList.remove('tab-content-hidden');
+            
+            // Add active class to selected tab
+            event.target.classList.add('active');
+        }
+
+        function toggleEdit() {
+            const bio = document.querySelector('.textarea');
+            const button = event.target;
+            
+            if (bio.disabled) {
+                bio.disabled = false;
+                button.textContent = 'Save Changes';
+                button.classList.remove('button-secondary');
+                button.classList.add('button-primary');
+            } else {
+                bio.disabled = true;
+                button.textContent = 'Edit Profile';
+                button.classList.remove('button-primary');
+                button.classList.add('button-secondary');
+            }
+        }
+
+        function disconnectWallet(walletName) {
+            if (confirm(`Are you sure you want to disconnect ${walletName}?`)) {
+                console.log(`Disconnecting ${walletName}`);
+                // Remove wallet card
+                event.target.closest('.wallet-card').remove();
+            }
+        }
+
+        // User menu toggle functionality
+        document.querySelector('.header-user-btn')?.addEventListener('click', function() {
+            console.log('User menu clicked');
+            // Implementation would show/hide user dropdown menu
+        });
+    </script>
+</body>
+</html>

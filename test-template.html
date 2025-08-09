@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Test - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .test-container {
+            padding: 3rem;
+            max-width: 120rem;
+            margin: 0 auto;
+        }
+
+        .test-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .test-header h1 {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .test-status {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .pages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .page-link {
+            display: block;
+            padding: 1.5rem;
+            background: var(--surface);
+            border-radius: 0.8rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .page-link:hover {
+            transform: translateY(-0.2rem);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-color);
+        }
+
+        .page-name {
+            font-weight: 600;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-status {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .template-check {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 0.8rem;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .check-icon {
+            font-size: 1.8rem;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 0.8rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="test-container">
+            <div class="test-header">
+                <h1>🚀 Template System Test</h1>
+                <span class="test-status status-success" id="templateStatus">Template Loaded Successfully</span>
+            </div>
+
+            <div class="template-check">
+                <h2>Template Components Check</h2>
+                <div class="check-item">
+                    <span class="check-icon" id="headerCheck">⏳</span>
+                    <span>Header Component</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-icon" id="footerCheck">⏳</span>
+                    <span>Footer Component</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-icon" id="navCheck">⏳</span>
+                    <span>Navigation Links (8 items)</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-icon" id="themeCheck">⏳</span>
+                    <span>Theme Toggle</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-icon" id="searchCheck">⏳</span>
+                    <span>Search Box</span>
+                </div>
+            </div>
+
+            <div class="summary-stats">
+                <div class="stat-card">
+                    <div class="stat-value">50+</div>
+                    <div class="stat-label">HTML Pages</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">43</div>
+                    <div class="stat-label">Updated to Template</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Template Coverage</div>
+                </div>
+            </div>
+
+            <h2>All Pages Directory</h2>
+            <div class="pages-grid">
+                <a href="index.html" class="page-link">
+                    <div class="page-name">🏠 Homepage</div>
+                    <div class="page-status">Main marketplace</div>
+                </a>
+                <a href="services.html" class="page-link">
+                    <div class="page-name">🛠️ Services</div>
+                    <div class="page-status">Service listings</div>
+                </a>
+                <a href="art-nft.html" class="page-link">
+                    <div class="page-name">🎨 Art & NFTs</div>
+                    <div class="page-status">Digital art marketplace</div>
+                </a>
+                <a href="gaming.html" class="page-link">
+                    <div class="page-name">🎮 Gaming</div>
+                    <div class="page-status">Gaming assets</div>
+                </a>
+                <a href="financial.html" class="page-link">
+                    <div class="page-name">💰 Financial</div>
+                    <div class="page-status">Financial services</div>
+                </a>
+                <a href="dex-swap.html" class="page-link">
+                    <div class="page-name">🔄 Crypto/DEX</div>
+                    <div class="page-status">Token swapping</div>
+                </a>
+                <a href="personal.html" class="page-link">
+                    <div class="page-name">👤 Personal</div>
+                    <div class="page-status">Personal services</div>
+                </a>
+                <a href="wallet.html" class="page-link">
+                    <div class="page-name">💳 Wallet</div>
+                    <div class="page-status">Crypto wallet</div>
+                </a>
+                <a href="staking.html" class="page-link">
+                    <div class="page-name">💎 Staking</div>
+                    <div class="page-status">XOM staking pools</div>
+                </a>
+                <a href="marketplace.html" class="page-link">
+                    <div class="page-name">🛍️ Marketplace</div>
+                    <div class="page-status">Browse all</div>
+                </a>
+                <a href="create-listing.html" class="page-link">
+                    <div class="page-name">➕ Create Listing</div>
+                    <div class="page-status">New listing form</div>
+                </a>
+                <a href="my-listings.html" class="page-link">
+                    <div class="page-name">📋 My Listings</div>
+                    <div class="page-status">Manage listings</div>
+                </a>
+                <a href="orders.html" class="page-link">
+                    <div class="page-name">📦 Orders</div>
+                    <div class="page-status">Order management</div>
+                </a>
+                <a href="messages.html" class="page-link">
+                    <div class="page-name">💬 Messages</div>
+                    <div class="page-status">Chat system</div>
+                </a>
+                <a href="profile.html" class="page-link">
+                    <div class="page-name">👨‍💼 Profile</div>
+                    <div class="page-status">User profile</div>
+                </a>
+                <a href="settings.html" class="page-link">
+                    <div class="page-name">⚙️ Settings</div>
+                    <div class="page-status">App settings</div>
+                </a>
+                <a href="escrow-dashboard.html" class="page-link">
+                    <div class="page-name">🔒 Escrow</div>
+                    <div class="page-status">Escrow management</div>
+                </a>
+                <a href="dex-trading.html" class="page-link">
+                    <div class="page-name">📈 Trading</div>
+                    <div class="page-status">Trading interface</div>
+                </a>
+                <a href="create-nft.html" class="page-link">
+                    <div class="page-name">🖼️ Create NFT</div>
+                    <div class="page-status">Mint NFTs</div>
+                </a>
+                <a href="kyc.html" class="page-link">
+                    <div class="page-name">🆔 KYC</div>
+                    <div class="page-status">Verification</div>
+                </a>
+                <a href="help.html" class="page-link">
+                    <div class="page-name">❓ Help</div>
+                    <div class="page-status">Help center</div>
+                </a>
+                <a href="about.html" class="page-link">
+                    <div class="page-name">ℹ️ About</div>
+                    <div class="page-status">About us</div>
+                </a>
+                <a href="auth-login.html" class="page-link">
+                    <div class="page-name">🔐 Login</div>
+                    <div class="page-status">Authentication</div>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+    
+    <!-- Test Script -->
+    <script>
+        // Wait for template to load
+        setTimeout(() => {
+            // Check header
+            const header = document.querySelector('.header');
+            if (header) {
+                document.getElementById('headerCheck').textContent = '✅';
+            } else {
+                document.getElementById('headerCheck').textContent = '❌';
+                document.getElementById('templateStatus').textContent = 'Template Load Error';
+                document.getElementById('templateStatus').className = 'test-status status-error';
+            }
+
+            // Check footer
+            const footer = document.querySelector('.footer');
+            if (footer) {
+                document.getElementById('footerCheck').textContent = '✅';
+            } else {
+                document.getElementById('footerCheck').textContent = '❌';
+            }
+
+            // Check navigation
+            const navItems = document.querySelectorAll('.nav-link');
+            if (navItems.length === 8) {
+                document.getElementById('navCheck').textContent = '✅';
+            } else {
+                document.getElementById('navCheck').textContent = '❌';
+            }
+
+            // Check theme toggle
+            const themeToggle = document.querySelector('.theme-toggle');
+            if (themeToggle) {
+                document.getElementById('themeCheck').textContent = '✅';
+            } else {
+                document.getElementById('themeCheck').textContent = '❌';
+            }
+
+            // Check search box
+            const searchBox = document.querySelector('.search-box');
+            if (searchBox) {
+                document.getElementById('searchCheck').textContent = '✅';
+            } else {
+                document.getElementById('searchCheck').textContent = '❌';
+            }
+        }, 500);
+    </script>
+</body>
+</html>

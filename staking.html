@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staking - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .staking-hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            padding: 4rem;
+            border-radius: 1.2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .staking-hero h1 {
+            font-size: 3.6rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .staking-hero p {
+            font-size: 1.8rem;
+            opacity: 0.95;
+            max-width: 60rem;
+            margin: 0 auto;
+        }
+
+        .staking-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-label {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+
+        .stat-value {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-change {
+            font-size: 1.2rem;
+            color: var(--success);
+            margin-top: 0.5rem;
+        }
+
+        .staking-pools {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .pools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
+            gap: 2rem;
+        }
+
+        .pool-card {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .pool-card:hover {
+            transform: translateY(-0.4rem);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+
+        .pool-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .pool-icon {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+        }
+
+        .pool-name {
+            flex: 1;
+        }
+
+        .pool-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .pool-type {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+        }
+
+        .pool-details {
+            display: grid;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.4rem;
+        }
+
+        .detail-label {
+            color: var(--text-secondary);
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .apy-value {
+            color: var(--success);
+            font-size: 1.6rem;
+        }
+
+        .pool-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .stake-button {
+            flex: 1;
+            padding: 1.2rem;
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-stake {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-stake:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-unstake {
+            background: none;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-unstake:hover {
+            background: var(--hover);
+        }
+
+        .my-stakes {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 3rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 3rem;
+        }
+
+        .stakes-table {
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .stakes-table th {
+            text-align: left;
+            padding: 1.2rem;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        .stakes-table td {
+            padding: 1.6rem 1.2rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 1.4rem;
+        }
+
+        .stakes-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .badge-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .badge-locked {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .rewards-banner {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .rewards-content {
+            flex: 1;
+        }
+
+        .rewards-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .rewards-amount {
+            font-size: 2.4rem;
+            font-weight: 700;
+        }
+
+        .claim-button {
+            padding: 1.2rem 2.4rem;
+            background: white;
+            color: var(--success);
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .claim-button:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .staking-hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .pools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stakes-table {
+                font-size: 1.2rem;
+            }
+
+            .stakes-table th,
+            .stakes-table td {
+                padding: 0.8rem;
+            }
+
+            .rewards-banner {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <div class="staking-hero">
+            <h1>XOM Staking</h1>
+            <p>Earn passive income by staking your XOM tokens and supporting the OmniBazaar network</p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="staking-stats">
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-label">Total Value Locked</div>
+                <div class="stat-value">12.5M XOM</div>
+                <div class="stat-change">+5.2% this week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-label">Average APY</div>
+                <div class="stat-value">18.5%</div>
+                <div class="stat-change">+0.8% from last month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-label">Active Stakers</div>
+                <div class="stat-value">8,342</div>
+                <div class="stat-change">+124 today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-label">Rewards Distributed</div>
+                <div class="stat-value">2.3M XOM</div>
+                <div class="stat-change">This month</div>
+            </div>
+        </div>
+
+        <!-- Pending Rewards Banner -->
+        <div class="rewards-banner">
+            <div class="rewards-content">
+                <div class="rewards-title">Your Pending Rewards</div>
+                <div class="rewards-amount">234.56 XOM</div>
+            </div>
+            <button class="claim-button">Claim Rewards</button>
+        </div>
+
+        <!-- Staking Pools -->
+        <section class="staking-pools">
+            <h2 class="section-title">Available Staking Pools</h2>
+            <div class="pools-grid">
+                <!-- Pool 1 -->
+                <div class="pool-card">
+                    <div class="pool-header">
+                        <div class="pool-icon">🔒</div>
+                        <div class="pool-name">
+                            <h3 class="pool-title">XOM Flexible</h3>
+                            <p class="pool-type">Flexible Staking</p>
+                        </div>
+                    </div>
+                    <div class="pool-details">
+                        <div class="detail-row">
+                            <span class="detail-label">APY</span>
+                            <span class="detail-value apy-value">12.5%</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Lock Period</span>
+                            <span class="detail-value">None</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Min Stake</span>
+                            <span class="detail-value">100 XOM</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Total Staked</span>
+                            <span class="detail-value">3.2M XOM</span>
+                        </div>
+                    </div>
+                    <div class="pool-actions">
+                        <button class="stake-button btn-stake">Stake XOM</button>
+                    </div>
+                </div>
+
+                <!-- Pool 2 -->
+                <div class="pool-card">
+                    <div class="pool-header">
+                        <div class="pool-icon">⏰</div>
+                        <div class="pool-name">
+                            <h3 class="pool-title">XOM 30-Day</h3>
+                            <p class="pool-type">Fixed Term</p>
+                        </div>
+                    </div>
+                    <div class="pool-details">
+                        <div class="detail-row">
+                            <span class="detail-label">APY</span>
+                            <span class="detail-value apy-value">18.5%</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Lock Period</span>
+                            <span class="detail-value">30 Days</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Min Stake</span>
+                            <span class="detail-value">500 XOM</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Total Staked</span>
+                            <span class="detail-value">5.8M XOM</span>
+                        </div>
+                    </div>
+                    <div class="pool-actions">
+                        <button class="stake-button btn-stake">Stake XOM</button>
+                    </div>
+                </div>
+
+                <!-- Pool 3 -->
+                <div class="pool-card">
+                    <div class="pool-header">
+                        <div class="pool-icon">💎</div>
+                        <div class="pool-name">
+                            <h3 class="pool-title">XOM 90-Day</h3>
+                            <p class="pool-type">Premium Pool</p>
+                        </div>
+                    </div>
+                    <div class="pool-details">
+                        <div class="detail-row">
+                            <span class="detail-label">APY</span>
+                            <span class="detail-value apy-value">25.0%</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Lock Period</span>
+                            <span class="detail-value">90 Days</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Min Stake</span>
+                            <span class="detail-value">1,000 XOM</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Total Staked</span>
+                            <span class="detail-value">3.5M XOM</span>
+                        </div>
+                    </div>
+                    <div class="pool-actions">
+                        <button class="stake-button btn-stake">Stake XOM</button>
+                    </div>
+                </div>
+
+                <!-- Pool 4 -->
+                <div class="pool-card">
+                    <div class="pool-header">
+                        <div class="pool-icon">🚀</div>
+                        <div class="pool-name">
+                            <h3 class="pool-title">LP Staking</h3>
+                            <p class="pool-type">Liquidity Provider</p>
+                        </div>
+                    </div>
+                    <div class="pool-details">
+                        <div class="detail-row">
+                            <span class="detail-label">APY</span>
+                            <span class="detail-value apy-value">35.0%</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Lock Period</span>
+                            <span class="detail-value">7 Days</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Required</span>
+                            <span class="detail-value">XOM-ETH LP</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Total Staked</span>
+                            <span class="detail-value">$2.4M</span>
+                        </div>
+                    </div>
+                    <div class="pool-actions">
+                        <button class="stake-button btn-stake">Add Liquidity</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- My Stakes -->
+        <section class="my-stakes">
+            <h2 class="section-title">My Active Stakes</h2>
+            <table class="stakes-table">
+                <thead>
+                    <tr>
+                        <th>Pool</th>
+                        <th>Amount Staked</th>
+                        <th>APY</th>
+                        <th>Rewards Earned</th>
+                        <th>Status</th>
+                        <th>Unlock Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>XOM Flexible</strong></td>
+                        <td>1,000 XOM</td>
+                        <td>12.5%</td>
+                        <td>45.23 XOM</td>
+                        <td><span class="badge badge-active">Active</span></td>
+                        <td>Anytime</td>
+                        <td>
+                            <button class="btn-unstake" style="padding: 0.6rem 1.2rem; font-size: 1.2rem;">Unstake</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>XOM 30-Day</strong></td>
+                        <td>5,000 XOM</td>
+                        <td>18.5%</td>
+                        <td>156.78 XOM</td>
+                        <td><span class="badge badge-locked">Locked</span></td>
+                        <td>Feb 10, 2025</td>
+                        <td>
+                            <button disabled style="opacity: 0.5; padding: 0.6rem 1.2rem; font-size: 1.2rem;">Locked</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>LP Staking</strong></td>
+                        <td>$3,500</td>
+                        <td>35.0%</td>
+                        <td>32.55 XOM</td>
+                        <td><span class="badge badge-active">Active</span></td>
+                        <td>Jan 22, 2025</td>
+                        <td>
+                            <button class="btn-unstake" style="padding: 0.6rem 1.2rem; font-size: 1.2rem;">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+</body>
+</html>

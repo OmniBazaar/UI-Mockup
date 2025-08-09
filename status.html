@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Status - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 4rem 2rem; background: #F7F8FA; }
+        .container { max-width: 80rem; margin: 0 auto; background: white; padding: 4rem; border-radius: 1rem; }
+        h1 { color: #373373; margin-bottom: 2rem; }
+        .status-item { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; margin: 1rem 0; border: 1px solid #E5E7EB; border-radius: 0.8rem; }
+        .status-name { font-weight: 600; }
+        .status-badge { padding: 0.5rem 1rem; border-radius: 2rem; color: white; font-size: 1.2rem; font-weight: 600; }
+        .status-operational { background: #10B981; }
+        .status-degraded { background: #F59E0B; }
+        .overall-status { background: linear-gradient(135deg, #10B981, #059669); color: white; padding: 2rem; border-radius: 1rem; margin-bottom: 3rem; text-align: center; }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+        <h1>System Status</h1>
+        
+        <div class="overall-status">
+            <h2>All Systems Operational</h2>
+            <p>All OmniBazaar services are running normally</p>
+        </div>
+        
+        <div class="status-item">
+            <div class="status-name">Marketplace</div>
+            <div class="status-badge status-operational">Operational</div>
+        </div>
+        
+        <div class="status-item">
+            <div class="status-name">Smart Contracts</div>
+            <div class="status-badge status-operational">Operational</div>
+        </div>
+        
+        <div class="status-item">
+            <div class="status-name">IPFS Storage</div>
+            <div class="status-badge status-operational">Operational</div>
+        </div>
+        
+        <div class="status-item">
+            <div class="status-name">Messaging System</div>
+            <div class="status-badge status-operational">Operational</div>
+        </div>
+        
+        <div class="status-item">
+            <div class="status-name">API Services</div>
+            <div class="status-badge status-degraded">Degraded Performance</div>
+        </div>
+        
+        <p style="margin-top: 3rem; color: #6F727F;">Last updated: January 15, 2025 at 14:30 UTC</p>
+        <p><a href="index.html">← Back to Marketplace</a></p>
+    </div>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+</body>
+</html>

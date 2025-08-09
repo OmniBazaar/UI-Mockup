@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .content-container {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 3rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+        
+        .settings-section, .help-section {
+            margin-bottom: 3rem;
+        }
+        
+        .settings-section h2, .help-section h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+        
+        .settings-group {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .settings-group:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .setting-label {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+        }
+        
+        .setting-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 5rem;
+            height: 2.4rem;
+            background: var(--border);
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background: var(--primary-color);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 0.3rem;
+            left: 0.3rem;
+            width: 1.8rem;
+            height: 1.8rem;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(2.6rem);
+        }
+        
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .help-card {
+            padding: 2rem;
+            background: var(--hover);
+            border-radius: 0.8rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .help-card:hover {
+            transform: translateY(-0.4rem);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .help-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .help-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .help-card p {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .help-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .help-link:hover {
+            text-decoration: underline;
+        }
+        
+        .faq-item {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: var(--hover);
+            border-radius: 0.8rem;
+        }
+        
+        .faq-question {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        
+        .faq-answer {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+    </style>
+    
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="content-container">
+        
+        <div class="page-header">
+            <h1 class="page-title">Help Center</h1>
+            <p class="page-subtitle">Find answers and get support for OmniBazaar</p>
+        </div>
+
+        <div class="help-grid">
+            <div class="help-card">
+                <div class="help-icon">🛍️</div>
+                <h3>Getting Started</h3>
+                <p>Learn the basics of buying and selling on OmniBazaar</p>
+                <a href="#getting-started" class="help-link">Learn More</a>
+            </div>
+
+            <div class="help-card">
+                <div class="help-icon">💰</div>
+                <h3>Payments & Fees</h3>
+                <p>Understand payment methods, fees, and crypto transactions</p>
+                <a href="#payments" class="help-link">Learn More</a>
+            </div>
+
+            <div class="help-card">
+                <div class="help-icon">🔒</div>
+                <h3>Safety & Security</h3>
+                <p>Keep your account and transactions secure</p>
+                <a href="#safety" class="help-link">Learn More</a>
+            </div>
+        </div>
+
+        <div class="help-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I create a listing on OmniBazaar?</div>
+                <div class="faq-answer">
+                    To create a listing, click "Create Listing" from the main page or your dashboard. Fill in the required information including title, description, price, and upload high-quality images. Your listing will be published to the blockchain network once you confirm the transaction.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What payment methods are accepted?</div>
+                <div class="faq-answer">
+                    OmniBazaar primarily operates with cryptocurrency payments including XOM (our native token), Bitcoin, Ethereum, and other supported cryptocurrencies. We also support traditional payment methods in some regions through our payment partners.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How does the escrow system work?</div>
+                <div class="faq-answer">
+                    Our smart contract-based escrow system holds funds securely until both parties confirm the transaction is complete. When you make a purchase, funds are locked in escrow. They're released to the seller only when you confirm receipt of the item or after a predetermined time period.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What if I have a dispute with a seller?</div>
+                <div class="faq-answer">
+                    If you have an issue with a transaction, you can open a dispute through your transaction history. Our decentralized dispute resolution system uses community arbitrators and smart contracts to resolve conflicts fairly and transparently.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I contact customer support?</div>
+                <div class="faq-answer">
+                    You can reach our support team through the contact form, community forums, or live chat. As a decentralized platform, we also encourage community support through our Discord and Telegram channels.
+                </div>
+            </div>
+        </div>
+
+        <div class="help-section">
+            <h2>Still Need Help?</h2>
+            <p style="font-size: 1.6rem; line-height: 1.7; color: var(--text-secondary); margin-bottom: 2rem;">
+                Can't find the answer you're looking for? Our support team is here to help you navigate the decentralized marketplace.
+            </p>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <a href="contact.html" class="help-link">Contact Support</a>
+                <a href="community.html" class="help-link">Join Community</a>
+                <a href="faq.html" class="help-link">More FAQ</a>
+            </div>
+        </div>
+    
+        </div>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+</body>
+</html>

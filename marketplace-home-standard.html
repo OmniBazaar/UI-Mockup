@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏪 OmniBazaar Marketplace</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <style>
+        /* Standard Page Template Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #373373;
+            --primary-dark: #2a2858;
+            --primary-light: #4a46a3;
+            --background: #F7F8FA;
+            --surface: #FFFFFF;
+            --text-primary: #3E4153;
+            --text-secondary: #6F727F;
+            --text-muted: #8E909B;
+            --border: #E5E7EB;
+            --hover: #F3F4F6;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --spacing-unit: 0.8rem;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+            background-color: var(--background);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Fixed Header */
+        .header {
+            background: var(--surface);
+            border-top: 0.5rem solid var(--primary-color);
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 128rem;
+            margin: 0 auto;
+            padding: 0 calc(var(--spacing-unit) * 3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: calc(var(--spacing-unit) * 8);
+        }
+
+        .header-brand {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 1);
+        }
+
+        .header-logo {
+            height: 3.2rem;
+            width: auto;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 4);
+            align-items: center;
+        }
+
+        .header-nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: calc(var(--spacing-unit) * 1) 0;
+            border-radius: calc(var(--spacing-unit) * 0.5);
+            transition: color 0.2s;
+        }
+
+        .header-nav-link:hover,
+        .header-nav-link.active {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .header-user-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .header-user-btn {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 1);
+            padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2);
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: calc(var(--spacing-unit) * 1);
+            color: var(--text-primary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .header-user-btn:hover {
+            background-color: var(--hover);
+            border-color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .header-nav {
+                display: none;
+            }
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            width: 100%;
+            position: relative;
+        }
+
+        .content-container {
+            max-width: 128rem;
+            margin: 0 auto;
+            padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 3);
+        }
+
+        .page-title {
+            font-size: 3.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            line-height: 1.2;
+        }
+
+        .page-description {
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+            line-height: 1.5;
+            max-width: 60ch;
+        }
+
+        /* Fixed Footer */
+        .footer {
+            background-color: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 3);
+            margin-top: calc(var(--spacing-unit) * 8);
+        }
+
+        .footer-container {
+            max-width: 128rem;
+            margin: 0 auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: calc(var(--spacing-unit) * 4);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+        }
+
+        .footer-section h3 {
+            color: var(--text-primary);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--spacing-unit) * 1);
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.6rem;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .footer-social-links {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 2);
+            margin-top: calc(var(--spacing-unit) * 2);
+        }
+
+        .footer-social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 4rem;
+            height: 4rem;
+            background-color: var(--background);
+            border: 1px solid var(--border);
+            border-radius: calc(var(--spacing-unit) * 1);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 2rem;
+        }
+
+        .footer-social-link:hover {
+            background-color: var(--hover);
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        .footer-bottom {
+            padding-top: calc(var(--spacing-unit) * 3);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-copyright {
+            color: var(--text-secondary);
+            font-size: 1.4rem;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .footer-bottom-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.4rem;
+            transition: color 0.2s;
+        }
+
+        .footer-bottom-links a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: calc(var(--spacing-unit) * 3);
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: calc(var(--spacing-unit) * 2);
+                text-align: center;
+            }
+        }
+
+        /* Page-specific content styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: calc(var(--spacing-unit) * 3);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: calc(var(--spacing-unit) * 2);
+            padding: calc(var(--spacing-unit) * 3);
+            text-align: center;
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: calc(var(--spacing-unit) * 1);
+        }
+
+        .stat-label {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: calc(var(--spacing-unit) * 3);
+        }
+
+        .category-card {
+            background: var(--surface);
+            border-radius: calc(var(--spacing-unit) * 2);
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .category-card:hover {
+            transform: translateY(-0.4rem);
+            box-shadow: 0 0.8rem 2rem rgba(0,0,0,0.1);
+        }
+
+        .category-header {
+            background: var(--primary-color);
+            color: white;
+            padding: calc(var(--spacing-unit) * 3);
+            text-align: center;
+        }
+
+        .category-icon {
+            font-size: 3.6rem;
+            margin-bottom: calc(var(--spacing-unit) * 1);
+        }
+
+        .category-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing-unit) * 1);
+        }
+
+        .category-subtitle {
+            opacity: 0.9;
+            font-size: 1.4rem;
+        }
+
+        .category-content {
+            padding: calc(var(--spacing-unit) * 3);
+        }
+
+        .category-description {
+            color: var(--text-secondary);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            line-height: 1.5;
+        }
+
+        .category-stats {
+            display: flex;
+            justify-content: space-between;
+            padding: calc(var(--spacing-unit) * 2);
+            background: var(--background);
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo and Brand -->
+            <a href="index.html" class="header-brand">
+                <img src="OmniBazaar Globe-clear-256x256.png" alt="OmniBazaar Logo" class="header-logo">
+                OmniBazaar
+            </a>
+            
+            <!-- Navigation Links (EXACT as specified) -->
+            <nav class="header-nav">
+                <a href="products.html" class="header-nav-link">Products</a>
+                <a href="services.html" class="header-nav-link">Services</a>
+                <a href="art.html" class="header-nav-link">Art</a>
+                <a href="gaming.html" class="header-nav-link">Gaming</a>
+                <a href="financial.html" class="header-nav-link">Financial</a>
+                <a href="crypto.html" class="header-nav-link">Crypto</a>
+                <a href="personal.html" class="header-nav-link">Personal</a>
+                <a href="wallet.html" class="header-nav-link">Wallet</a>
+            </nav>
+            
+            <!-- User Profile Dropdown (right side) -->
+            <div class="header-user-menu">
+                <button class="header-user-btn">
+                    <span>👤</span>
+                    <span>Profile</span>
+                    <span>▼</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <div class="content-container">
+            <h1 class="page-title">🏪 OmniBazaar Marketplace</h1>
+            <p class="page-description">Discover products, services, NFTs, and more across multiple blockchains</p>
+
+            <!-- Marketplace Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">12,847</div>
+                    <div class="stat-label">Total Listings</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Blockchains</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5,231</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">$2.4M</div>
+                    <div class="stat-label">Total Volume</div>
+                </div>
+            </div>
+
+            <!-- Category Grid -->
+            <div class="categories-grid">
+                <a href="products.html" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">📦</div>
+                        <h3 class="category-title">Products</h3>
+                        <p class="category-subtitle">Physical & Digital Goods</p>
+                    </div>
+                    <div class="category-content">
+                        <p class="category-description">
+                            Electronics, fashion, books, software, and more. Browse thousands of products from verified sellers.
+                        </p>
+                    </div>
+                    <div class="category-stats">
+                        <span>Items: 8,432</span>
+                        <span>Active: 2,156</span>
+                    </div>
+                </a>
+
+                <a href="services.html" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">🛠️</div>
+                        <h3 class="category-title">Services</h3>
+                        <p class="category-subtitle">Professional Services</p>
+                    </div>
+                    <div class="category-content">
+                        <p class="category-description">
+                            Design, development, consulting, marketing, and other professional services from experts worldwide.
+                        </p>
+                    </div>
+                    <div class="category-stats">
+                        <span>Items: 2,341</span>
+                        <span>Active: 892</span>
+                    </div>
+                </a>
+
+                <a href="art.html" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">🎨</div>
+                        <h3 class="category-title">Art</h3>
+                        <p class="category-subtitle">Digital & Physical Art</p>
+                    </div>
+                    <div class="category-content">
+                        <p class="category-description">
+                            NFTs, digital artwork, paintings, sculptures, and collectibles from artists around the world.
+                        </p>
+                    </div>
+                    <div class="category-stats">
+                        <span>Items: 1,567</span>
+                        <span>Active: 623</span>
+                    </div>
+                </a>
+
+                <a href="gaming.html" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">🎮</div>
+                        <h3 class="category-title">Gaming</h3>
+                        <p class="category-subtitle">Games & In-Game Assets</p>
+                    </div>
+                    <div class="category-content">
+                        <p class="category-description">
+                            Game keys, in-game items, accounts, and gaming hardware. The ultimate destination for gamers.
+                        </p>
+                    </div>
+                    <div class="category-stats">
+                        <span>Items: 3,214</span>
+                        <span>Active: 1,087</span>
+                    </div>
+                </a>
+
+                <a href="financial.html" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">📊</div>
+                        <h3 class="category-title">Financial</h3>
+                        <p class="category-subtitle">Financial Services & RWAs</p>
+                    </div>
+                    <div class="category-content">
+                        <p class="category-description">
+                            Real world assets, investment opportunities, loans, insurance, and financial planning services.
+                        </p>
+                    </div>
+                    <div class="category-stats">
+                        <span>Items: 456</span>
+                        <span>Active: 234</span>
+                    </div>
+                </a>
+
+                <a href="crypto.html" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">₿</div>
+                        <h3 class="category-title">Crypto</h3>
+                        <p class="category-subtitle">Digital Assets & Trading</p>
+                    </div>
+                    <div class="category-content">
+                        <p class="category-description">
+                            Cryptocurrencies, tokens, mining hardware, and blockchain-related services and products.
+                        </p>
+                    </div>
+                    <div class="category-stats">
+                        <span>Items: 789</span>
+                        <span>Active: 345</span>
+                    </div>
+                </a>
+
+                <a href="personal.html" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">👤</div>
+                        <h3 class="category-title">Personal</h3>
+                        <p class="category-subtitle">Personal Items & Services</p>
+                    </div>
+                    <div class="category-content">
+                        <p class="category-description">
+                            Personal belongings, tutoring, fitness coaching, and other individual services and items.
+                        </p>
+                    </div>
+                    <div class="category-stats">
+                        <span>Items: 1,234</span>
+                        <span>Active: 567</span>
+                    </div>
+                </a>
+
+                <a href="wallet.html" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">💳</div>
+                        <h3 class="category-title">Wallet</h3>
+                        <p class="category-subtitle">Manage Your Assets</p>
+                    </div>
+                    <div class="category-content">
+                        <p class="category-description">
+                            Access your digital wallet to manage cryptocurrencies, NFTs, and make secure transactions.
+                        </p>
+                    </div>
+                    <div class="category-stats">
+                        <span>Assets: Multi-chain</span>
+                        <span>Security: Bank-grade</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Fixed Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <!-- About Section -->
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">Company</a>
+                        <a href="#" class="footer-link">Mission</a>
+                        <a href="#" class="footer-link">Careers</a>
+                        <a href="#" class="footer-link">Press</a>
+                    </div>
+                </div>
+
+                <!-- Support Section -->
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">Help Center</a>
+                        <a href="#" class="footer-link">Safety</a>
+                        <a href="#" class="footer-link">Contact</a>
+                        <a href="#" class="footer-link">FAQ</a>
+                    </div>
+                </div>
+
+                <!-- Legal Section -->
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">Terms</a>
+                        <a href="#" class="footer-link">Privacy</a>
+                        <a href="#" class="footer-link">Cookies</a>
+                        <a href="#" class="footer-link">Licenses</a>
+                    </div>
+                </div>
+
+                <!-- Connect Section -->
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <div class="footer-social-links">
+                        <a href="https://twitter.com/omnibazaar" class="footer-social-link" aria-label="Twitter">🐦</a>
+                        <a href="https://discord.gg/omnibazaar" class="footer-social-link" aria-label="Discord">💬</a>
+                        <a href="https://t.me/omnibazaar" class="footer-social-link" aria-label="Telegram">📱</a>
+                        <a href="https://github.com/omnibazaar" class="footer-social-link" aria-label="GitHub">🐙</a>
+                        <a href="https://medium.com/@omnibazaar" class="footer-social-link" aria-label="Medium">📝</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    &copy; 2025 OmniBazaar. All rights reserved.
+                </div>
+                <div class="footer-bottom-links">
+                    <a href="#" aria-label="Privacy Policy">Privacy</a>
+                    <a href="#" aria-label="Terms of Service">Terms</a>
+                    <a href="#" aria-label="Support">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // User menu toggle functionality
+        document.querySelector('.header-user-btn')?.addEventListener('click', function() {
+            console.log('User menu clicked');
+            // Implementation would show/hide user dropdown menu
+        });
+
+        // Category card click tracking
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                const categoryTitle = this.querySelector('.category-title').textContent;
+                console.log('Category clicked:', categoryTitle);
+            });
+        });
+    </script>
+</body>
+</html>

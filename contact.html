@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        
+        <div class="page-header">
+            <h1 class="page-title">Contact Us</h1>
+            <p class="page-subtitle">Get in touch with the OmniBazaar team</p>
+        </div>
+
+        <div class="help-grid">
+            <div class="help-card">
+                <div class="help-icon">📧</div>
+                <h3>Email Support</h3>
+                <p>Get help with your account, transactions, or technical issues</p>
+                <a href="mailto:support@omnibazaar.com" class="help-link">support@omnibazaar.com</a>
+            </div>
+
+            <div class="help-card">
+                <div class="help-icon">💬</div>
+                <h3>Live Chat</h3>
+                <p>Chat with our support team for immediate assistance</p>
+                <a href="#chat" class="help-link">Start Chat</a>
+            </div>
+
+            <div class="help-card">
+                <div class="help-icon">👥</div>
+                <h3>Community</h3>
+                <p>Connect with other users and get peer support</p>
+                <a href="community.html" class="help-link">Join Community</a>
+            </div>
+        </div>
+
+        <div class="help-section">
+            <h2>Send us a Message</h2>
+            <p style="font-size: 1.6rem; line-height: 1.7; color: var(--text-secondary); margin-bottom: 2rem;">
+                Have a question or need assistance? Fill out the form below and we'll get back to you as soon as possible.
+            </p>
+            
+            <form style="display: grid; gap: 2rem; max-width: 60rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.8rem;">Name</label>
+                        <input type="text" style="width: 100%; padding: 1.2rem; border: 2px solid var(--border); border-radius: 0.8rem; font-size: 1.4rem;" required>
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.8rem;">Email</label>
+                        <input type="email" style="width: 100%; padding: 1.2rem; border: 2px solid var(--border); border-radius: 0.8rem; font-size: 1.4rem;" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 0.8rem;">Subject</label>
+                    <select style="width: 100%; padding: 1.2rem; border: 2px solid var(--border); border-radius: 0.8rem; font-size: 1.4rem;">
+                        <option>General Inquiry</option>
+                        <option>Account Issues</option>
+                        <option>Transaction Problems</option>
+                        <option>Technical Support</option>
+                        <option>Feature Request</option>
+                        <option>Bug Report</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 0.8rem;">Message</label>
+                    <textarea style="width: 100%; min-height: 12rem; padding: 1.2rem; border: 2px solid var(--border); border-radius: 0.8rem; font-size: 1.4rem; resize: vertical;" placeholder="Please describe your issue or question in detail..." required></textarea>
+                </div>
+                
+                <button type="submit" style="background: var(--primary-color); color: white; border: none; padding: 1.6rem 3.2rem; border-radius: 0.8rem; font-size: 1.6rem; font-weight: 600; cursor: pointer;">Send Message</button>
+            </form>
+        </div>
+
+        <div class="help-section">
+            <h2>Other Ways to Reach Us</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr)); gap: 2rem;">
+                <div>
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Business Inquiries</h3>
+                    <p style="color: var(--text-secondary);">business@omnibazaar.com</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Media & Press</h3>
+                    <p style="color: var(--text-secondary);">press@omnibazaar.com</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Security Issues</h3>
+                    <p style="color: var(--text-secondary);">security@omnibazaar.com</p>
+                </div>
+            </div>
+        </div>
+    
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+</body>
+</html>

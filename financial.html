@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Services - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #373373;
+            --primary-dark: #2a2858;
+            --primary-light: #4a46a3;
+            --background: #F7F8FA;
+            --surface: #FFFFFF;
+            --text-primary: #3E4153;
+            --text-secondary: #6F727F;
+            --text-muted: #8E909B;
+            --border: #E5E7EB;
+            --hover: #F3F4F6;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --spacing-unit: 0.8rem;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        html {
+            font-size: 10px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.4rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+            background-color: var(--background);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            background: var(--surface);
+            border-top: 0.5rem solid var(--primary-color);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 144rem;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            min-height: 6.4rem;
+            gap: 3rem;
+        }
+
+        .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 800;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .brand-link:hover {
+            color: var(--primary-dark);
+        }
+
+        .logo {
+            height: 3.2rem;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.4rem;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.4rem;
+            padding: 0.8rem 0.4rem;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 1.6rem;
+            flex-shrink: 0;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 0.8rem 3.2rem 0.8rem 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 0.6rem;
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 1.4rem;
+            min-width: 20rem;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .icon-button {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 0.6rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.6rem;
+            min-width: 4rem;
+            height: 4rem;
+            text-decoration: none;
+        }
+
+        .icon-button:hover {
+            background-color: var(--hover);
+            border-color: var(--primary-color);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -0.4rem;
+            right: -0.4rem;
+            background: var(--error);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 0.2rem 0.6rem;
+            border-radius: 50%;
+            min-width: 1.8rem;
+            height: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .dropdown-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-button {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1.2rem;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 0.6rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.4rem;
+        }
+
+        .dropdown-button:hover {
+            background-color: var(--hover);
+            border-color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            max-width: 144rem;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .header-content-left {
+            text-align: left;
+            flex: 1;
+            min-width: 30rem;
+        }
+
+        .page-title {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.6rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        /* Marketplace Buttons */
+        .marketplace-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-primary {
+            padding: 1.2rem 2.4rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-0.2rem);
+        }
+
+        .btn-secondary {
+            padding: 1.2rem 2.4rem;
+            background: var(--surface);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: var(--hover);
+            transform: translateY(-0.2rem);
+        }
+
+        /* Stats Dashboard */
+        .stats-dashboard {
+            background: var(--surface);
+            border-radius: 1.6rem;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+            gap: 2.4rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--primary-color);
+            border-radius: 1.2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s;
+        }
+
+        .stat-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .stat-value {
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        .stat-label {
+            font-size: 1.4rem;
+            opacity: 0.9;
+        }
+
+        /* Services Grid */
+        .services-section {
+            background: var(--surface);
+            border-radius: 1.6rem;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 2.4rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(32rem, 1fr));
+            gap: 2.4rem;
+        }
+
+        .service-card {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card:hover {
+            transform: translateY(-0.8rem);
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .service-icon {
+            font-size: 4rem;
+            margin-bottom: 1.6rem;
+            color: var(--primary-color);
+        }
+
+        .service-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .service-description {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.6rem;
+        }
+
+        .service-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .service-features li {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .service-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .service-cta {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .service-cta:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(55, 51, 115, 0.4);
+        }
+
+        /* Market Data */
+        .market-data {
+            background: var(--surface);
+            border-radius: 1.6rem;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+            gap: 2rem;
+        }
+
+        .market-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.6rem;
+            background: var(--surface);
+            border-radius: 0.8rem;
+            border: 1px solid var(--border);
+        }
+
+        .market-info {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .market-icon {
+            width: 3.2rem;
+            height: 3.2rem;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+        }
+
+        .market-details h4 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .market-details p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .market-price {
+            text-align: right;
+        }
+
+        .market-price .price {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .market-price .change {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .change.positive {
+            color: var(--success);
+        }
+
+        .change.negative {
+            color: var(--error);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 2rem 0 1rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 144rem;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 15rem;
+        }
+
+        .footer-section h4 {
+            color: var(--text-primary);
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header {
+                text-align: center;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .header-content-left {
+                text-align: center;
+                min-width: auto;
+            }
+
+            .marketplace-buttons {
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .market-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 2.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content-left">
+                <h1 class="page-title">Financial Services</h1>
+                <p class="page-subtitle">Access lending, borrowing, staking, RWAs, and advanced financial tools</p>
+            </div>
+            <div class="marketplace-buttons">
+                <a href="marketplace-create.html" class="btn-primary">Create Listing</a>
+                <a href="my-listings.html" class="btn-secondary">My Listings</a>
+            </div>
+        </div>
+
+        <!-- Stats Dashboard -->
+        <div class="stats-dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">$2.4B</div>
+                    <div class="stat-label">Total Value Locked</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">12.5%</div>
+                    <div class="stat-label">Average APY</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">45,678</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$156M</div>
+                    <div class="stat-label">24h Volume</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Services -->
+        <div class="services-section">
+            <h2 class="section-title">🏦 Financial Services</h2>
+            <div class="services-grid">
+                <!-- Lending -->
+                <div class="service-card">
+                    <div class="service-icon">💰</div>
+                    <h3 class="service-title">Lending & Borrowing</h3>
+                    <p class="service-description">Lend your crypto assets to earn interest or borrow against your holdings with competitive rates.</p>
+                    <ul class="service-features">
+                        <li>Earn up to 15% APY on deposits</li>
+                        <li>Borrow at competitive rates</li>
+                        <li>No credit checks required</li>
+                        <li>Instant liquidity access</li>
+                    </ul>
+                    <button class="service-cta">Start Lending</button>
+                </div>
+
+                <!-- Staking -->
+                <div class="service-card">
+                    <div class="service-icon">🥩</div>
+                    <h3 class="service-title">XOM Staking</h3>
+                    <p class="service-description">Stake your XOM tokens to help secure the network and earn rewards while supporting the ecosystem.</p>
+                    <ul class="service-features">
+                        <li>Up to 18% annual rewards</li>
+                        <li>Flexible staking periods</li>
+                        <li>Validator delegation</li>
+                        <li>Compound rewards</li>
+                    </ul>
+                    <button class="service-cta">Stake Now</button>
+                </div>
+
+                <!-- Liquidity Pools -->
+                <div class="service-card">
+                    <div class="service-icon">🌊</div>
+                    <h3 class="service-title">Liquidity Pools</h3>
+                    <p class="service-description">Provide liquidity to trading pairs and earn fees from every trade plus additional rewards.</p>
+                    <ul class="service-features">
+                        <li>Earn trading fees</li>
+                        <li>Liquidity mining rewards</li>
+                        <li>Impermanent loss protection</li>
+                        <li>Multiple pool options</li>
+                    </ul>
+                    <button class="service-cta">Add Liquidity</button>
+                </div>
+
+                <!-- Yield Farming -->
+                <div class="service-card">
+                    <div class="service-icon">🚜</div>
+                    <h3 class="service-title">Yield Farming</h3>
+                    <p class="service-description">Maximize your returns through sophisticated yield farming strategies and auto-compounding.</p>
+                    <ul class="service-features">
+                        <li>Automated strategies</li>
+                        <li>Auto-compound rewards</li>
+                        <li>Risk management</li>
+                        <li>High APY opportunities</li>
+                    </ul>
+                    <button class="service-cta">Farm Yields</button>
+                </div>
+
+                <!-- Insurance -->
+                <div class="service-card">
+                    <div class="service-icon">🛡️</div>
+                    <h3 class="service-title">DeFi Insurance</h3>
+                    <p class="service-description">Protect your DeFi investments with comprehensive insurance coverage against smart contract risks.</p>
+                    <ul class="service-features">
+                        <li>Smart contract coverage</li>
+                        <li>Slashing protection</li>
+                        <li>Affordable premiums</li>
+                        <li>Quick claim processing</li>
+                    </ul>
+                    <button class="service-cta">Get Coverage</button>
+                </div>
+
+                <!-- Derivatives -->
+                <div class="service-card">
+                    <div class="service-icon">📈</div>
+                    <h3 class="service-title">Derivatives Trading</h3>
+                    <p class="service-description">Trade perpetual futures, options, and other derivatives with up to 100x leverage.</p>
+                    <ul class="service-features">
+                        <li>Perpetual futures</li>
+                        <li>Options trading</li>
+                        <li>Up to 100x leverage</li>
+                        <li>Advanced order types</li>
+                    </ul>
+                    <button class="service-cta">Start Trading</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real World Assets (RWAs) -->
+        <div class="services-section">
+            <h2 class="section-title">🏘️ Real World Assets (RWAs)</h2>
+            <div class="services-grid">
+                <!-- Real Estate -->
+                <div class="service-card">
+                    <div class="service-icon">🏠</div>
+                    <h3 class="service-title">Tokenized Real Estate</h3>
+                    <p class="service-description">Invest in fractional real estate ownership through blockchain tokenization with rental income distribution.</p>
+                    <ul class="service-features">
+                        <li>Fractional property ownership</li>
+                        <li>Automated rental distributions</li>
+                        <li>Global property access</li>
+                        <li>Liquid real estate investment</li>
+                    </ul>
+                    <button class="service-cta">Browse Properties</button>
+                </div>
+
+                <!-- Commodities -->
+                <div class="service-card">
+                    <div class="service-icon">🥇</div>
+                    <h3 class="service-title">Digital Commodities</h3>
+                    <p class="service-description">Trade tokenized gold, silver, oil, and other commodities with physical asset backing and storage.</p>
+                    <ul class="service-features">
+                        <li>Physical asset backing</li>
+                        <li>Secure vault storage</li>
+                        <li>24/7 trading access</li>
+                        <li>Redemption options</li>
+                    </ul>
+                    <button class="service-cta">Trade Commodities</button>
+                </div>
+
+                <!-- Stocks & Bonds -->
+                <div class="service-card">
+                    <div class="service-icon">📊</div>
+                    <h3 class="service-title">Tokenized Securities</h3>
+                    <p class="service-description">Access traditional stocks, bonds, and ETFs through compliant tokenization with dividend payments.</p>
+                    <ul class="service-features">
+                        <li>Compliant tokenization</li>
+                        <li>Dividend distributions</li>
+                        <li>Fractional shares</li>
+                        <li>Global market access</li>
+                    </ul>
+                    <button class="service-cta">Explore Securities</button>
+                </div>
+
+                <!-- Collectibles -->
+                <div class="service-card">
+                    <div class="service-icon">🎨</div>
+                    <h3 class="service-title">Collectibles & Art</h3>
+                    <p class="service-description">Own fractions of rare art, vintage cars, watches, and other high-value collectibles.</p>
+                    <ul class="service-features">
+                        <li>Authenticated collectibles</li>
+                        <li>Expert curation</li>
+                        <li>Appreciation tracking</li>
+                        <li>Insurance coverage</li>
+                    </ul>
+                    <button class="service-cta">View Collection</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- P2P Local Crypto Trading -->
+        <div class="services-section">
+            <h2 class="section-title">🤝 P2P Local Crypto Trading</h2>
+            <div class="services-grid">
+                <!-- Local Trading -->
+                <div class="service-card">
+                    <div class="service-icon">📍</div>
+                    <h3 class="service-title">Local Cash Trading</h3>
+                    <p class="service-description">Buy and sell crypto with local traders for cash. Meet safely in public places with escrow protection.</p>
+                    <ul class="service-features">
+                        <li>Local trader matching</li>
+                        <li>Escrow protection</li>
+                        <li>Safe meeting locations</li>
+                        <li>Reputation system</li>
+                    </ul>
+                    <button class="service-cta">Find Local Traders</button>
+                </div>
+
+                <!-- Bank Transfers -->
+                <div class="service-card">
+                    <div class="service-icon">🏦</div>
+                    <h3 class="service-title">Bank Transfer P2P</h3>
+                    <p class="service-description">Trade crypto directly with bank transfers, wire transfers, and other traditional payment methods.</p>
+                    <ul class="service-features">
+                        <li>Bank transfer support</li>
+                        <li>Multiple payment methods</li>
+                        <li>Instant settlements</li>
+                        <li>KYC verified traders</li>
+                    </ul>
+                    <button class="service-cta">Start Bank Trading</button>
+                </div>
+
+                <!-- Mobile Money -->
+                <div class="service-card">
+                    <div class="service-icon">📱</div>
+                    <h3 class="service-title">Mobile Money Trading</h3>
+                    <p class="service-description">Trade crypto using mobile money services like M-Pesa, GCash, and other regional mobile wallets.</p>
+                    <ul class="service-features">
+                        <li>Mobile wallet integration</li>
+                        <li>Regional currency support</li>
+                        <li>Fast settlements</li>
+                        <li>Low fees</li>
+                    </ul>
+                    <button class="service-cta">Trade Mobile Money</button>
+                </div>
+
+                <!-- Gift Cards -->
+                <div class="service-card">
+                    <div class="service-icon">🎁</div>
+                    <h3 class="service-title">Gift Card Exchange</h3>
+                    <p class="service-description">Convert gift cards to crypto or trade crypto for popular gift cards from major retailers.</p>
+                    <ul class="service-features">
+                        <li>Major retailer cards</li>
+                        <li>Instant verification</li>
+                        <li>Competitive rates</li>
+                        <li>Fraud protection</li>
+                    </ul>
+                    <button class="service-cta">Exchange Gift Cards</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Market Data -->
+        <div class="market-data">
+            <h2 class="section-title">📊 Market Overview</h2>
+            <div class="market-grid">
+                <div class="market-item">
+                    <div class="market-info">
+                        <div class="market-icon">₿</div>
+                        <div class="market-details">
+                            <h4>Bitcoin</h4>
+                            <p>BTC</p>
+                        </div>
+                    </div>
+                    <div class="market-price">
+                        <div class="price">$67,543</div>
+                        <div class="change positive">+2.34%</div>
+                    </div>
+                </div>
+
+                <div class="market-item">
+                    <div class="market-info">
+                        <div class="market-icon">Ξ</div>
+                        <div class="market-details">
+                            <h4>Ethereum</h4>
+                            <p>ETH</p>
+                        </div>
+                    </div>
+                    <div class="market-price">
+                        <div class="price">$3,456</div>
+                        <div class="change positive">+1.87%</div>
+                    </div>
+                </div>
+
+                <div class="market-item">
+                    <div class="market-info">
+                        <div class="market-icon">X</div>
+                        <div class="market-details">
+                            <h4>OmniCoin</h4>
+                            <p>XOM</p>
+                        </div>
+                    </div>
+                    <div class="market-price">
+                        <div class="price">$12.87</div>
+                        <div class="change positive">+5.42%</div>
+                    </div>
+                </div>
+
+                <div class="market-item">
+                    <div class="market-info">
+                        <div class="market-icon">$</div>
+                        <div class="market-details">
+                            <h4>USD Coin</h4>
+                            <p>USDC</p>
+                        </div>
+                    </div>
+                    <div class="market-price">
+                        <div class="price">$1.00</div>
+                        <div class="change">+0.01%</div>
+                    </div>
+                </div>
+
+                <div class="market-item">
+                    <div class="market-info">
+                        <div class="market-icon">◊</div>
+                        <div class="market-details">
+                            <h4>Chainlink</h4>
+                            <p>LINK</p>
+                        </div>
+                    </div>
+                    <div class="market-price">
+                        <div class="price">$23.45</div>
+                        <div class="change negative">-1.23%</div>
+                    </div>
+                </div>
+
+                <div class="market-item">
+                    <div class="market-info">
+                        <div class="market-icon">◎</div>
+                        <div class="market-details">
+                            <h4>Solana</h4>
+                            <p>SOL</p>
+                        </div>
+                    </div>
+                    <div class="market-price">
+                        <div class="price">$187.92</div>
+                        <div class="change positive">+3.78%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="text-align: center; margin: 4rem 0;">
+            <button style="padding: 1.2rem 2.4rem; background: linear-gradient(45deg, var(--defi-accent), var(--defi-secondary)); color: white; border: none; border-radius: 0.6rem; font-size: 1.4rem; font-weight: 500; cursor: pointer; margin-right: 1rem; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);">
+                Explore All Services
+            </button>
+            <button style="padding: 1.2rem 2.4rem; background: transparent; color: white; border: 2px solid white; border-radius: 0.6rem; font-size: 1.4rem; font-weight: 500; cursor: pointer;">
+                Connect Wallet
+            </button>
+        </div>
+    
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+</body>
+</html>

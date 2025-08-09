@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        
+        <!-- Search Header -->
+        <div class="search-header">
+            <div class="search-info">
+                <h1 class="search-title">Search Results</h1>
+                <p class="search-meta">Showing results for: <span class="search-query" id="searchQuery">"laptop"</span></p>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label class="filter-label">Category</label>
+                    <select class="filter-select">
+                        <option>All Categories</option>
+                        <option>Electronics</option>
+                        <option>Clothing</option>
+                        <option>Home & Garden</option>
+                        <option>Books</option>
+                        <option>Sports</option>
+                        <option>Art & NFTs</option>
+                        <option>Gaming</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Price Range</label>
+                    <select class="filter-select">
+                        <option>Any Price</option>
+                        <option>Under $50</option>
+                        <option>$50 - $200</option>
+                        <option>$200 - $500</option>
+                        <option>Over $500</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Location</label>
+                    <select class="filter-select">
+                        <option>Worldwide</option>
+                        <option>United States</option>
+                        <option>Europe</option>
+                        <option>Asia</option>
+                        <option>Local Only</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Sort By</label>
+                    <select class="filter-select">
+                        <option>Best Match</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Best Rating</option>
+                        <option>Most Recent</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Grid -->
+        <div class="results-grid">
+            <!-- Result 1 -->
+            <div class="result-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/4a46a3/ffffff?text=Gaming+Laptop" alt="Gaming Laptop" class="result-image">
+                <div class="result-content">
+                    <div class="result-category">Electronics</div>
+                    <h3 class="result-title">High-Performance Gaming Laptop</h3>
+                    <p class="result-description">Intel i7 processor, 16GB RAM, RTX 3070 graphics card. Perfect for gaming and professional work.</p>
+                    <div class="result-footer">
+                        <div class="result-price">1,299 XOM</div>
+                        <div class="result-seller">TechDealer</div>
+                    </div>
+                    <div class="result-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-text">4.8 (24 reviews)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result 2 -->
+            <div class="result-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/10b981/ffffff?text=Business+Laptop" alt="Business Laptop" class="result-image">
+                <div class="result-content">
+                    <div class="result-category">Electronics</div>
+                    <h3 class="result-title">Professional Business Laptop</h3>
+                    <p class="result-description">Lightweight design, 14-hour battery life, Intel i5 processor. Ideal for business professionals.</p>
+                    <div class="result-footer">
+                        <div class="result-price">899 XOM</div>
+                        <div class="result-seller">OfficeTech</div>
+                    </div>
+                    <div class="result-rating">
+                        <span class="stars">★★★★☆</span>
+                        <span class="rating-text">4.5 (67 reviews)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result 3 -->
+            <div class="result-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/f59e0b/ffffff?text=MacBook" alt="MacBook Pro" class="result-image">
+                <div class="result-content">
+                    <div class="result-category">Electronics</div>
+                    <h3 class="result-title">MacBook Pro 16-inch</h3>
+                    <p class="result-description">M2 Pro chip, 32GB unified memory, 1TB SSD storage. Perfect for creative professionals.</p>
+                    <div class="result-footer">
+                        <div class="result-price">2,199 XOM</div>
+                        <div class="result-seller">AppleStore</div>
+                    </div>
+                    <div class="result-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-text">4.9 (123 reviews)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result 4 -->
+            <div class="result-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/ef4444/ffffff?text=Laptop+Stand" alt="Laptop Stand" class="result-image">
+                <div class="result-content">
+                    <div class="result-category">Electronics</div>
+                    <h3 class="result-title">Adjustable Laptop Stand</h3>
+                    <p class="result-description">Ergonomic aluminum design, adjustable height and angle. Improve your workspace posture.</p>
+                    <div class="result-footer">
+                        <div class="result-price">45 XOM</div>
+                        <div class="result-seller">ErgoDesk</div>
+                    </div>
+                    <div class="result-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-text">4.7 (234 reviews)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result 5 -->
+            <div class="result-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/3b82f6/ffffff?text=Laptop+Bag" alt="Laptop Bag" class="result-image">
+                <div class="result-content">
+                    <div class="result-category">Electronics</div>
+                    <h3 class="result-title">Premium Laptop Bag</h3>
+                    <p class="result-description">Waterproof canvas, padded compartments, fits laptops up to 17 inches. Professional style.</p>
+                    <div class="result-footer">
+                        <div class="result-price">79 XOM</div>
+                        <div class="result-seller">BagCraft</div>
+                    </div>
+                    <div class="result-rating">
+                        <span class="stars">★★★★☆</span>
+                        <span class="rating-text">4.3 (89 reviews)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result 6 -->
+            <div class="result-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/8b5cf6/ffffff?text=Refurbished" alt="Refurbished Laptop" class="result-image">
+                <div class="result-content">
+                    <div class="result-category">Electronics</div>
+                    <h3 class="result-title">Refurbished ThinkPad Laptop</h3>
+                    <p class="result-description">Certified refurbished, Intel i7, 16GB RAM, 512GB SSD. 1-year warranty included.</p>
+                    <div class="result-footer">
+                        <div class="result-price">649 XOM</div>
+                        <div class="result-seller">RefurbTech</div>
+                    </div>
+                    <div class="result-rating">
+                        <span class="stars">★★★★☆</span>
+                        <span class="rating-text">4.2 (156 reviews)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Load More -->
+        <div style="text-align: center; margin: 4rem 0;">
+            <button style="padding: 1.2rem 2.4rem; background: var(--primary-color); color: white; border: none; border-radius: 0.6rem; font-size: 1.4rem; font-weight: 500; cursor: pointer;">
+                Load More Results
+            </button>
+        </div>
+    
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+</body>
+</html>

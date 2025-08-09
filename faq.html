@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    
+    <style>
+        .content-container {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 3rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+
+        .press-section, .safety-section, .community-section, .careers-section {
+            margin-bottom: 3rem;
+        }
+
+        .press-section h2, .safety-section h2, .community-section h2, .careers-section h2 {
+            font-size: 2.4rem;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .press-item {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .press-item:last-child {
+            border-bottom: none;
+        }
+
+        .press-date {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .press-title {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .press-excerpt {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .press-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .media-kit-grid, .community-grid, .program-grid, .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .media-item, .community-card, .program-card, .benefit-item {
+            text-align: center;
+            padding: 2rem;
+            background: var(--hover);
+            border-radius: 0.8rem;
+        }
+
+        .media-icon, .community-icon, .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .faq-categories {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .faq-category {
+            padding: 0.8rem 1.6rem;
+            background: var(--hover);
+            border: none;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .faq-category.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.8rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1.5rem;
+            background: none;
+            border: none;
+            text-align: left;
+            font-size: 1.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:hover {
+            background: var(--hover);
+        }
+
+        .faq-toggle {
+            font-size: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            display: none;
+        }
+
+        .safety-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .safety-item {
+            padding: 2rem;
+            background: var(--hover);
+            border-radius: 0.8rem;
+        }
+
+        .safety-item h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .safety-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .safety-list li {
+            padding: 1rem 0 1rem 2rem;
+            position: relative;
+            font-size: 1.4rem;
+            line-height: 1.6;
+        }
+
+        .safety-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--error);
+            border-radius: 0.8rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .warning-box h3 {
+            color: var(--error);
+            margin-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--hover);
+            border-radius: 0.8rem;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .job-listing {
+            background: var(--hover);
+            border-radius: 0.8rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .job-header h3 {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+        }
+
+        .job-location {
+            background: var(--primary-light);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .job-description {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .job-tags {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background: var(--surface);
+            padding: 0.4rem 1rem;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .lead-text {
+            font-size: 1.6rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .report-options {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        
+        <div class="page-header">
+            <h1 class="page-title">Frequently Asked Questions</h1>
+            <p class="page-subtitle">Find answers to common questions about OmniBazaar</p>
+        </div>
+
+        <div class="content-container">
+            <div class="faq-categories">
+                <button class="faq-category active">General</button>
+                <button class="faq-category">Buying</button>
+                <button class="faq-category">Selling</button>
+                <button class="faq-category">Payments</button>
+                <button class="faq-category">Security</button>
+                <button class="faq-category">XOM Token</button>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        What is OmniBazaar?
+                        <span class="faq-toggle">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        OmniBazaar is a decentralized peer-to-peer marketplace built on blockchain technology. It allows users to buy and sell physical goods, digital assets, NFTs, and services directly without intermediaries, using smart contract escrow for secure transactions.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        How do I start selling on OmniBazaar?
+                        <span class="faq-toggle">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        To start selling: 1) Create an account or connect your wallet, 2) Complete optional KYC verification for higher limits, 3) Click "Create Listing" and fill in product details, 4) Set your price in XOM or supported cryptocurrencies, 5) Publish your listing to the blockchain.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        What is XOM token?
+                        <span class="faq-toggle">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        XOM (OmniCoin) is the native cryptocurrency of the OmniBazaar platform. It's used for transactions, staking, governance voting, and earning rewards. XOM holders receive fee discounts and can participate in platform decisions.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        How does the escrow system protect buyers and sellers?
+                        <span class="faq-toggle">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Our smart contract escrow automatically holds payment when a buyer makes a purchase. Funds are only released to the seller when: 1) The buyer confirms receipt and satisfaction, 2) The delivery is confirmed via tracking, or 3) The escrow period expires without dispute. This protects both parties from fraud.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        What fees does OmniBazaar charge?
+                        <span class="faq-toggle">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        OmniBazaar charges a low 2.5% transaction fee on successful sales. XOM token holders receive discounts: 20% off with 1000+ XOM staked, 50% off with 10,000+ XOM staked. There are no listing fees, and buyers don't pay platform fees.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        How do disputes get resolved?
+                        <span class="faq-toggle">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Disputes are resolved through our decentralized arbitration system. Community arbitrators review evidence from both parties and vote on the outcome. The smart contract automatically executes the decision. Arbitrators are rewarded in XOM for fair judgments.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        Can I use traditional payment methods?
+                        <span class="faq-toggle">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        While OmniBazaar primarily uses cryptocurrency, we're integrating fiat payment gateways in supported regions. Users can purchase XOM directly with credit cards or bank transfers through our partners.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        Is KYC verification required?
+                        <span class="faq-toggle">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Basic buying and selling doesn't require KYC. However, verified users enjoy higher transaction limits, access to premium features, and enhanced trust scores. KYC is handled by our decentralized oracle network to protect privacy.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function toggleFaq(element) {
+                const answer = element.nextElementSibling;
+                const toggle = element.querySelector('.faq-toggle');
+                const isOpen = answer.style.display === 'block';
+                
+                answer.style.display = isOpen ? 'none' : 'block';
+                toggle.textContent = isOpen ? '+' : '−';
+                element.classList.toggle('active');
+            }
+        </script>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+</body>
+</html>

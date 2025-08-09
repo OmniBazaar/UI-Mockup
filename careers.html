@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    
+    <style>
+        .content-container {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 3rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+
+        .press-section, .safety-section, .community-section, .careers-section {
+            margin-bottom: 3rem;
+        }
+
+        .press-section h2, .safety-section h2, .community-section h2, .careers-section h2 {
+            font-size: 2.4rem;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .press-item {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .press-item:last-child {
+            border-bottom: none;
+        }
+
+        .press-date {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .press-title {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .press-excerpt {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .press-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .media-kit-grid, .community-grid, .program-grid, .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .media-item, .community-card, .program-card, .benefit-item {
+            text-align: center;
+            padding: 2rem;
+            background: var(--hover);
+            border-radius: 0.8rem;
+        }
+
+        .media-icon, .community-icon, .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .faq-categories {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .faq-category {
+            padding: 0.8rem 1.6rem;
+            background: var(--hover);
+            border: none;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .faq-category.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.8rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1.5rem;
+            background: none;
+            border: none;
+            text-align: left;
+            font-size: 1.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:hover {
+            background: var(--hover);
+        }
+
+        .faq-toggle {
+            font-size: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            display: none;
+        }
+
+        .safety-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .safety-item {
+            padding: 2rem;
+            background: var(--hover);
+            border-radius: 0.8rem;
+        }
+
+        .safety-item h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .safety-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .safety-list li {
+            padding: 1rem 0 1rem 2rem;
+            position: relative;
+            font-size: 1.4rem;
+            line-height: 1.6;
+        }
+
+        .safety-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--error);
+            border-radius: 0.8rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .warning-box h3 {
+            color: var(--error);
+            margin-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--hover);
+            border-radius: 0.8rem;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .job-listing {
+            background: var(--hover);
+            border-radius: 0.8rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .job-header h3 {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+        }
+
+        .job-location {
+            background: var(--primary-light);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .job-description {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .job-tags {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background: var(--surface);
+            padding: 0.4rem 1rem;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .lead-text {
+            font-size: 1.6rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .report-options {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        
+        <div class="page-header">
+            <h1 class="page-title">Careers at OmniBazaar</h1>
+            <p class="page-subtitle">Join us in building the future of decentralized commerce</p>
+        </div>
+
+        <div class="content-container">
+            <section class="careers-section">
+                <h2>Why Work at OmniBazaar?</h2>
+                <p class="lead-text">We're building a revolutionary marketplace that empowers people worldwide to trade freely and securely. Join our mission to democratize commerce through blockchain technology.</p>
+                
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🌍</div>
+                        <h3>Remote First</h3>
+                        <p>Work from anywhere in the world</p>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">💰</div>
+                        <h3>Token Compensation</h3>
+                        <p>Earn XOM tokens as part of your package</p>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🚀</div>
+                        <h3>Innovation</h3>
+                        <p>Work on cutting-edge blockchain technology</p>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🌱</div>
+                        <h3>Growth</h3>
+                        <p>Learn and grow with industry leaders</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="careers-section">
+                <h2>Open Positions</h2>
+                
+                <div class="job-listing">
+                    <div class="job-header">
+                        <h3>Senior Blockchain Developer</h3>
+                        <span class="job-location">Remote</span>
+                    </div>
+                    <p class="job-description">Lead smart contract development and blockchain integration for our marketplace platform. Experience with Solidity, Web3, and DeFi protocols required.</p>
+                    <div class="job-tags">
+                        <span class="tag">Engineering</span>
+                        <span class="tag">Full-time</span>
+                        <span class="tag">Senior</span>
+                    </div>
+                    <a href="#" class="btn btn-primary">Apply Now</a>
+                </div>
+
+                <div class="job-listing">
+                    <div class="job-header">
+                        <h3>Product Designer</h3>
+                        <span class="job-location">Remote</span>
+                    </div>
+                    <p class="job-description">Design intuitive user experiences for our decentralized marketplace. Create designs that make blockchain technology accessible to everyone.</p>
+                    <div class="job-tags">
+                        <span class="tag">Design</span>
+                        <span class="tag">Full-time</span>
+                        <span class="tag">Mid-Senior</span>
+                    </div>
+                    <a href="#" class="btn btn-primary">Apply Now</a>
+                </div>
+
+                <div class="job-listing">
+                    <div class="job-header">
+                        <h3>Community Manager</h3>
+                        <span class="job-location">Remote</span>
+                    </div>
+                    <p class="job-description">Build and nurture our global community across Discord, Telegram, and social media. Organize events and manage community programs.</p>
+                    <div class="job-tags">
+                        <span class="tag">Marketing</span>
+                        <span class="tag">Full-time</span>
+                        <span class="tag">All levels</span>
+                    </div>
+                    <a href="#" class="btn btn-primary">Apply Now</a>
+                </div>
+
+                <div class="job-listing">
+                    <div class="job-header">
+                        <h3>Security Engineer</h3>
+                        <span class="job-location">Remote</span>
+                    </div>
+                    <p class="job-description">Ensure the security of our platform through audits, penetration testing, and security best practices. Experience with smart contract security essential.</p>
+                    <div class="job-tags">
+                        <span class="tag">Security</span>
+                        <span class="tag">Full-time</span>
+                        <span class="tag">Senior</span>
+                    </div>
+                    <a href="#" class="btn btn-primary">Apply Now</a>
+                </div>
+            </section>
+
+            <section class="careers-section">
+                <h2>Don't See Your Role?</h2>
+                <p>We're always looking for talented individuals who share our vision. Send us your resume and tell us how you can contribute to OmniBazaar's mission.</p>
+                <a href="contact.html" class="btn btn-secondary">Get in Touch</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+</body>
+</html>

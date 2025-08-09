@@ -3,701 +3,470 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmniBazaar UI Mockup - Development Portal</title>
+    <title>OmniBazaar - Decentralized Marketplace</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary-color: #373373;
-            --primary-dark: #2a2858;
-            --primary-light: #4a46a3;
-            --background: #F7F8FA;
-            --surface: #FFFFFF;
-            --text-primary: #3E4153;
-            --text-secondary: #6F727F;
-            --text-muted: #8E909B;
-            --border: #E5E7EB;
-            --hover: #F3F4F6;
-            --success: #10B981;
-            --error: #EF4444;
-            --warning: #F59E0B;
-            --info: #3B82F6;
-            --spacing-unit: 0.8rem;
-        }
-
-        html {
-            font-size: 10px;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            font-size: 1.6rem;
-            line-height: 1.5;
-            color: var(--text-primary);
-            background-color: var(--background);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 120rem;
-            margin: 0 auto;
-            padding: calc(var(--spacing-unit) * 5) calc(var(--spacing-unit) * 3);
-        }
-
-        .header {
+        /* Page Specific Styles */
+        .page-header {
             text-align: center;
-            margin-bottom: calc(var(--spacing-unit) * 6);
-            background: var(--surface);
-            border-radius: calc(var(--spacing-unit) * 2);
-            padding: calc(var(--spacing-unit) * 6);
-            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
-            border-top: 0.5rem solid var(--primary-color);
-        }
-
-        .logo {
-            width: 8rem;
-            height: 8rem;
-            margin-bottom: calc(var(--spacing-unit) * 3);
-        }
-
-        .title {
-            font-size: 4.8rem;
-            font-weight: 800;
-            margin-bottom: calc(var(--spacing-unit) * 2);
-            color: var(--primary-color);
-        }
-
-        .subtitle {
-            font-size: 2.4rem;
-            font-weight: 300;
-            margin-bottom: calc(var(--spacing-unit) * 1);
-            color: var(--text-primary);
-        }
-
-        .description {
-            font-size: 1.8rem;
-            color: var(--text-secondary);
-            max-width: 60rem;
-            margin: 0 auto;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-            gap: calc(var(--spacing-unit) * 3);
-            margin-bottom: calc(var(--spacing-unit) * 6);
-        }
-
-        .stat-card {
-            background: var(--surface);
-            border-radius: calc(var(--spacing-unit) * 2);
-            padding: calc(var(--spacing-unit) * 4);
-            text-align: center;
-            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-0.2rem);
-            box-shadow: 0 0.4rem 1rem rgba(0,0,0,0.1);
-        }
-
-        .stat-number {
-            font-size: 3.6rem;
-            font-weight: 700;
-            margin-bottom: calc(var(--spacing-unit) * 1);
-            color: var(--primary-color);
-        }
-
-        .stat-label {
-            font-size: 1.4rem;
-            color: var(--text-secondary);
-        }
-
-        .modules {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(32rem, 1fr));
-            gap: calc(var(--spacing-unit) * 3);
-            margin-bottom: calc(var(--spacing-unit) * 6);
-        }
-
-        .module-card {
-            background: var(--surface);
-            border-radius: calc(var(--spacing-unit) * 2);
-            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
-            overflow: hidden;
-            transition: all 0.2s;
-            border: 1px solid var(--border);
-        }
-
-        .module-card:hover {
-            transform: translateY(-0.4rem);
-            box-shadow: 0 0.8rem 2rem rgba(0,0,0,0.1);
-            border-color: var(--primary-color);
-        }
-
-        .module-header {
-            background: var(--primary-color);
-            color: white;
-            padding: calc(var(--spacing-unit) * 4);
-            text-align: center;
-        }
-
-        .module-icon {
-            font-size: 4.8rem;
-            margin-bottom: calc(var(--spacing-unit) * 2);
-        }
-
-        .module-title {
-            font-size: 2.4rem;
-            font-weight: 700;
-            margin-bottom: calc(var(--spacing-unit) * 1);
-        }
-
-        .module-subtitle {
-            opacity: 0.9;
-            font-size: 1.4rem;
-        }
-
-        .module-content {
-            padding: calc(var(--spacing-unit) * 4);
-        }
-
-        .module-description {
-            color: var(--text-secondary);
-            margin-bottom: calc(var(--spacing-unit) * 3);
-            line-height: 1.5;
-        }
-
-        .page-list {
-            margin-bottom: calc(var(--spacing-unit) * 3);
-        }
-
-        .page-list h4 {
-            color: var(--text-primary);
-            font-size: 1.6rem;
-            font-weight: 600;
-            margin-bottom: calc(var(--spacing-unit) * 2);
-        }
-
-        .page-links {
-            display: flex;
-            flex-direction: column;
-            gap: calc(var(--spacing-unit) * 1);
-        }
-
-        .page-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 2);
-            border-radius: calc(var(--spacing-unit) * 1);
-            transition: all 0.2s;
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            gap: calc(var(--spacing-unit) * 1);
-            border: 1px solid transparent;
-        }
-
-        .page-link:hover {
-            background: var(--hover);
-            border-color: var(--primary-color);
-            transform: translateX(0.2rem);
-        }
-
-        .page-status {
-            margin-left: auto;
-            font-size: 1.2rem;
-            padding: calc(var(--spacing-unit) * 0.5) calc(var(--spacing-unit) * 1);
-            border-radius: calc(var(--spacing-unit) * 0.5);
-            font-weight: 500;
-        }
-
-        .status-complete {
-            background: var(--success);
-            color: white;
-        }
-
-        .status-ready {
-            background: var(--info);
-            color: white;
-        }
-
-        .status-progress {
-            background: var(--warning);
-            color: white;
-        }
-
-        .status-planned {
-            background: var(--text-muted);
-            color: white;
-        }
-
-        .module-stats {
+            margin-bottom: 3rem;
             display: flex;
             justify-content: space-between;
-            padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 4);
-            background: var(--background);
-            border-top: 1px solid var(--border);
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .header-content-left {
+            text-align: left;
+            flex: 1;
+            min-width: 30rem;
+        }
+
+        .page-title {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .marketplace-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-primary {
+            padding: 1.2rem 2.4rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-0.2rem);
+        }
+
+        .btn-secondary {
+            padding: 1.2rem 2.4rem;
+            background: var(--surface);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: var(--hover);
+            transform: translateY(-0.2rem);
+        }
+
+        .filter-bar {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .filter-select {
+            padding: 0.8rem 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 0.6rem;
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 1.4rem;
+            min-width: 15rem;
+            cursor: pointer;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+            gap: 2.4rem;
+            margin-bottom: 4rem;
+        }
+
+        .product-card {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-0.8rem);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 20rem;
+            object-fit: cover;
+            background: var(--hover);
+        }
+
+        .product-content {
+            padding: 2rem;
+        }
+
+        .product-category {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .product-description {
             font-size: 1.4rem;
             color: var(--text-secondary);
+            margin-bottom: 1.6rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        .footer {
-            text-align: center;
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .product-seller {
+            font-size: 1.2rem;
             color: var(--text-secondary);
-            margin-top: calc(var(--spacing-unit) * 6);
-            padding: calc(var(--spacing-unit) * 4);
-            background: var(--surface);
-            border-radius: calc(var(--spacing-unit) * 2);
-            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
         }
 
-        .footer a {
-            color: var(--primary-color);
-            text-decoration: none;
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.8rem;
         }
 
-        .footer a:hover {
-            text-decoration: underline;
+        .stars {
+            color: var(--warning);
         }
 
-        .development-notice {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: calc(var(--spacing-unit) * 2);
-            padding: calc(var(--spacing-unit) * 4);
-            margin-bottom: calc(var(--spacing-unit) * 6);
-            text-align: center;
-            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
-        }
-
-        .notice-title {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: calc(var(--spacing-unit) * 2);
-            color: var(--primary-color);
-        }
-
-        .notice-text {
+        .rating-text {
+            font-size: 1.2rem;
             color: var(--text-secondary);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <img src="OmniBazaar Globe-clear-256x256.png" alt="OmniBazaar Logo" class="logo">
-            <h1 class="title">OmniBazaar</h1>
-            <p class="subtitle">UI Mockup Development Portal</p>
-            <p class="description">
-                Interactive mockups for user acceptance testing and development preview
-            </p>
-        </div>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
 
-        <!-- Development Notice -->
-        <div class="development-notice">
-            <h3 class="notice-title">🚧 Development Environment</h3>
-            <p class="notice-text">
-                These mockups represent the OmniBazaar ecosystem modules in development. 
-                Use these for user testing, design validation, and stakeholder previews.
-            </p>
-        </div>
-
-        <!-- Statistics -->
-        <div class="stats">
-            <div class="stat-card">
-                <div class="stat-number">12</div>
-                <div class="stat-label">Total Modules</div>
+    <!-- Main Content -->
+    <main class="main">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content-left">
+                <h1 class="page-title">Marketplace</h1>
+                <p class="page-subtitle">Discover amazing products from sellers around the world</p>
             </div>
-            <div class="stat-card">
-                <div class="stat-number">21</div>
-                <div class="stat-label">UI Mockups</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">8</div>
-                <div class="stat-label">Complete Flows</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">95%</div>
-                <div class="stat-label">Progress</div>
+            <div class="marketplace-buttons">
+                <a href="marketplace-create.html" class="btn-primary">Create Listing</a>
+                <a href="my-listings.html" class="btn-secondary">My Listings</a>
             </div>
         </div>
 
-        <!-- Module Cards -->
-        <div class="modules">
-            <!-- Authentication & Onboarding -->
-            <div class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">🔐</div>
-                    <h3 class="module-title">Authentication</h3>
-                    <p class="module-subtitle">User Login & Registration</p>
+        <!-- Filters -->
+        <div class="filter-bar">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label class="filter-label">Category</label>
+                    <select class="filter-select">
+                        <option>All Categories</option>
+                        <option>Electronics</option>
+                        <option>Clothing</option>
+                        <option>Home & Garden</option>
+                        <option>Books</option>
+                        <option>Sports</option>
+                        <option>Collectibles</option>
+                    </select>
                 </div>
-                <div class="module-content">
-                    <p class="module-description">
-                        Web2-style authentication system with username/password login, 
-                        abstracting away blockchain complexity from users.
-                    </p>
-                    <div class="page-list">
-                        <h4>Available Pages:</h4>
-                        <div class="page-links">
-                            <a href="onboarding-welcome.html" class="page-link">
-                                🏠 Welcome Page
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                            <a href="auth-login.html" class="page-link">
-                                🔑 Login & Registration
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                        </div>
-                    </div>
+                <div class="filter-group">
+                    <label class="filter-label">Price Range</label>
+                    <select class="filter-select">
+                        <option>Any Price</option>
+                        <option>Under $50</option>
+                        <option>$50 - $200</option>
+                        <option>$200 - $500</option>
+                        <option>Over $500</option>
+                    </select>
                 </div>
-                <div class="module-stats">
-                    <span>Pages: 2</span>
-                    <span>Status: Complete</span>
+                <div class="filter-group">
+                    <label class="filter-label">Location</label>
+                    <select class="filter-select">
+                        <option>Worldwide</option>
+                        <option>United States</option>
+                        <option>Europe</option>
+                        <option>Asia</option>
+                        <option>Local Only</option>
+                    </select>
                 </div>
-            </div>
-
-            <!-- Wallet & Dashboard -->
-            <div class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">💳</div>
-                    <h3 class="module-title">Wallet</h3>
-                    <p class="module-subtitle">Multi-Chain Wallet Interface</p>
-                </div>
-                <div class="module-content">
-                    <p class="module-description">
-                        Comprehensive wallet interface supporting OmniCoin, Ethereum, 
-                        Bitcoin, and other cryptocurrencies with Web2-like UX.
-                    </p>
-                    <div class="page-list">
-                        <h4>Available Pages:</h4>
-                        <div class="page-links">
-                            <a href="wallet-dashboard.html" class="page-link">
-                                📊 Wallet Dashboard
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                            <a href="transaction-send.html" class="page-link">
-                                💸 Send Money
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                            <a href="wallet.html" class="page-link">
-                                💰 Wallet Page
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                            <a href="#" class="page-link">
-                                📥 Receive Money
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                            <a href="#" class="page-link">
-                                📈 Portfolio View
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="module-stats">
-                    <span>Pages: 3/5</span>
-                    <span>Status: 60% Complete</span>
-                </div>
-            </div>
-
-            <!-- Marketplace -->
-            <div class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">🏪</div>
-                    <h3 class="module-title">Marketplace</h3>
-                    <p class="module-subtitle">Decentralized Product Marketplace</p>
-                </div>
-                <div class="module-content">
-                    <p class="module-description">
-                        Full-featured marketplace for products, services, NFTs, RWAs, 
-                        and digital assets with integrated escrow and payments.
-                    </p>
-                    <div class="page-list">
-                        <h4>Available Pages:</h4>
-                        <div class="page-links">
-                            <a href="marketplace-categories.html" class="page-link">
-                                🏠 Marketplace Home
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                            <a href="my-listings.html" class="page-link">
-                                📋 My Listings
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                            <a href="orders.html" class="page-link">
-                                📦 My Orders
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                            <a href="profile.html" class="page-link">
-                                👤 Profile
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                            <a href="escrow-dashboard.html" class="page-link">
-                                🔒 Escrow Dashboard
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                            <a href="marketplace-search.html" class="page-link">
-                                🔍 Search Results
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                            <a href="marketplace-listing.html" class="page-link">
-                                📄 Listing Details
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                            <a href="marketplace-create.html" class="page-link">
-                                ➕ Create Listing
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                            <a href="purchase-flow.html" class="page-link">
-                                💳 Purchase Flow
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                            <a href="messages.html" class="page-link">
-                                💬 Messages
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                            <a href="notifications.html" class="page-link">
-                                🔔 Notifications
-                                <span class="page-status status-complete">Complete</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="module-stats">
-                    <span>Pages: 11/11</span>
-                    <span>Status: 100% Complete</span>
-                </div>
-            </div>
-
-            <!-- DEX (CryptoBazaar) -->
-            <div class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">📈</div>
-                    <h3 class="module-title">DEX</h3>
-                    <p class="module-subtitle">Decentralized Exchange</p>
-                </div>
-                <div class="module-content">
-                    <p class="module-description">
-                        Professional trading interface for cryptocurrency exchange 
-                        with advanced charting and order management.
-                    </p>
-                    <div class="page-list">
-                        <h4>Planned Pages:</h4>
-                        <div class="page-links">
-                            <a href="dex-trading.html" class="page-link">
-                                📊 Trading Dashboard
-                                <span class="page-status status-ready">Ready</span>
-                            </a>
-                            <a href="#" class="page-link">
-                                📋 Order Book
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                            <a href="dex-swap.html" class="page-link">
-                                🔄 Swap Interface
-                                <span class="page-status status-ready">Ready</span>
-                            </a>
-                            <a href="#" class="page-link">
-                                💰 Liquidity Pools
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="module-stats">
-                    <span>Pages: 2/4</span>
-                    <span>Status: In Progress</span>
-                </div>
-            </div>
-
-            <!-- Chat & Messaging -->
-            <div class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">💬</div>
-                    <h3 class="module-title">Chat</h3>
-                    <p class="module-subtitle">P2P Communication</p>
-                </div>
-                <div class="module-content">
-                    <p class="module-description">
-                        Secure peer-to-peer messaging system for marketplace 
-                        communication and community interaction.
-                    </p>
-                    <div class="page-list">
-                        <h4>Planned Pages:</h4>
-                        <div class="page-links">
-                            <a href="#" class="page-link">
-                                💬 Chat Interface
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                            <a href="#" class="page-link">
-                                👥 Contact List
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                            <a href="#" class="page-link">
-                                🔐 Secure Channels
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="module-stats">
-                    <span>Pages: 0/3</span>
-                    <span>Status: Planned</span>
-                </div>
-            </div>
-
-            <!-- Staking & Governance -->
-            <div class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">🗳️</div>
-                    <h3 class="module-title">Governance</h3>
-                    <p class="module-subtitle">Staking & Voting</p>
-                </div>
-                <div class="module-content">
-                    <p class="module-description">
-                        OmniCoin staking interface and governance system for 
-                        community decision making and network participation.
-                    </p>
-                    <div class="page-list">
-                        <h4>Planned Pages:</h4>
-                        <div class="page-links">
-                            <a href="#" class="page-link">
-                                🏛️ Governance Dashboard
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                            <a href="#" class="page-link">
-                                🥩 Staking Interface
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                            <a href="#" class="page-link">
-                                📊 Proposals & Voting
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="module-stats">
-                    <span>Pages: 0/3</span>
-                    <span>Status: Planned</span>
-                </div>
-            </div>
-
-            <!-- Migration Tools -->
-            <div class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">🔄</div>
-                    <h3 class="module-title">Migration</h3>
-                    <p class="module-subtitle">Legacy Account Migration</p>
-                </div>
-                <div class="module-content">
-                    <p class="module-description">
-                        Tools for migrating from legacy OmniCoin accounts to 
-                        the new blockchain with balance preservation.
-                    </p>
-                    <div class="page-list">
-                        <h4>Planned Pages:</h4>
-                        <div class="page-links">
-                            <a href="#" class="page-link">
-                                🔍 Account Lookup
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                            <a href="#" class="page-link">
-                                📋 Migration Wizard
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                            <a href="#" class="page-link">
-                                ✅ Migration Status
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="module-stats">
-                    <span>Pages: 0/3</span>
-                    <span>Status: Planned</span>
-                </div>
-            </div>
-
-            <!-- Settings & Admin -->
-            <div class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">⚙️</div>
-                    <h3 class="module-title">Settings</h3>
-                    <p class="module-subtitle">Configuration & Preferences</p>
-                </div>
-                <div class="module-content">
-                    <p class="module-description">
-                        User settings, security preferences, and administrative 
-                        controls for the OmniBazaar ecosystem.
-                    </p>
-                    <div class="page-list">
-                        <h4>Planned Pages:</h4>
-                        <div class="page-links">
-                            <a href="#" class="page-link">
-                                👤 Profile Settings
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                            <a href="#" class="page-link">
-                                🔐 Security Settings
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                            <a href="#" class="page-link">
-                                🔔 Notifications
-                                <span class="page-status status-planned">Planned</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="module-stats">
-                    <span>Pages: 0/3</span>
-                    <span>Status: Planned</span>
+                <div class="filter-group">
+                    <label class="filter-label">Sort By</label>
+                    <select class="filter-select">
+                        <option>Most Recent</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Best Rating</option>
+                        <option>Most Popular</option>
+                    </select>
                 </div>
             </div>
         </div>
 
-        <!-- Footer -->
-        <div class="footer">
-            <p>&copy; 2025 OmniBazaar Development Team</p>
-            <p>
-                <a href="../README.md">Documentation</a> • 
-                <a href="../TODO.md">Development Plan</a> • 
-                <a href="mailto:dev@omnibazaar.com">Contact</a>
-            </p>
-        </div>
-    </div>
+        <!-- Products Grid -->
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/4a46a3/ffffff?text=Laptop" alt="Gaming Laptop" class="product-image">
+                <div class="product-content">
+                    <div class="product-category">Electronics</div>
+                    <h3 class="product-title">High-Performance Gaming Laptop</h3>
+                    <p class="product-description">Intel i7 processor, 16GB RAM, RTX 3070 graphics card. Perfect for gaming and professional work.</p>
+                    <div class="product-footer">
+                        <div class="product-price">1,299 XOM</div>
+                        <div class="product-seller">TechDealer</div>
+                    </div>
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-text">4.8 (24 reviews)</span>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Product 2 -->
+            <div class="product-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/10b981/ffffff?text=Headphones" alt="Wireless Headphones" class="product-image">
+                <div class="product-content">
+                    <div class="product-category">Electronics</div>
+                    <h3 class="product-title">Premium Wireless Headphones</h3>
+                    <p class="product-description">Noise-cancelling Bluetooth headphones with 30-hour battery life and premium sound quality.</p>
+                    <div class="product-footer">
+                        <div class="product-price">299 XOM</div>
+                        <div class="product-seller">AudioPro</div>
+                    </div>
+                    <div class="product-rating">
+                        <span class="stars">★★★★☆</span>
+                        <span class="rating-text">4.6 (89 reviews)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/f59e0b/ffffff?text=Watch" alt="Smart Watch" class="product-image">
+                <div class="product-content">
+                    <div class="product-category">Electronics</div>
+                    <h3 class="product-title">Advanced Smart Watch</h3>
+                    <p class="product-description">Health monitoring, GPS tracking, waterproof design with 7-day battery life.</p>
+                    <div class="product-footer">
+                        <div class="product-price">199 XOM</div>
+                        <div class="product-seller">WearableTech</div>
+                    </div>
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-text">4.9 (156 reviews)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/ef4444/ffffff?text=Sneakers" alt="Designer Sneakers" class="product-image">
+                <div class="product-content">
+                    <div class="product-category">Clothing</div>
+                    <h3 class="product-title">Limited Edition Sneakers</h3>
+                    <p class="product-description">Rare colorway, authentic with original box and receipt. Size 10.5 US.</p>
+                    <div class="product-footer">
+                        <div class="product-price">450 XOM</div>
+                        <div class="product-seller">SneakerHead</div>
+                    </div>
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-text">5.0 (12 reviews)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/3b82f6/ffffff?text=Camera" alt="Digital Camera" class="product-image">
+                <div class="product-content">
+                    <div class="product-category">Electronics</div>
+                    <h3 class="product-title">Professional DSLR Camera</h3>
+                    <p class="product-description">24MP full-frame sensor, 4K video recording, includes 50mm lens and camera bag.</p>
+                    <div class="product-footer">
+                        <div class="product-price">899 XOM</div>
+                        <div class="product-seller">PhotoGear</div>
+                    </div>
+                    <div class="product-rating">
+                        <span class="stars">★★★★☆</span>
+                        <span class="rating-text">4.7 (43 reviews)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/8b5cf6/ffffff?text=Book+Set" alt="Book Collection" class="product-image">
+                <div class="product-content">
+                    <div class="product-category">Books</div>
+                    <h3 class="product-title">Fantasy Book Collection</h3>
+                    <p class="product-description">Complete 7-book series in hardcover, excellent condition. Perfect for collectors.</p>
+                    <div class="product-footer">
+                        <div class="product-price">125 XOM</div>
+                        <div class="product-seller">BookLover</div>
+                    </div>
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-text">4.9 (67 reviews)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 7 -->
+            <div class="product-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/06b6d4/ffffff?text=Plant" alt="Indoor Plant" class="product-image">
+                <div class="product-content">
+                    <div class="product-category">Home & Garden</div>
+                    <h3 class="product-title">Rare Monstera Plant</h3>
+                    <p class="product-description">Healthy variegated monstera deliciosa, 2 feet tall with decorative ceramic pot.</p>
+                    <div class="product-footer">
+                        <div class="product-price">89 XOM</div>
+                        <div class="product-seller">PlantParent</div>
+                    </div>
+                    <div class="product-rating">
+                        <span class="stars">★★★★☆</span>
+                        <span class="rating-text">4.5 (31 reviews)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 8 -->
+            <div class="product-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/ec4899/ffffff?text=Guitar" alt="Electric Guitar" class="product-image">
+                <div class="product-content">
+                    <div class="product-category">Musical Instruments</div>
+                    <h3 class="product-title">Vintage Electric Guitar</h3>
+                    <p class="product-description">1980s Stratocaster-style guitar in sunburst finish. Includes hard case and amp.</p>
+                    <div class="product-footer">
+                        <div class="product-price">650 XOM</div>
+                        <div class="product-seller">MusicStore</div>
+                    </div>
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-text">4.8 (28 reviews)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 9 -->
+            <div class="product-card" onclick="location.href='marketplace-listing.html'">
+                <img src="https://via.placeholder.com/300x200/14b8a6/ffffff?text=Bike" alt="Mountain Bike" class="product-image">
+                <div class="product-content">
+                    <div class="product-category">Sports</div>
+                    <h3 class="product-title">Mountain Bike - Full Suspension</h3>
+                    <p class="product-description">29" wheels, 21-speed transmission, aluminum frame. Perfect for trails and city riding.</p>
+                    <div class="product-footer">
+                        <div class="product-price">420 XOM</div>
+                        <div class="product-seller">BikeShop</div>
+                    </div>
+                    <div class="product-rating">
+                        <span class="stars">★★★★☆</span>
+                        <span class="rating-text">4.4 (52 reviews)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Load More -->
+        <div style="text-align: center; margin: 4rem 0;">
+            <button style="padding: 1.2rem 2.4rem; background: var(--primary-color); color: white; border: none; border-radius: 0.6rem; font-size: 1.4rem; font-weight: 500; cursor: pointer;">
+                Load More Products
+            </button>
+        </div>
+    
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
     <script>
-        // Add some interactivity
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animate stat numbers
-            const statNumbers = document.querySelectorAll('.stat-number');
-            statNumbers.forEach(stat => {
-                const target = parseInt(stat.textContent);
-                let current = 0;
-                const increment = target / 20;
-                const timer = setInterval(() => {
-                    current += increment;
-                    if (current >= target) {
-                        stat.textContent = target + (stat.textContent.includes('%') ? '%' : '');
-                        clearInterval(timer);
-                    } else {
-                        stat.textContent = Math.floor(current) + (stat.textContent.includes('%') ? '%' : '');
-                    }
-                }, 50);
+        // Product card interactions
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-0.8rem)';
             });
-
-            // Add click tracking for planned pages
-            const plannedLinks = document.querySelectorAll('.page-link[href="#"]');
-            plannedLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    alert('This page is planned for future development. Check back soon!');
-                });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
             });
         });
     </script>

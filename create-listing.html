@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Listing - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        /* Page Specific Styles */
+        .form-container {
+            max-width: 80rem;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 3rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .form-section {
+            margin-bottom: 3rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .form-label.required::after {
+            content: " *";
+            color: var(--error);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            background: var(--surface);
+            color: var(--text-primary);
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(55, 51, 115, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 12rem;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .help-text {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid var(--info);
+            border-radius: 0.8rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 0.8rem;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .file-upload-area:hover, .file-upload-area.dragover {
+            border-color: var(--primary-color);
+            background: var(--hover);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .image-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .preview-item {
+            position: relative;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 10rem;
+            object-fit: cover;
+            border-radius: 0.4rem;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 2rem;
+            height: 2rem;
+            background: var(--error);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .price-input-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .price-input {
+            flex: 1;
+        }
+
+        .currency-select {
+            width: 10rem;
+            padding: 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            background: var(--surface);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox {
+            width: 1.8rem;
+            height: 1.8rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 3rem;
+        }
+
+        .btn {
+            padding: 1.2rem 2.4rem;
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--hover);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        
+        <div class="page-header">
+            <h1 class="page-title">Create New Listing</h1>
+            <p class="page-subtitle">List your physical goods for sale on the decentralized marketplace</p>
+        </div>
+
+        <div class="info-box">
+            <p><strong>Decentralized Listing:</strong> Your listing will be stored on IPFS and indexed across the network. Once published, it will be permanently available and searchable by all users.</p>
+        </div>
+
+        <div class="form-container">
+            <form onsubmit="submitListing(event)">
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <h2 class="section-title">Basic Information</h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label required" for="title">Listing Title</label>
+                        <input type="text" class="form-input" id="title" name="title" placeholder="Enter a clear, descriptive title" required>
+                        <div class="help-text">Use keywords buyers will search for. Maximum 80 characters.</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="category">Category</label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="">Select a category...</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="clothing">Clothing & Fashion</option>
+                                <option value="home">Home & Garden</option>
+                                <option value="books">Books & Media</option>
+                                <option value="sports">Sports & Recreation</option>
+                                <option value="collectibles">Collectibles</option>
+                                <option value="automotive">Automotive</option>
+                                <option value="health">Health & Beauty</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required" for="condition">Condition</label>
+                            <select class="form-select" id="condition" name="condition" required>
+                                <option value="">Select condition...</option>
+                                <option value="new">New</option>
+                                <option value="like-new">Like New</option>
+                                <option value="excellent">Excellent</option>
+                                <option value="good">Good</option>
+                                <option value="fair">Fair</option>
+                                <option value="poor">Poor</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required" for="description">Description</label>
+                        <textarea class="form-textarea" id="description" name="description" placeholder="Describe your item in detail. Include any flaws, measurements, brand, model, etc." required></textarea>
+                        <div class="help-text">Detailed descriptions help buyers make informed decisions and reduce disputes.</div>
+                    </div>
+                </div>
+
+                <!-- Images -->
+                <div class="form-section">
+                    <h2 class="section-title">Images</h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Product Images</label>
+                        <div class="file-upload-area" onclick="document.getElementById('images').click()">
+                            <div class="upload-icon">📸</div>
+                            <div class="upload-text">Click to upload images or drag and drop</div>
+                            <div class="help-text">Upload up to 10 high-quality images. First image will be the main photo.</div>
+                        </div>
+                        <input type="file" class="file-input" id="images" multiple accept="image/*" onchange="handleImageUpload(this)">
+                        <div class="image-preview" id="imagePreview"></div>
+                    </div>
+                </div>
+
+                <!-- Pricing -->
+                <div class="form-section">
+                    <h2 class="section-title">Pricing & Payment</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="price">Price</label>
+                            <div class="price-input-group">
+                                <input type="number" class="form-input price-input" id="price" name="price" placeholder="0.00" step="0.01" min="0" required>
+                                <select class="currency-select" name="currency">
+                                    <option value="xom">XOM</option>
+                                    <option value="eth">ETH</option>
+                                    <option value="btc">BTC</option>
+                                    <option value="usd">USD</option>
+                                </select>
+                            </div>
+                            <div class="help-text">Set a competitive price based on market value and condition.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="quantity">Quantity Available</label>
+                            <input type="number" class="form-input" id="quantity" name="quantity" value="1" min="1">
+                            <div class="help-text">How many units are you selling?</div>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" class="checkbox" id="acceptOffers" name="acceptOffers">
+                        <label for="acceptOffers">Accept offers below asking price</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" class="checkbox" id="acceptTrades" name="acceptTrades">
+                        <label for="acceptTrades">Consider trades or exchanges</label>
+                    </div>
+                </div>
+
+                <!-- Shipping -->
+                <div class="form-section">
+                    <h2 class="section-title">Shipping & Location</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="location">Your Location</label>
+                            <input type="text" class="form-input" id="location" name="location" placeholder="City, State/Province, Country" required>
+                            <div class="help-text">General location helps buyers estimate shipping costs.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="shippingCost">Shipping Cost</label>
+                            <input type="number" class="form-input" id="shippingCost" name="shippingCost" placeholder="0.00" step="0.01" min="0">
+                            <div class="help-text">Leave empty for free shipping or buyer-calculated rates.</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="shippingRegions">Ship To</label>
+                        <select class="form-select" id="shippingRegions" name="shippingRegions">
+                            <option value="worldwide">Worldwide</option>
+                            <option value="domestic">Domestic only</option>
+                            <option value="north-america">North America</option>
+                            <option value="europe">Europe</option>
+                            <option value="asia">Asia</option>
+                            <option value="local">Local pickup only</option>
+                        </select>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" class="checkbox" id="localPickup" name="localPickup">
+                        <label for="localPickup">Offer local pickup</label>
+                    </div>
+                </div>
+
+                <!-- Additional Options -->
+                <div class="form-section">
+                    <h2 class="section-title">Additional Options</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="duration">Listing Duration</label>
+                            <select class="form-select" id="duration" name="duration">
+                                <option value="30">30 days</option>
+                                <option value="60" selected>60 days</option>
+                                <option value="90">90 days</option>
+                                <option value="0">No expiration</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="tags">Tags</label>
+                            <input type="text" class="form-input" id="tags" name="tags" placeholder="vintage, rare, handmade, etc.">
+                            <div class="help-text">Comma-separated tags to help buyers find your item.</div>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" class="checkbox" id="featured" name="featured">
+                        <label for="featured">Feature this listing (+0.5 XOM fee)</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" class="checkbox" id="autoRelist" name="autoRelist">
+                        <label for="autoRelist">Automatically relist if unsold</label>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary">Save as Draft</button>
+                    <button type="button" class="btn btn-primary">Preview Listing</button>
+                    <button type="submit" class="btn btn-success">Publish Listing</button>
+                </div>
+            </form>
+        </div>
+    
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+    
+    <script>
+        let uploadedImages = [];
+
+        function handleImageUpload(input) {
+            const files = Array.from(input.files);
+            const preview = document.getElementById('imagePreview');
+            
+            files.forEach((file, index) => {
+                if (uploadedImages.length >= 10) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImages.push(file);
+                    
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item';
+                    
+                    previewItem.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview" class="preview-image">
+                        <button type="button" class="remove-image" onclick="removeImage(${uploadedImages.length - 1})">×</button>
+                    `;
+                    
+                    preview.appendChild(previewItem);
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // Clear the input so the same file can be uploaded again
+            input.value = '';
+        }
+
+        function removeImage(index) {
+            uploadedImages.splice(index, 1);
+            updateImagePreview();
+        }
+
+        function updateImagePreview() {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = '';
+            
+            uploadedImages.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item';
+                    
+                    previewItem.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview" class="preview-image">
+                        <button type="button" class="remove-image" onclick="removeImage(${index})">×</button>
+                    `;
+                    
+                    preview.appendChild(previewItem);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function submitListing(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(event.target);
+            
+            // Validate required fields
+            const title = formData.get('title');
+            const category = formData.get('category');
+            const condition = formData.get('condition');
+            const description = formData.get('description');
+            const price = formData.get('price');
+            const location = formData.get('location');
+            
+            if (!title || !category || !condition || !description || !price || !location) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            if (uploadedImages.length === 0) {
+                alert('Please upload at least one image of your item.');
+                return;
+            }
+            
+            // In a real implementation, this would submit to the blockchain/IPFS
+            alert('Your listing has been created and will be published to the network shortly!');
+            
+            // Redirect to listings page
+            window.location.href = 'my-listings.html';
+        }
+
+        // Drag and drop functionality
+        const uploadArea = document.querySelector('.file-upload-area');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight(e) {
+            uploadArea.classList.add('dragover');
+        }
+        
+        function unhighlight(e) {
+            uploadArea.classList.remove('dragover');
+        }
+        
+        uploadArea.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            document.getElementById('images').files = files;
+            handleImageUpload(document.getElementById('images'));
+        }
+    </script>
+</body>
+</html>

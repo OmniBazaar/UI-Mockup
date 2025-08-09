@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .content-container {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 3rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+        
+        .settings-section, .help-section {
+            margin-bottom: 3rem;
+        }
+        
+        .settings-section h2, .help-section h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+        
+        .settings-group {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .settings-group:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .setting-label {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+        }
+        
+        .setting-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 5rem;
+            height: 2.4rem;
+            background: var(--border);
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background: var(--primary-color);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 0.3rem;
+            left: 0.3rem;
+            width: 1.8rem;
+            height: 1.8rem;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(2.6rem);
+        }
+        
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .help-card {
+            padding: 2rem;
+            background: var(--hover);
+            border-radius: 0.8rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .help-card:hover {
+            transform: translateY(-0.4rem);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .help-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .help-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .help-card p {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .help-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .help-link:hover {
+            text-decoration: underline;
+        }
+        
+        .faq-item {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: var(--hover);
+            border-radius: 0.8rem;
+        }
+        
+        .faq-question {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        
+        .faq-answer {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+    </style>
+    
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="content-container">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Settings</h1>
+            <p class="page-subtitle">Manage your account preferences and privacy settings</p>
+        </div>
+
+        <!-- Settings Layout -->
+        <div class="settings-layout">
+            <!-- Sidebar Navigation -->
+            <div class="settings-sidebar">
+                <ul class="settings-nav">
+                    <li class="settings-nav-item">
+                        <a href="#profile" class="settings-nav-link active" data-section="profile">
+                            👤 Profile Settings
+                        </a>
+                    </li>
+                    <li class="settings-nav-item">
+                        <a href="#notifications" class="settings-nav-link" data-section="notifications">
+                            🔔 Notifications
+                        </a>
+                    </li>
+                    <li class="settings-nav-item">
+                        <a href="#privacy" class="settings-nav-link" data-section="privacy">
+                            🔒 Privacy & Security
+                        </a>
+                    </li>
+                    <li class="settings-nav-item">
+                        <a href="#payments" class="settings-nav-link" data-section="payments">
+                            💳 Payment Methods
+                        </a>
+                    </li>
+                    <li class="settings-nav-item">
+                        <a href="#preferences" class="settings-nav-link" data-section="preferences">
+                            ⚙️ Preferences
+                        </a>
+                    </li>
+                    <li class="settings-nav-item">
+                        <a href="#data" class="settings-nav-link" data-section="data">
+                            📊 Data & Storage
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="settings-content">
+                <!-- Profile Settings -->
+                <div class="settings-section" id="profile-section">
+                    <h2 class="section-title">Profile Settings</h2>
+                    <p class="section-description">Update your personal information and profile details</p>
+
+                    <div class="form-group">
+                        <label class="form-label">Display Name</label>
+                        <input type="text" class="form-input" value="CryptoTrader" placeholder="Enter your display name">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" value="trader@example.com" placeholder="Enter your email">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Bio</label>
+                        <textarea class="form-textarea" placeholder="Tell us about yourself">Professional trader and marketplace enthusiast. Specializing in electronics and digital services.</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-input" value="San Francisco, CA" placeholder="Enter your location">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Website</label>
+                        <input type="url" class="form-input" placeholder="https://yourwebsite.com">
+                    </div>
+
+                    <button class="btn btn-primary">Save Profile Changes</button>
+                </div>
+
+                <!-- Notifications -->
+                <div class="settings-section" id="notifications-section" style="display: none;">
+                    <h2 class="section-title">Notification Preferences</h2>
+                    <p class="section-description">Choose what notifications you want to receive</p>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Order Updates</div>
+                            <div class="toggle-description">Receive notifications about your orders and sales</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Messages</div>
+                            <div class="toggle-description">Get notified when you receive new messages</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Price Alerts</div>
+                            <div class="toggle-description">Notifications for price changes on watched items</div>
+                        </div>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Market Updates</div>
+                            <div class="toggle-description">Stay updated on market trends and new features</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Email Notifications</div>
+                            <div class="toggle-description">Receive important updates via email</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+
+                    <button class="btn btn-primary">Save Notification Settings</button>
+                </div>
+
+                <!-- Privacy & Security -->
+                <div class="settings-section" id="privacy-section" style="display: none;">
+                    <h2 class="section-title">Privacy & Security</h2>
+                    <p class="section-description">Manage your security settings and privacy preferences</p>
+
+                    <div class="card">
+                        <div class="card-title">Two-Factor Authentication</div>
+                        <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">Add an extra layer of security to your account</p>
+                        <button class="btn btn-primary">Enable 2FA</button>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Profile Visibility</div>
+                            <div class="toggle-description">Make your profile visible to other users</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Show Online Status</div>
+                            <div class="toggle-description">Let others see when you're online</div>
+                        </div>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Activity Tracking</div>
+                            <div class="toggle-description">Allow analytics for better user experience</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Data Export</div>
+                        <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">Download a copy of your account data</p>
+                        <button class="btn btn-secondary">Export Data</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Delete Account</div>
+                        <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">Permanently delete your account and all associated data</p>
+                        <button class="btn btn-danger">Delete Account</button>
+                    </div>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="settings-section" id="payments-section" style="display: none;">
+                    <h2 class="section-title">Payment Methods</h2>
+                    <p class="section-description">Manage your wallets and payment preferences</p>
+
+                    <div class="card">
+                        <div class="card-title">Connected Wallets</div>
+                        
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 1.5rem; border: 1px solid var(--border); border-radius: 0.8rem; margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="width: 4rem; height: 4rem; background: #f0f0f0; border-radius: 0.8rem; display: flex; align-items: center; justify-content: center; font-size: 2rem;">🦊</div>
+                                <div>
+                                    <div style="font-weight: 600;">MetaMask</div>
+                                    <div style="color: var(--text-secondary); font-size: 1.3rem;">0x1234...5678</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary">Disconnect</button>
+                        </div>
+
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 1.5rem; border: 1px solid var(--border); border-radius: 0.8rem; margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="width: 4rem; height: 4rem; background: var(--primary-color); border-radius: 0.8rem; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white;">💰</div>
+                                <div>
+                                    <div style="font-weight: 600;">OmniWallet</div>
+                                    <div style="color: var(--text-secondary); font-size: 1.3rem;">0xabcd...ef01</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary">Primary</button>
+                        </div>
+
+                        <button class="btn btn-primary">Connect New Wallet</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Default Currency</label>
+                        <select class="form-select">
+                            <option value="xom">XOM (OmniCoin)</option>
+                            <option value="eth">ETH (Ethereum)</option>
+                            <option value="btc">BTC (Bitcoin)</option>
+                            <option value="usd">USD (US Dollar)</option>
+                        </select>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Auto-convert to XOM</div>
+                            <div class="toggle-description">Automatically convert received payments to XOM</div>
+                        </div>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+
+                <!-- Preferences -->
+                <div class="settings-section" id="preferences-section" style="display: none;">
+                    <h2 class="section-title">Preferences</h2>
+                    <p class="section-description">Customize your OmniBazaar experience</p>
+
+                    <div class="form-group">
+                        <label class="form-label">Language</label>
+                        <select class="form-select">
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                            <option value="de">Deutsch</option>
+                            <option value="zh">中文</option>
+                            <option value="ja">日本語</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Timezone</label>
+                        <select class="form-select">
+                            <option value="utc">UTC</option>
+                            <option value="est">Eastern Time</option>
+                            <option value="pst">Pacific Time</option>
+                            <option value="cet">Central European Time</option>
+                            <option value="jst">Japan Standard Time</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Theme</label>
+                        <select class="form-select">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                            <option value="auto">Auto (System)</option>
+                        </select>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Compact View</div>
+                            <div class="toggle-description">Show more content in less space</div>
+                        </div>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Auto-save Drafts</div>
+                            <div class="toggle-description">Automatically save listing drafts as you type</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+
+                    <button class="btn btn-primary">Save Preferences</button>
+                </div>
+
+                <!-- Data & Storage -->
+                <div class="settings-section" id="data-section" style="display: none;">
+                    <h2 class="section-title">Data & Storage</h2>
+                    <p class="section-description">Manage your data storage and IPFS settings</p>
+
+                    <div class="card">
+                        <div class="card-title">Storage Usage</div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Images & Media</span>
+                                <span>2.4 GB</span>
+                            </div>
+                            <div style="width: 100%; height: 0.8rem; background: var(--border); border-radius: 0.4rem;">
+                                <div style="width: 60%; height: 100%; background: var(--primary-color); border-radius: 0.4rem;"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Listing Data</span>
+                                <span>156 MB</span>
+                            </div>
+                            <div style="width: 100%; height: 0.8rem; background: var(--border); border-radius: 0.4rem;">
+                                <div style="width: 15%; height: 100%; background: var(--info); border-radius: 0.4rem;"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Messages</span>
+                                <span>89 MB</span>
+                            </div>
+                            <div style="width: 100%; height: 0.8rem; background: var(--border); border-radius: 0.4rem;">
+                                <div style="width: 8%; height: 100%; background: var(--warning); border-radius: 0.4rem;"></div>
+                            </div>
+                        </div>
+                        
+                        <p style="color: var(--text-secondary); font-size: 1.3rem;">Total: 2.6 GB of 10 GB used</p>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">IPFS Storage</div>
+                            <div class="toggle-description">Store your data on the distributed IPFS network</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Auto-backup</div>
+                            <div class="toggle-description">Automatically backup your data to IPFS</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Data Compression</div>
+                            <div class="toggle-description">Compress images and files to save space</div>
+                        </div>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-secondary">Clear Cache</button>
+                        <button class="btn btn-secondary">Optimize Storage</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+</body>
+</html>
