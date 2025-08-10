@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Wallet Panel - OmniBazaar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f3f4f6;
+            padding: 20px;
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        
+        .demo-container {
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        h1 {
+            font-size: 32px;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        @media (max-width: 900px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .demo-section {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        /* Integrated Mode (Embedded in Page) */
+        .wallet-panel-integrated {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+        
+        /* Modal Mode (External dApp) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 9998;
+        }
+        
+        .modal-overlay.active {
+            display: block;
+        }
+        
+        .wallet-panel-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 420px;
+            max-height: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            z-index: 9999;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .wallet-panel-modal.active {
+            display: block;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            color: #9ca3af;
+            cursor: pointer;
+        }
+        
+        .close-btn:hover {
+            color: #4b5563;
+        }
+        
+        /* Shared Wallet Styles */
+        .wallet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .wallet-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            padding: 4px 8px;
+            background: #10b981;
+            color: white;
+            border-radius: 12px;
+        }
+        
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .wallet-address {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 20px;
+            font-family: 'SF Mono', Monaco, monospace;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .copy-btn {
+            background: #f3f4f6;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #6b7280;
+        }
+        
+        .copy-btn:hover {
+            background: #e5e7eb;
+        }
+        
+        /* Balance Grid */
+        .balance-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .balance-item {
+            text-align: center;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+        
+        .balance-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .balance-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+        
+        .balance-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .balance-value.primary {
+            color: #667eea;
+        }
+        
+        .balance-value.privacy {
+            color: #8b5cf6;
+        }
+        
+        /* Status Section */
+        .status-section {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .status-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .status-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 6px;
+        }
+        
+        .status-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .progress-bar {
+            width: 60px;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin: 4px auto 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #667eea;
+            width: 85%;
+        }
+        
+        .kyc-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .action-btn {
+            padding: 10px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-btn.primary {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .action-btn.primary:hover {
+            background: #5a67d8;
+        }
+        
+        /* Recent Activity */
+        .activity-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .activity-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+        
+        .activity-list {
+            space-y: 8px;
+        }
+        
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background: #f9fafb;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .activity-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .activity-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e0e7ff;
+            color: #667eea;
+            border-radius: 50%;
+            font-size: 10px;
+        }
+        
+        .activity-amount {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        /* Transaction Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 16px 20px;
+            background: #10b981;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: slideIn 0.3s ease-out;
+            display: none;
+            z-index: 10000;
+        }
+        
+        .notification.show {
+            display: block;
+        }
+        
+        .notification.error {
+            background: #ef4444;
+        }
+        
+        .notification.pending {
+            background: #f59e0b;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        
+        /* Demo Controls */
+        .demo-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .demo-btn {
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .demo-btn:hover {
+            background: #5a67d8;
+        }
+        
+        .demo-btn.secondary {
+            background: #6b7280;
+        }
+        
+        .demo-btn.secondary:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>Integrated Wallet Panel Demo</h1>
+        <p class="subtitle">Seamless wallet integration that adapts to context - embedded for marketplace, modal for external dApps</p>
+        
+        <div class="demo-grid">
+            <!-- Integrated Mode Demo -->
+            <div class="demo-section">
+                <h2 class="section-title">Integrated Mode (Marketplace Pages)</h2>
+                
+                <div class="wallet-panel-integrated">
+                    <div class="wallet-header">
+                        <div class="wallet-title">
+                            💳 Your Wallet
+                        </div>
+                        <div class="connection-status">
+                            <span class="status-dot"></span>
+                            Connected
+                        </div>
+                    </div>
+                    
+                    <div class="wallet-address">
+                        0x742d35Cc6634C0532925a3b844Bc8923
+                        <button class="copy-btn" onclick="copyAddress()">Copy</button>
+                    </div>
+                    
+                    <!-- Balances -->
+                    <div class="balance-grid">
+                        <div class="balance-item">
+                            <div class="balance-label">ETH</div>
+                            <div class="balance-value">2.45</div>
+                        </div>
+                        <div class="balance-item">
+                            <div class="balance-label">XOM</div>
+                            <div class="balance-value primary">1,250.00</div>
+                        </div>
+                        <div class="balance-item">
+                            <div class="balance-label">pXOM</div>
+                            <div class="balance-value privacy">500.00</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Status -->
+                    <div class="status-section">
+                        <div class="status-item">
+                            <div class="status-label">Participation</div>
+                            <div class="status-value">85/100</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">KYC Status</div>
+                            <div class="kyc-badge">✓ Verified</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <button class="action-btn primary" onclick="quickBuy()">
+                            ⚡ Quick Buy
+                        </button>
+                        <button class="action-btn" onclick="stakeXOM()">
+                            💎 Stake XOM
+                        </button>
+                        <button class="action-btn" onclick="autoSwap()">
+                            🔄 Swap
+                        </button>
+                        <button class="action-btn" onclick="sendTokens()">
+                            📤 Send
+                        </button>
+                    </div>
+                    
+                    <!-- Recent Activity -->
+                    <div class="activity-section">
+                        <div class="activity-title">Recent Activity</div>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-type">
+                                    <div class="activity-icon">🛍️</div>
+                                    <span>NFT Purchase</span>
+                                </div>
+                                <div class="activity-amount">-50 XOM</div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-type">
+                                    <div class="activity-icon">🔄</div>
+                                    <span>Swap XOM→pXOM</span>
+                                </div>
+                                <div class="activity-amount">100 pXOM</div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-type">
+                                    <div class="activity-icon">💰</div>
+                                    <span>Staking Reward</span>
+                                </div>
+                                <div class="activity-amount">+12.5 XOM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="demo-controls">
+                    <button class="demo-btn" onclick="simulatePurchase()">Simulate Purchase</button>
+                    <button class="demo-btn secondary" onclick="simulateSwap()">Simulate Swap</button>
+                </div>
+            </div>
+            
+            <!-- Modal Mode Demo -->
+            <div class="demo-section">
+                <h2 class="section-title">Modal Mode (External dApps)</h2>
+                <p style="color: #6b7280; font-size: 14px; margin-bottom: 20px;">
+                    When accessed from external dApps, the wallet appears as a modal overlay
+                </p>
+                
+                <button class="demo-btn" onclick="showModal()">Open Wallet Modal</button>
+                
+                <div style="margin-top: 20px; padding: 16px; background: #f9fafb; border-radius: 8px;">
+                    <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Context Detection</h3>
+                    <ul style="font-size: 13px; color: #6b7280; list-style: none; space-y: 4px;">
+                        <li>✓ Detects browser extension environment</li>
+                        <li>✓ Identifies external dApp requests</li>
+                        <li>✓ Automatically switches display mode</li>
+                        <li>✓ Preserves frictionless UX</li>
+                    </ul>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 16px; background: #fef3c7; border-radius: 8px;">
+                    <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #92400e;">Frictionless Features</h3>
+                    <ul style="font-size: 13px; color: #92400e; list-style: none; space-y: 4px;">
+                        <li>🚀 No confirmation popups for purchases</li>
+                        <li>🔄 Automatic currency swaps</li>
+                        <li>⚡ Instant transaction execution</li>
+                        <li>📊 Minimal notifications (not popups)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Overlay -->
+    <div id="modalOverlay" class="modal-overlay" onclick="closeModal()"></div>
+    
+    <!-- Modal Wallet Panel -->
+    <div id="walletModal" class="wallet-panel-modal">
+        <div class="modal-header">
+            <div class="wallet-title">
+                🔐 OmniWallet
+            </div>
+            <button class="close-btn" onclick="closeModal()">×</button>
+        </div>
+        
+        <div class="modal-body">
+            <div class="wallet-address">
+                0x742d35Cc6634C0532925a3b844Bc8923
+                <button class="copy-btn" onclick="copyAddress()">Copy</button>
+            </div>
+            
+            <!-- Balances -->
+            <div class="balance-grid">
+                <div class="balance-item">
+                    <div class="balance-label">ETH</div>
+                    <div class="balance-value">2.45</div>
+                </div>
+                <div class="balance-item">
+                    <div class="balance-label">XOM</div>
+                    <div class="balance-value primary">1,250.00</div>
+                </div>
+                <div class="balance-item">
+                    <div class="balance-label">pXOM</div>
+                    <div class="balance-value privacy">500.00</div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="action-btn primary" onclick="quickBuy()">
+                    ⚡ Quick Buy
+                </button>
+                <button class="action-btn" onclick="stakeXOM()">
+                    💎 Stake XOM
+                </button>
+                <button class="action-btn" onclick="autoSwap()">
+                    🔄 Swap
+                </button>
+                <button class="action-btn" onclick="sendTokens()">
+                    📤 Send
+                </button>
+            </div>
+            
+            <!-- Links to Marketplace and DEX -->
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                <div class="quick-actions">
+                    <button class="action-btn primary" onclick="openMarketplace()">
+                        🛍️ Open Marketplace
+                    </button>
+                    <button class="action-btn primary" onclick="openDEX()">
+                        📊 Open DEX
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Transaction Notification -->
+    <div id="notification" class="notification">
+        <span id="notificationText">Transaction successful!</span>
+    </div>
+    
+    <script>
+        // Show modal
+        function showModal() {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('walletModal').classList.add('active');
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.getElementById('walletModal').classList.remove('active');
+        }
+        
+        // Copy address
+        function copyAddress() {
+            navigator.clipboard.writeText('0x742d35Cc6634C0532925a3b844Bc8923');
+            showNotification('Address copied!', 'success');
+        }
+        
+        // Quick buy - FRICTIONLESS!
+        function quickBuy() {
+            showNotification('Purchasing featured item...', 'pending');
+            setTimeout(() => {
+                showNotification('Purchase complete! No confirmation needed!', 'success');
+            }, 1500);
+        }
+        
+        // Stake XOM
+        function stakeXOM() {
+            showNotification('Staking 100 XOM...', 'pending');
+            setTimeout(() => {
+                showNotification('Staking successful!', 'success');
+            }, 1500);
+        }
+        
+        // Auto swap - NO CONFIRMATION!
+        function autoSwap() {
+            showNotification('Auto-swapping XOM to pXOM...', 'pending');
+            setTimeout(() => {
+                showNotification('Swap complete! No confirmation needed!', 'success');
+                // Update balances
+                updateBalances();
+            }, 1500);
+        }
+        
+        // Send tokens
+        function sendTokens() {
+            showNotification('Preparing send...', 'pending');
+        }
+        
+        // Simulate purchase
+        function simulatePurchase() {
+            showNotification('NFT purchased instantly! No popup!', 'success');
+            // Add to activity
+            addActivity('🛍️', 'NFT Purchase', '-75 XOM');
+        }
+        
+        // Simulate swap
+        function simulateSwap() {
+            showNotification('Auto-swap executed!', 'success');
+            // Add to activity
+            addActivity('🔄', 'Swap XOM→pXOM', '50 pXOM');
+            updateBalances();
+        }
+        
+        // Update balances
+        function updateBalances() {
+            document.querySelectorAll('.balance-value.primary').forEach(el => {
+                el.textContent = '1,150.00';
+            });
+            document.querySelectorAll('.balance-value.privacy').forEach(el => {
+                el.textContent = '600.00';
+            });
+        }
+        
+        // Add activity
+        function addActivity(icon, type, amount) {
+            const activityList = document.querySelector('.activity-list');
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item';
+            newActivity.innerHTML = `
+                <div class="activity-type">
+                    <div class="activity-icon">${icon}</div>
+                    <span>${type}</span>
+                </div>
+                <div class="activity-amount">${amount}</div>
+            `;
+            activityList.insertBefore(newActivity, activityList.firstChild);
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            
+            notification.className = 'notification show ' + type;
+            text.textContent = message;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Open marketplace
+        function openMarketplace() {
+            window.location.href = 'marketplace.html';
+        }
+        
+        // Open DEX
+        function openDEX() {
+            window.location.href = 'dex.html';
+        }
+    </script>
+</body>
+</html>

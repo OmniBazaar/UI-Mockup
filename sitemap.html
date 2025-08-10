@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Map - OmniBazaar UI Mockups</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .sitemap-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem;
+        }
+        
+        .sitemap-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .sitemap-title {
+            font-size: 3.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        
+        .sitemap-subtitle {
+            font-size: 1.6rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .sitemap-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        
+        .sitemap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+        
+        .sitemap-section {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .page-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .page-item {
+            margin-bottom: 1rem;
+        }
+        
+        .page-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.2rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 0.6rem;
+            transition: all 0.2s;
+        }
+        
+        .page-link:hover {
+            background: var(--hover);
+            transform: translateX(4px);
+        }
+        
+        .page-icon {
+            margin-right: 1rem;
+            font-size: 1.6rem;
+        }
+        
+        .page-name {
+            flex: 1;
+            font-size: 1.4rem;
+        }
+        
+        .page-status {
+            font-size: 1.2rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 1rem;
+            font-weight: 500;
+        }
+        
+        .status-new {
+            background: #10b981;
+            color: white;
+        }
+        
+        .status-updated {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .status-complete {
+            background: #6366f1;
+            color: white;
+        }
+        
+        .highlighted-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .highlighted-section .section-title {
+            color: white;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .highlighted-section .page-link {
+            color: white;
+        }
+        
+        .highlighted-section .page-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <main class="main-content">
+        <div class="sitemap-container">
+            <div class="sitemap-header">
+                <h1 class="sitemap-title">OmniBazaar UI Mockup Site Map</h1>
+                <p class="sitemap-subtitle">Complete list of all actively linked pages in the UI mockup system</p>
+                
+                <div class="sitemap-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">32</div>
+                        <div class="stat-label">Total Linked Pages</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">New Today</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">Template Compliant</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sitemap-grid">
+
+                <!-- Main Navigation Pages -->
+                <div class="sitemap-section">
+                    <h2 class="section-title">🛍️ Main Navigation</h2>
+                    <ul class="page-list">
+                        <li class="page-item">
+                            <a href="index.html" class="page-link">
+                                <span class="page-icon">🏠</span>
+                                <span class="page-name">Home / Products</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="services.html" class="page-link">
+                                <span class="page-icon">🛠️</span>
+                                <span class="page-name">Services</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="art-nft.html" class="page-link">
+                                <span class="page-icon">🎨</span>
+                                <span class="page-name">Art & NFTs</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="gaming.html" class="page-link">
+                                <span class="page-icon">🎮</span>
+                                <span class="page-name">Gaming</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="financial.html" class="page-link">
+                                <span class="page-icon">💰</span>
+                                <span class="page-name">Financial</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="dex-swap.html" class="page-link">
+                                <span class="page-icon">📊</span>
+                                <span class="page-name">Crypto DEX</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="personal.html" class="page-link">
+                                <span class="page-icon">👤</span>
+                                <span class="page-name">Personal</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="wallet.html" class="page-link">
+                                <span class="page-icon">💼</span>
+                                <span class="page-name">Wallet</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Marketplace Pages -->
+                <div class="sitemap-section">
+                    <h2 class="section-title">🏪 Marketplace</h2>
+                    <ul class="page-list">
+                        <li class="page-item">
+                            <a href="marketplace-create.html" class="page-link">
+                                <span class="page-icon">➕</span>
+                                <span class="page-name">Create Listing</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="my-listings.html" class="page-link">
+                                <span class="page-icon">📝</span>
+                                <span class="page-name">My Listings</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="marketplace-listing.html" class="page-link">
+                                <span class="page-icon">📦</span>
+                                <span class="page-name">Listing Detail</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- User Account Pages -->
+                <div class="sitemap-section">
+                    <h2 class="section-title">👤 User Account</h2>
+                    <ul class="page-list">
+                        <li class="page-item">
+                            <a href="profile.html" class="page-link">
+                                <span class="page-icon">👤</span>
+                                <span class="page-name">User Profile</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="settings.html" class="page-link">
+                                <span class="page-icon">⚙️</span>
+                                <span class="page-name">Settings</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="auth-login.html" class="page-link">
+                                <span class="page-icon">🔐</span>
+                                <span class="page-name">Login / Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Company Pages -->
+                <div class="sitemap-section">
+                    <h2 class="section-title">🏢 Company</h2>
+                    <ul class="page-list">
+                        <li class="page-item">
+                            <a href="about.html" class="page-link">
+                                <span class="page-icon">ℹ️</span>
+                                <span class="page-name">About</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="mission.html" class="page-link">
+                                <span class="page-icon">🎯</span>
+                                <span class="page-name">Mission</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="careers.html" class="page-link">
+                                <span class="page-icon">💼</span>
+                                <span class="page-name">Careers</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="press.html" class="page-link">
+                                <span class="page-icon">📰</span>
+                                <span class="page-name">Press</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="blog.html" class="page-link">
+                                <span class="page-icon">📝</span>
+                                <span class="page-name">Blog</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Support Pages -->
+                <div class="sitemap-section">
+                    <h2 class="section-title">🆘 Support</h2>
+                    <ul class="page-list">
+                        <li class="page-item">
+                            <a href="help.html" class="page-link">
+                                <span class="page-icon">❓</span>
+                                <span class="page-name">Help Center</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="safety.html" class="page-link">
+                                <span class="page-icon">🛡️</span>
+                                <span class="page-name">Safety</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="community.html" class="page-link">
+                                <span class="page-icon">👥</span>
+                                <span class="page-name">Community</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="contact.html" class="page-link">
+                                <span class="page-icon">📧</span>
+                                <span class="page-name">Contact</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="faq.html" class="page-link">
+                                <span class="page-icon">❔</span>
+                                <span class="page-name">FAQ</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Legal Pages -->
+                <div class="sitemap-section">
+                    <h2 class="section-title">⚖️ Legal</h2>
+                    <ul class="page-list">
+                        <li class="page-item">
+                            <a href="terms.html" class="page-link">
+                                <span class="page-icon">📄</span>
+                                <span class="page-name">Terms</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="privacy.html" class="page-link">
+                                <span class="page-icon">🔒</span>
+                                <span class="page-name">Privacy</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="cookies.html" class="page-link">
+                                <span class="page-icon">🍪</span>
+                                <span class="page-name">Cookies</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="disputes.html" class="page-link">
+                                <span class="page-icon">⚖️</span>
+                                <span class="page-name">Disputes</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="kyc.html" class="page-link">
+                                <span class="page-icon">🆔</span>
+                                <span class="page-name">KYC/AML</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Platform/Technical Pages -->
+                <div class="sitemap-section">
+                    <h2 class="section-title">🔧 Platform</h2>
+                    <ul class="page-list">
+                        <li class="page-item">
+                            <a href="staking.html" class="page-link">
+                                <span class="page-icon">💎</span>
+                                <span class="page-name">Staking</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="docs.html" class="page-link">
+                                <span class="page-icon">📚</span>
+                                <span class="page-name">API Docs</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="status.html" class="page-link">
+                                <span class="page-icon">🟢</span>
+                                <span class="page-name">System Status</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Notes Section -->
+            <div style="margin-top: 4rem; padding: 2rem; background: var(--surface); border-radius: 1rem;">
+                <h2 style="font-size: 1.8rem; margin-bottom: 1rem;">📝 Notes</h2>
+                <ul style="font-size: 1.4rem; color: var(--text-secondary); line-height: 2;">
+                    <li>All pages use the centralized template system (template.js)</li>
+                    <li>All orphaned pages not linked from navigation have been excluded from this map</li>
+                    <li>Container issues in DEX and Settings pages have been fixed</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+</body>
+</html>
