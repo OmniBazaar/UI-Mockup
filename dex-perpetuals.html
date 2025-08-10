@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perpetual Futures Trading - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .perpetuals-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 1.2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .market-selector {
+            padding: 1rem 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0.8rem;
+            background: var(--background);
+            color: var(--text-primary);
+            font-size: 1.4rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .perpetual-info {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .info-label {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .info-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .info-value.positive {
+            color: var(--success);
+        }
+
+        .info-value.negative {
+            color: var(--error);
+        }
+
+        .trading-grid {
+            display: grid;
+            grid-template-columns: 28rem 1fr 32rem;
+            grid-template-rows: auto 1fr auto;
+            gap: 2rem;
+            min-height: calc(100vh - 20rem);
+        }
+
+        .section {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .orderbook-section {
+            grid-column: 1;
+            grid-row: 1 / 3;
+        }
+
+        .chart-section {
+            grid-column: 2;
+            grid-row: 1 / 3;
+        }
+
+        .trading-form-section {
+            grid-column: 3;
+            grid-row: 1;
+            padding: 2rem;
+        }
+
+        .positions-section {
+            grid-column: 3;
+            grid-row: 2;
+        }
+
+        .bottom-section {
+            grid-column: 1 / -1;
+            grid-row: 3;
+            max-height: 30rem;
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .side-button {
+            padding: 1.2rem;
+            border: 2px solid var(--border);
+            border-radius: 0.8rem;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .side-button.long {
+            border-color: var(--success);
+            background: rgba(0, 200, 83, 0.1);
+            color: var(--success);
+        }
+
+        .side-button.short {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .side-button:hover {
+            opacity: 0.8;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 0.8rem;
+            background: var(--background);
+            color: var(--text-primary);
+            font-size: 1.4rem;
+        }
+
+        .leverage-slider {
+            margin-bottom: 2rem;
+        }
+
+        .leverage-display {
+            text-align: center;
+            font-size: 2.4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .slider {
+            width: 100%;
+            height: 0.6rem;
+            background: var(--border);
+            border-radius: 0.3rem;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 2rem;
+            height: 2rem;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .leverage-marks {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .leverage-mark {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .info-box {
+            background: var(--background-secondary);
+            border-radius: 0.8rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-row-label {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .info-row-value {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .action-button {
+            width: 100%;
+            padding: 1.6rem;
+            border: none;
+            border-radius: 0.8rem;
+            color: white;
+            font-size: 1.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-button.long {
+            background: var(--success);
+        }
+
+        .action-button.short {
+            background: var(--error);
+        }
+
+        .action-button:hover {
+            opacity: 0.9;
+        }
+
+        .positions-list {
+            padding: 2rem;
+        }
+
+        .position-card {
+            background: var(--background-secondary);
+            border-radius: 0.8rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .position-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .position-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .position-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.4rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .position-badge.long {
+            background: rgba(0, 200, 83, 0.2);
+            color: var(--success);
+        }
+
+        .position-badge.short {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        .position-pnl {
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+
+        .position-pnl.positive {
+            color: var(--success);
+        }
+
+        .position-pnl.negative {
+            color: var(--error);
+        }
+
+        .position-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .position-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab {
+            padding: 1.5rem 2rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-secondary);
+            font-size: 1.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+            background: var(--background-hover);
+        }
+
+        .tab-content {
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: calc(30rem - 5.2rem);
+        }
+
+        /* Order Book Styles */
+        .orderbook-content {
+            padding: 1.5rem;
+        }
+
+        .orderbook-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            padding: 0.8rem 0;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .order-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            padding: 0.6rem 0;
+            font-size: 1.3rem;
+            position: relative;
+        }
+
+        .order-row.sell .price {
+            color: var(--error);
+        }
+
+        .order-row.buy .price {
+            color: var(--success);
+        }
+
+        .order-depth {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .order-row.sell .order-depth {
+            background: var(--error);
+        }
+
+        .order-row.buy .order-depth {
+            background: var(--success);
+        }
+
+        .midprice {
+            padding: 1rem 0;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin: 0.5rem 0;
+        }
+
+        /* Chart Placeholder */
+        .chart-area {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .trading-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .orderbook-section,
+            .chart-section,
+            .trading-form-section,
+            .positions-section,
+            .bottom-section {
+                grid-column: 1;
+                grid-row: auto;
+            }
+            
+            .chart-section {
+                min-height: 40rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Perpetuals Header -->
+            <div class="perpetuals-header">
+                <div class="perpetual-info">
+                    <select class="market-selector">
+                        <option value="BTC-USD">BTC-USD PERP</option>
+                        <option value="ETH-USD">ETH-USD PERP</option>
+                        <option value="SOL-USD">SOL-USD PERP</option>
+                    </select>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Mark Price</span>
+                        <span class="info-value">$50,000</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Index Price</span>
+                        <span class="info-value">$49,950</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Funding Rate</span>
+                        <span class="info-value positive">+0.0012%</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Next Funding</span>
+                        <span class="info-value">2:45:30</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">24h Volume</span>
+                        <span class="info-value">$125.3M</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trading Grid -->
+            <div class="trading-grid">
+                <!-- Order Book -->
+                <div class="section orderbook-section">
+                    <div class="orderbook-content">
+                        <div class="orderbook-header">
+                            <span>Price (USD)</span>
+                            <span style="text-align: center">Size (BTC)</span>
+                            <span style="text-align: right">Total</span>
+                        </div>
+                        
+                        <!-- Asks -->
+                        <div class="order-row sell">
+                            <span class="price">50,125</span>
+                            <span style="text-align: center">0.523</span>
+                            <span style="text-align: right">26,215</span>
+                            <div class="order-depth" style="width: 75%"></div>
+                        </div>
+                        <div class="order-row sell">
+                            <span class="price">50,100</span>
+                            <span style="text-align: center">1.234</span>
+                            <span style="text-align: right">61,823</span>
+                            <div class="order-depth" style="width: 85%"></div>
+                        </div>
+                        <div class="order-row sell">
+                            <span class="price">50,075</span>
+                            <span style="text-align: center">0.876</span>
+                            <span style="text-align: right">43,866</span>
+                            <div class="order-depth" style="width: 65%"></div>
+                        </div>
+                        <div class="order-row sell">
+                            <span class="price">50,050</span>
+                            <span style="text-align: center">2.145</span>
+                            <span style="text-align: right">107,357</span>
+                            <div class="order-depth" style="width: 90%"></div>
+                        </div>
+                        <div class="order-row sell">
+                            <span class="price">50,025</span>
+                            <span style="text-align: center">0.432</span>
+                            <span style="text-align: right">21,611</span>
+                            <div class="order-depth" style="width: 45%"></div>
+                        </div>
+                        
+                        <div class="midprice">
+                            Mid Price: $50,000
+                        </div>
+                        
+                        <!-- Bids -->
+                        <div class="order-row buy">
+                            <span class="price">49,975</span>
+                            <span style="text-align: center">0.654</span>
+                            <span style="text-align: right">32,684</span>
+                            <div class="order-depth" style="width: 55%"></div>
+                        </div>
+                        <div class="order-row buy">
+                            <span class="price">49,950</span>
+                            <span style="text-align: center">1.987</span>
+                            <span style="text-align: right">99,251</span>
+                            <div class="order-depth" style="width: 92%"></div>
+                        </div>
+                        <div class="order-row buy">
+                            <span class="price">49,925</span>
+                            <span style="text-align: center">0.876</span>
+                            <span style="text-align: right">43,734</span>
+                            <div class="order-depth" style="width: 65%"></div>
+                        </div>
+                        <div class="order-row buy">
+                            <span class="price">49,900</span>
+                            <span style="text-align: center">1.543</span>
+                            <span style="text-align: right">76,996</span>
+                            <div class="order-depth" style="width: 80%"></div>
+                        </div>
+                        <div class="order-row buy">
+                            <span class="price">49,875</span>
+                            <span style="text-align: center">0.321</span>
+                            <span style="text-align: right">16,010</span>
+                            <div class="order-depth" style="width: 35%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="section chart-section">
+                    <div class="chart-area">
+                        📊 TradingView Chart
+                    </div>
+                </div>
+
+                <!-- Trading Form -->
+                <div class="section trading-form-section">
+                    <h3 class="form-title">Place Order</h3>
+                    
+                    <div class="button-group">
+                        <button class="side-button long">Long</button>
+                        <button class="side-button">Short</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Size (BTC)</label>
+                        <input type="number" class="form-input" placeholder="0.00">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Price (USD)</label>
+                        <input type="number" class="form-input" placeholder="Market Price">
+                    </div>
+                    
+                    <div class="leverage-slider">
+                        <label class="form-label">Leverage</label>
+                        <div class="leverage-display">10x</div>
+                        <input type="range" class="slider" min="1" max="100" value="10">
+                        <div class="leverage-marks">
+                            <span class="leverage-mark">1x</span>
+                            <span class="leverage-mark">25x</span>
+                            <span class="leverage-mark">50x</span>
+                            <span class="leverage-mark">75x</span>
+                            <span class="leverage-mark">100x</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <div class="info-row">
+                            <span class="info-row-label">Required Margin</span>
+                            <span class="info-row-value">$0.00</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-row-label">Est. Liquidation Price</span>
+                            <span class="info-row-value">$0.00</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-row-label">Fee (0.05%)</span>
+                            <span class="info-row-value">$0.00</span>
+                        </div>
+                    </div>
+                    
+                    <button class="action-button long">Long 0 BTC</button>
+                </div>
+
+                <!-- Open Positions -->
+                <div class="section positions-section">
+                    <h3 class="form-title" style="padding: 2rem 2rem 0;">Open Positions</h3>
+                    <div class="positions-list">
+                        <div class="position-card">
+                            <div class="position-header">
+                                <div class="position-title">
+                                    <span>BTC-USD</span>
+                                    <span class="position-badge long">LONG 10x</span>
+                                </div>
+                                <span class="position-pnl positive">+$750.00</span>
+                            </div>
+                            
+                            <div class="position-details">
+                                <div class="position-detail">
+                                    <span class="info-row-label">Size</span>
+                                    <span class="info-row-value">0.5 BTC</span>
+                                </div>
+                                <div class="position-detail">
+                                    <span class="info-row-label">Entry</span>
+                                    <span class="info-row-value">$48,500</span>
+                                </div>
+                                <div class="position-detail">
+                                    <span class="info-row-label">Liq. Price</span>
+                                    <span class="info-row-value">$44,065</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="position-card">
+                            <div class="position-header">
+                                <div class="position-title">
+                                    <span>ETH-USD</span>
+                                    <span class="position-badge short">SHORT 5x</span>
+                                </div>
+                                <span class="position-pnl positive">+$250.00</span>
+                            </div>
+                            
+                            <div class="position-details">
+                                <div class="position-detail">
+                                    <span class="info-row-label">Size</span>
+                                    <span class="info-row-value">5 ETH</span>
+                                </div>
+                                <div class="position-detail">
+                                    <span class="info-row-label">Entry</span>
+                                    <span class="info-row-value">$3,200</span>
+                                </div>
+                                <div class="position-detail">
+                                    <span class="info-row-label">Liq. Price</span>
+                                    <span class="info-row-value">$3,520</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Tabs -->
+                <div class="section bottom-section">
+                    <div class="tab-container">
+                        <button class="tab active">All Positions</button>
+                        <button class="tab">Active Orders</button>
+                        <button class="tab">Trade History</button>
+                    </div>
+                    
+                    <div class="tab-content">
+                        <p style="text-align: center; color: var(--text-secondary);">No additional positions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <script src="template.js"></script>
+    <script>
+        // Initialize leverage slider
+        const leverageSlider = document.querySelector('.slider');
+        const leverageDisplay = document.querySelector('.leverage-display');
+        
+        if (leverageSlider) {
+            leverageSlider.addEventListener('input', (e) => {
+                leverageDisplay.textContent = e.target.value + 'x';
+            });
+        }
+
+        // Side button toggle
+        const sideButtons = document.querySelectorAll('.side-button');
+        const actionButton = document.querySelector('.action-button');
+        
+        sideButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                sideButtons.forEach(btn => {
+                    btn.classList.remove('long', 'short');
+                });
+                
+                if (button.textContent === 'Long') {
+                    button.classList.add('long');
+                    actionButton.classList.remove('short');
+                    actionButton.classList.add('long');
+                    actionButton.textContent = 'Long 0 BTC';
+                } else {
+                    button.classList.add('short');
+                    actionButton.classList.remove('long');
+                    actionButton.classList.add('short');
+                    actionButton.textContent = 'Short 0 BTC';
+                }
+            });
+        });
+
+        // Tab switching
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // Calculate margin and liquidation
+        const sizeInput = document.querySelector('.form-input[placeholder="0.00"]');
+        const marginDisplay = document.querySelector('.info-row-value');
+        
+        function updateCalculations() {
+            const size = parseFloat(sizeInput?.value || 0);
+            const leverage = parseInt(leverageSlider?.value || 10);
+            const markPrice = 50000; // Mock price
+            
+            const margin = (size * markPrice / leverage).toFixed(2);
+            const liquidationPrice = (markPrice * (1 - 1/leverage + 0.005)).toFixed(2);
+            const fee = (size * markPrice * 0.0005).toFixed(2);
+            
+            // Update displays
+            const infoValues = document.querySelectorAll('.info-box .info-row-value');
+            if (infoValues[0]) infoValues[0].textContent = '$' + margin;
+            if (infoValues[1]) infoValues[1].textContent = '$' + liquidationPrice;
+            if (infoValues[2]) infoValues[2].textContent = '$' + fee;
+            
+            // Update button
+            const isLong = actionButton?.classList.contains('long');
+            if (actionButton) {
+                actionButton.textContent = `${isLong ? 'Long' : 'Short'} ${size || 0} BTC`;
+            }
+        }
+        
+        sizeInput?.addEventListener('input', updateCalculations);
+        leverageSlider?.addEventListener('input', updateCalculations);
+    </script>
+</body>
+</html>
