@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initialize OmniBazaar Listings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 1rem;
+            padding: 3rem;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #373373;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .status {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .status.loading {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .progress {
+            background: #e5e7eb;
+            height: 4px;
+            border-radius: 2px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: #373373;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .log {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            margin-bottom: 2rem;
+        }
+        
+        .log-entry {
+            padding: 0.25rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .log-entry.success {
+            color: #059669;
+        }
+        
+        .log-entry.info {
+            color: #3730a3;
+        }
+        
+        .log-entry.error {
+            color: #dc2626;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #373373;
+        }
+        
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: #373373;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2a2a5e;
+        }
+        
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: #373373;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 0.5rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 OmniBazaar Listing Initializer</h1>
+        
+        <div id="status" class="status loading">
+            <span class="spinner"></span>
+            Initializing listing generator...
+        </div>
+        
+        <div class="progress">
+            <div id="progress-bar" class="progress-bar"></div>
+        </div>
+        
+        <div id="log" class="log"></div>
+        
+        <div id="stats" class="stats" style="display: none;">
+            <div class="stat">
+                <div class="stat-value" id="total-listings">0</div>
+                <div class="stat-label">Total Listings</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="categories">0</div>
+                <div class="stat-label">Categories</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="countries">0</div>
+                <div class="stat-label">Countries</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="images">0</div>
+                <div class="stat-label">Images</div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="btn-primary" onclick="initializeListings()">
+                Initialize Listings
+            </button>
+            <button class="btn-secondary" onclick="viewListings()">
+                View Listings
+            </button>
+            <button class="btn-success" onclick="checkStatus()">
+                Check Status
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Enhanced listing generator with real Unsplash images
+        class ListingGenerator {
+            constructor() {
+                this.listings = [];
+                this.currentId = 1;
+                this.logEntries = [];
+            }
+
+            log(message, type = 'info') {
+                const entry = { message, type, timestamp: new Date().toLocaleTimeString() };
+                this.logEntries.push(entry);
+                this.updateLog();
+            }
+
+            updateLog() {
+                const logEl = document.getElementById('log');
+                logEl.innerHTML = this.logEntries.map(entry => 
+                    `<div class="log-entry ${entry.type}">[${entry.timestamp}] ${entry.message}</div>`
+                ).join('');
+                logEl.scrollTop = logEl.scrollHeight;
+            }
+
+            updateProgress(percent) {
+                document.getElementById('progress-bar').style.width = percent + '%';
+            }
+
+            // Category templates with real product names
+            templates = {
+                electronics: {
+                    titles: [
+                        'MacBook Pro 16" M3 Max',
+                        'iPhone 15 Pro Max 512GB',
+                        'Sony WH-1000XM5 Headphones',
+                        'iPad Pro 12.9" with Magic Keyboard',
+                        'Samsung 65" OLED 4K TV',
+                        'Canon EOS R5 Mirrorless Camera',
+                        'DJI Mavic 3 Pro Drone',
+                        'PlayStation 5 Console Bundle',
+                        'Bose QuietComfort Earbuds',
+                        'Apple Watch Ultra 2'
+                    ],
+                    priceRange: [100, 5000],
+                    category: 1
+                },
+                fashion: {
+                    titles: [
+                        'Designer Leather Handbag',
+                        'Limited Edition Sneakers Size 10',
+                        'Vintage Rolex Submariner',
+                        'Cashmere Winter Coat',
+                        'Designer Sunglasses Collection',
+                        'Italian Leather Boots',
+                        'Silk Evening Dress',
+                        'Men\'s Tailored Suit',
+                        'Diamond Tennis Bracelet',
+                        'Luxury Scarf Set'
+                    ],
+                    priceRange: [50, 10000],
+                    category: 1
+                },
+                home: {
+                    titles: [
+                        'Mid-Century Modern Sofa',
+                        'Smart Home Security System',
+                        'Espresso Machine Professional',
+                        'Standing Desk with Motor',
+                        'Air Purifier HEPA Filter',
+                        'Robot Vacuum with Mapping',
+                        'King Size Memory Foam Mattress',
+                        'Kitchen Aid Stand Mixer',
+                        'Outdoor Patio Set',
+                        'Wine Refrigerator 50 Bottle'
+                    ],
+                    priceRange: [100, 3000],
+                    category: 1
+                },
+                services: {
+                    titles: [
+                        'Web Development - Full Stack',
+                        'Logo Design & Branding Package',
+                        'SEO Optimization Service',
+                        'Business Consulting - 10 Hours',
+                        'Legal Document Review',
+                        'Tax Preparation Service',
+                        'Personal Training - 10 Sessions',
+                        'Language Tutoring - Spanish',
+                        'House Cleaning - Bi-weekly',
+                        'Photography - Event Coverage'
+                    ],
+                    priceRange: [50, 2000],
+                    category: 2
+                },
+                nft: {
+                    titles: [
+                        'Genesis Collection #0001',
+                        'Rare Punk Avatar #4523',
+                        'Digital Art Masterpiece',
+                        'Generative Art Algorithm',
+                        'Virtual Land Parcel - Prime',
+                        'Music NFT - Exclusive Rights',
+                        '3D Sculpture Collection',
+                        'Photography NFT Series',
+                        'Gaming NFT - Legendary Sword',
+                        'Metaverse Wearable - Rare'
+                    ],
+                    priceRange: [100, 50000],
+                    category: 3
+                },
+                gaming: {
+                    titles: [
+                        'Legendary Armor Set - Max Stats',
+                        'Rare Mount - Flying Dragon',
+                        'Game Account - Level 100',
+                        'Limited Skin - Championship',
+                        'Virtual Currency - 10000 Gold',
+                        'Exclusive Emote Pack',
+                        'Base Building - Fully Upgraded',
+                        'Character Boost Service',
+                        'Raid Carry - Guaranteed Loot',
+                        'Season Pass - All Unlocked'
+                    ],
+                    priceRange: [10, 1000],
+                    category: 4
+                },
+                crypto: {
+                    titles: [
+                        'Bitcoin for Cash - Local NYC',
+                        'Ethereum - Bank Transfer',
+                        'USDT Stable - Quick Trade',
+                        'XOM Tokens - Direct P2P',
+                        'Crypto Bundle - BTC/ETH/SOL',
+                        'Mining Rig - 6 GPU Setup',
+                        'Hardware Wallet - Ledger',
+                        'DeFi Yield Strategy Guide',
+                        'Crypto Tax Consultation',
+                        'Blockchain Development Course'
+                    ],
+                    priceRange: [100, 10000],
+                    category: 5
+                }
+            };
+
+            locations = [
+                { country: 'USA', city: 'New York', coordinates: [40.7128, -74.0060] },
+                { country: 'USA', city: 'Los Angeles', coordinates: [34.0522, -118.2437] },
+                { country: 'USA', city: 'Chicago', coordinates: [41.8781, -87.6298] },
+                { country: 'USA', city: 'Houston', coordinates: [29.7604, -95.3698] },
+                { country: 'USA', city: 'Miami', coordinates: [25.7617, -80.1918] },
+                { country: 'Canada', city: 'Toronto', coordinates: [43.6532, -79.3832] },
+                { country: 'Canada', city: 'Vancouver', coordinates: [49.2827, -123.1207] },
+                { country: 'Mexico', city: 'Mexico City', coordinates: [19.4326, -99.1332] },
+                { country: 'UK', city: 'London', coordinates: [51.5074, -0.1278] },
+                { country: 'France', city: 'Paris', coordinates: [48.8566, 2.3522] },
+                { country: 'Germany', city: 'Berlin', coordinates: [52.5200, 13.4050] },
+                { country: 'Spain', city: 'Madrid', coordinates: [40.4168, -3.7038] },
+                { country: 'Italy', city: 'Rome', coordinates: [41.9028, 12.4964] },
+                { country: 'Netherlands', city: 'Amsterdam', coordinates: [52.3676, 4.9041] },
+                { country: 'Japan', city: 'Tokyo', coordinates: [35.6762, 139.6503] },
+                { country: 'China', city: 'Shanghai', coordinates: [31.2304, 121.4737] },
+                { country: 'India', city: 'Mumbai', coordinates: [19.0760, 72.8777] },
+                { country: 'Singapore', city: 'Singapore', coordinates: [1.3521, 103.8198] },
+                { country: 'South Korea', city: 'Seoul', coordinates: [37.5665, 126.9780] },
+                { country: 'UAE', city: 'Dubai', coordinates: [25.2048, 55.2708] },
+                { country: 'Brazil', city: 'São Paulo', coordinates: [-23.5505, -46.6333] },
+                { country: 'Argentina', city: 'Buenos Aires', coordinates: [-34.6037, -58.3816] },
+                { country: 'Australia', city: 'Sydney', coordinates: [-33.8688, 151.2093] },
+                { country: 'South Africa', city: 'Cape Town', coordinates: [-33.9249, 18.4241] }
+            ];
+
+            // Generate Unsplash image URLs with specific queries
+            getImageUrls(title, category, count = 3) {
+                const queries = {
+                    'MacBook': 'macbook,laptop,apple',
+                    'iPhone': 'iphone,smartphone,mobile',
+                    'Sony': 'headphones,audio,music',
+                    'iPad': 'ipad,tablet,apple',
+                    'Samsung': 'television,tv,oled',
+                    'Canon': 'camera,photography,dslr',
+                    'DJI': 'drone,flying,aerial',
+                    'PlayStation': 'gaming,console,ps5',
+                    'Bose': 'earbuds,wireless,audio',
+                    'Watch': 'smartwatch,apple,watch',
+                    'Handbag': 'handbag,purse,luxury',
+                    'Sneakers': 'sneakers,shoes,nike',
+                    'Rolex': 'luxury,watch,rolex',
+                    'Coat': 'coat,fashion,winter',
+                    'Sunglasses': 'sunglasses,eyewear,fashion',
+                    'Boots': 'boots,shoes,leather',
+                    'Dress': 'dress,fashion,elegant',
+                    'Suit': 'suit,business,formal',
+                    'Bracelet': 'jewelry,bracelet,diamond',
+                    'Scarf': 'scarf,fashion,luxury',
+                    'Sofa': 'sofa,furniture,living',
+                    'Security': 'security,camera,smart',
+                    'Espresso': 'coffee,espresso,machine',
+                    'Desk': 'desk,office,workspace',
+                    'Purifier': 'air,purifier,clean',
+                    'Robot': 'vacuum,robot,cleaning',
+                    'Mattress': 'mattress,bedroom,sleep',
+                    'Kitchen': 'kitchen,mixer,cooking',
+                    'Patio': 'patio,outdoor,furniture',
+                    'Wine': 'wine,refrigerator,storage',
+                    'Web': 'coding,laptop,programming',
+                    'Logo': 'design,creative,branding',
+                    'SEO': 'marketing,digital,seo',
+                    'Consulting': 'business,meeting,office',
+                    'Legal': 'legal,documents,law',
+                    'Tax': 'accounting,tax,finance',
+                    'Training': 'fitness,gym,workout',
+                    'Tutoring': 'education,learning,teaching',
+                    'Cleaning': 'cleaning,home,service',
+                    'Photography': 'photography,camera,professional',
+                    'NFT': 'digital,art,abstract',
+                    'Gaming': 'gaming,esports,computer',
+                    'Bitcoin': 'bitcoin,crypto,currency',
+                    'Ethereum': 'ethereum,crypto,blockchain',
+                    'USDT': 'cryptocurrency,trading,finance',
+                    'Mining': 'mining,computer,gpu',
+                    'Hardware': 'wallet,crypto,security',
+                    'DeFi': 'blockchain,finance,defi'
+                };
+
+                // Find matching query
+                let query = 'product,marketplace,shopping';
+                for (const [key, value] of Object.entries(queries)) {
+                    if (title.includes(key)) {
+                        query = value;
+                        break;
+                    }
+                }
+
+                // Generate Unsplash URLs
+                const urls = [];
+                for (let i = 0; i < count; i++) {
+                    const timestamp = Date.now() + i + Math.random() * 1000;
+                    urls.push(`https://source.unsplash.com/800x600/?${query}&sig=${Math.floor(timestamp)}`);
+                }
+                return urls;
+            }
+
+            // Generate gradient thumbnail
+            generateThumbnail(title, category) {
+                const colors = {
+                    1: ['#667eea', '#764ba2'], // Products - Purple
+                    2: ['#f093fb', '#f5576c'], // Services - Pink
+                    3: ['#4facfe', '#00f2fe'], // NFT - Blue
+                    4: ['#43e97b', '#38f9d7'], // Gaming - Green
+                    5: ['#fa709a', '#fee140']  // Crypto - Orange/Pink
+                };
+                
+                const [color1, color2] = colors[category] || colors[1];
+                const icon = {
+                    1: '📦', 2: '🛠️', 3: '🎨', 4: '🎮', 5: '₿'
+                }[category] || '📦';
+                
+                const svg = `
+                    <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:${color1};stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:${color2};stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="64" height="64" fill="url(#grad)" />
+                        <text x="32" y="38" font-family="Arial" font-size="24" fill="white" text-anchor="middle">
+                            ${title.charAt(0).toUpperCase()}
+                        </text>
+                    </svg>
+                `;
+                
+                return 'data:image/svg+xml;base64,' + btoa(svg);
+            }
+
+            // Create a single listing
+            createListing(template, index, categoryName) {
+                const title = template.titles[index % template.titles.length];
+                const location = this.locations[Math.floor(Math.random() * this.locations.length)];
+                const price = Math.floor(Math.random() * (template.priceRange[1] - template.priceRange[0]) + template.priceRange[0]);
+                
+                const listing = {
+                    id: `listing_${this.currentId++}_${Date.now()}`,
+                    seller: `0x${Math.random().toString(16).substr(2, 40)}`,
+                    title: `${title} - Special #${index}`,
+                    description: `High quality ${title.toLowerCase()}. Excellent condition, fast shipping available. Located in ${location.city}, ${location.country}. Trusted seller with 5-star ratings. ${this.getExtraDescription(categoryName)}`,
+                    price: (price * 1e18).toString(),
+                    category: template.category,
+                    subcategory: categoryName,
+                    images: this.getImageUrls(title, categoryName),
+                    thumbnailDataURI: this.generateThumbnail(title, template.category),
+                    signature: `0x${Math.random().toString(16).substr(2, 130)}`,
+                    timestamp: Date.now(),
+                    status: 'active',
+                    tags: [categoryName, location.country.toLowerCase(), 'verified', 'premium'],
+                    location: location,
+                    shipping: {
+                        local: true,
+                        international: Math.random() > 0.3,
+                        freeShipping: price > 500 && Math.random() > 0.6
+                    },
+                    condition: ['new', 'like-new', 'excellent', 'good'][Math.floor(Math.random() * 4)],
+                    quantity: Math.floor(Math.random() * 10) + 1,
+                    views: Math.floor(Math.random() * 1000),
+                    likes: Math.floor(Math.random() * 100),
+                    feeRecipients: {
+                        listingNode: `0x${Math.random().toString(16).substr(2, 40)}`,
+                        referrer: Math.random() > 0.5 ? `0x${Math.random().toString(16).substr(2, 40)}` : undefined
+                    }
+                };
+
+                return listing;
+            }
+
+            getExtraDescription(category) {
+                const descriptions = {
+                    electronics: 'Comes with original packaging and warranty. Professional seller specializing in tech products.',
+                    fashion: 'Authentic designer piece with certificate. Fashion expert with extensive collection.',
+                    home: 'Transform your living space. Home improvement specialist with design expertise.',
+                    services: 'Professional service with proven track record. Certified expert with excellent reviews.',
+                    nft: 'Verified on blockchain. Digital art collector with rare pieces.',
+                    gaming: 'Instant delivery after purchase. Gaming specialist with 24/7 support.',
+                    crypto: 'Fast and secure P2P trading. KYC verified trader with escrow protection.'
+                };
+                return descriptions[category] || 'Premium quality guaranteed.';
+            }
+
+            // Generate all listings
+            async generateAll() {
+                this.log('Starting listing generation...', 'info');
+                
+                const counts = {
+                    electronics: 20,
+                    fashion: 20,
+                    home: 20,
+                    services: 40,
+                    nft: 30,
+                    gaming: 35,
+                    crypto: 35
+                };
+
+                let totalGenerated = 0;
+                const totalToGenerate = Object.values(counts).reduce((a, b) => a + b, 0);
+
+                for (const [categoryName, count] of Object.entries(counts)) {
+                    this.log(`Creating ${count} ${categoryName} listings...`, 'info');
+                    const template = this.templates[categoryName];
+                    
+                    for (let i = 0; i < count; i++) {
+                        const listing = this.createListing(template, i, categoryName);
+                        this.listings.push(listing);
+                        totalGenerated++;
+                        this.updateProgress((totalGenerated / totalToGenerate) * 100);
+                    }
+                    
+                    this.log(`✅ Created ${count} ${categoryName} listings`, 'success');
+                }
+
+                return this.listings;
+            }
+        }
+
+        // Initialize listings
+        async function initializeListings() {
+            const statusEl = document.getElementById('status');
+            const statsEl = document.getElementById('stats');
+            
+            try {
+                statusEl.className = 'status loading';
+                statusEl.innerHTML = '<span class="spinner"></span> Generating 200 listings with real images...';
+                
+                const generator = new ListingGenerator();
+                const listings = await generator.generateAll();
+                
+                generator.log('Storing in localStorage...', 'info');
+                localStorage.setItem('omnibazaar_listings', JSON.stringify(listings));
+                localStorage.setItem('omnibazaar_listings_initialized', new Date().toISOString());
+                
+                // Update stats
+                document.getElementById('total-listings').textContent = listings.length;
+                document.getElementById('categories').textContent = 5;
+                document.getElementById('countries').textContent = new Set(listings.map(l => l.location.country)).size;
+                document.getElementById('images').textContent = listings.length * 3;
+                statsEl.style.display = 'grid';
+                
+                statusEl.className = 'status success';
+                statusEl.textContent = `✅ Successfully generated ${listings.length} listings!`;
+                
+                generator.log(`Success! Generated ${listings.length} listings`, 'success');
+                generator.log('You can now view the listings', 'info');
+                
+            } catch (error) {
+                statusEl.className = 'status error';
+                statusEl.textContent = '❌ Error: ' + error.message;
+                console.error('Error:', error);
+            }
+        }
+
+        function viewListings() {
+            window.location.href = 'test-listings.html';
+        }
+
+        function checkStatus() {
+            const listings = localStorage.getItem('omnibazaar_listings');
+            const statusEl = document.getElementById('status');
+            
+            if (listings) {
+                const data = JSON.parse(listings);
+                statusEl.className = 'status success';
+                statusEl.textContent = `✅ Found ${data.length} listings in storage`;
+                
+                // Update stats
+                document.getElementById('total-listings').textContent = data.length;
+                document.getElementById('categories').textContent = 5;
+                document.getElementById('countries').textContent = new Set(data.map(l => l.location?.country).filter(Boolean)).size;
+                document.getElementById('images').textContent = data.filter(l => l.images?.length > 0).length * 3;
+                document.getElementById('stats').style.display = 'grid';
+            } else {
+                statusEl.className = 'status error';
+                statusEl.textContent = '❌ No listings found. Click "Initialize Listings" to create them.';
+            }
+        }
+
+        // Check status on load
+        window.addEventListener('DOMContentLoaded', () => {
+            checkStatus();
+        });
+    </script>
+</body>
+</html>

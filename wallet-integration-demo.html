@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniBazaar - Wallet Integration Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .wallet-demo {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .wallet-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .wallet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .wallet-address {
+            font-family: monospace;
+            font-size: 0.875rem;
+            color: #666;
+        }
+        
+        .balances {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .balance-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .balance-item.xom {
+            background: #e3f2fd;
+        }
+        
+        .balance-item.pxom {
+            background: #f3e5f5;
+        }
+        
+        .balance-label {
+            font-size: 0.75rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+        
+        .balance-value {
+            font-size: 1.25rem;
+            font-weight: bold;
+            font-family: monospace;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        
+        .listing-demo {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .listing-item {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .listing-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .listing-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .listing-details h4 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+        
+        .listing-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2196f3;
+            margin-bottom: 0.5rem;
+        }
+        
+        .payment-options {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .payment-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .payment-badge.xom {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .payment-badge.pxom {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .purchase-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .fee-breakdown {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .fee-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .fee-row.total {
+            font-weight: bold;
+            border-top: 1px solid #ddd;
+            padding-top: 0.5rem;
+        }
+        
+        .transaction-log {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+        
+        .log-entry {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .log-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+        
+        .log-icon.success {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+        
+        .log-icon.pending {
+            background: #fff3cd;
+            color: #f57c00;
+        }
+        
+        .log-details {
+            flex: 1;
+        }
+        
+        .log-hash {
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .privacy-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: #f3e5f5;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background: #7b1fa2;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(24px);
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="nav-container">
+            <div class="logo">OmniBazaar</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="marketplace.html">Marketplace</a></li>
+                <li><a href="wallet-integration-demo.html" class="active">Wallet Demo</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="wallet-demo">
+        <h1>Wallet Integration Demo</h1>
+        <p>Test the integration between Wallet and Bazaar modules for marketplace transactions</p>
+
+        <div class="demo-grid">
+            <!-- Wallet Status Panel -->
+            <div>
+                <div class="wallet-card">
+                    <div class="wallet-header">
+                        <div>
+                            <h3>OmniWallet</h3>
+                            <div class="wallet-address">0x742d...8963</div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" onclick="disconnectWallet()">Disconnect</button>
+                    </div>
+
+                    <div class="balances">
+                        <div class="balance-item">
+                            <div class="balance-label">ETH</div>
+                            <div class="balance-value">2.458</div>
+                        </div>
+                        <div class="balance-item xom">
+                            <div class="balance-label">XOM</div>
+                            <div class="balance-value">1,250.00</div>
+                        </div>
+                        <div class="balance-item pxom">
+                            <div class="balance-label">pXOM</div>
+                            <div class="balance-value">500.00</div>
+                        </div>
+                    </div>
+
+                    <div class="status-grid">
+                        <div class="status-item">
+                            <span>Participation</span>
+                            <strong>75/100</strong>
+                        </div>
+                        <div class="status-item">
+                            <span>KYC Status</span>
+                            <span class="badge badge-success">Verified</span>
+                        </div>
+                    </div>
+
+                    <div class="privacy-toggle">
+                        <label>Privacy Mode (pXOM)</label>
+                        <div class="toggle-switch" id="privacyToggle" onclick="togglePrivacy()">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-bottom: 1rem;">Quick Actions</h4>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="swapTokens()">Swap XOM → pXOM</button>
+                        <button class="btn btn-secondary" onclick="stakeTokens()">Stake XOM</button>
+                        <button class="btn btn-secondary" onclick="viewHistory()">Transaction History</button>
+                        <button class="btn btn-secondary" onclick="manageNFTs()">My NFTs</button>
+                    </div>
+                </div>
+
+                <!-- Fee Breakdown -->
+                <div class="wallet-card" style="margin-top: 1rem;">
+                    <h4>Fee Structure</h4>
+                    <div class="fee-breakdown">
+                        <div class="fee-row">
+                            <span>Transaction Fee</span>
+                            <span>0.5%</span>
+                        </div>
+                        <div class="fee-row">
+                            <span>Referral Fee</span>
+                            <span>0.25%</span>
+                        </div>
+                        <div class="fee-row">
+                            <span>Listing Node Fee</span>
+                            <span>0.25%</span>
+                        </div>
+                        <div class="fee-row total">
+                            <span>Total Marketplace Fee</span>
+                            <span>1.0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listing Purchase Demo -->
+            <div>
+                <div class="listing-demo">
+                    <h3>Test Marketplace Purchases</h3>
+                    
+                    <!-- Sample Listing 1 -->
+                    <div class="listing-item">
+                        <img src="https://picsum.photos/120/120?random=1" alt="MacBook Pro" class="listing-image">
+                        <div class="listing-details">
+                            <h4>MacBook Pro 14" M3</h4>
+                            <p style="color: #666; margin: 0.5rem 0;">Brand new, sealed in box. Latest M3 chip with 16GB RAM.</p>
+                            <div class="payment-options">
+                                <span class="payment-badge xom">XOM</span>
+                                <span class="payment-badge pxom">pXOM</span>
+                            </div>
+                            <small style="color: #999;">Seller: 0x9876...5432</small>
+                        </div>
+                        <div class="purchase-actions">
+                            <div class="listing-price">100 XOM</div>
+                            <button class="btn btn-primary" onclick="purchaseListing('listing_001', 100, false)">
+                                Buy with XOM
+                            </button>
+                            <button class="btn btn-secondary" onclick="purchaseListing('listing_001', 100, true)">
+                                Buy with pXOM
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sample Listing 2 -->
+                    <div class="listing-item">
+                        <img src="https://picsum.photos/120/120?random=2" alt="NFT Art" class="listing-image">
+                        <div class="listing-details">
+                            <h4>Cosmic Dreams NFT #142</h4>
+                            <p style="color: #666; margin: 0.5rem 0;">Exclusive digital artwork from the Cosmic Dreams collection.</p>
+                            <div class="payment-options">
+                                <span class="payment-badge pxom">pXOM Only</span>
+                            </div>
+                            <small style="color: #999;">Artist: 0x3456...7890</small>
+                        </div>
+                        <div class="purchase-actions">
+                            <div class="listing-price">250 pXOM</div>
+                            <button class="btn btn-primary" onclick="purchaseListing('listing_002', 250, true)">
+                                Buy with Privacy
+                            </button>
+                            <button class="btn btn-secondary" onclick="makeOffer('listing_002')">
+                                Make Offer
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sample Listing 3 -->
+                    <div class="listing-item">
+                        <img src="https://picsum.photos/120/120?random=3" alt="Service" class="listing-image">
+                        <div class="listing-details">
+                            <h4>Web Development Service</h4>
+                            <p style="color: #666; margin: 0.5rem 0;">Professional website development. React, Node.js, Web3 integration.</p>
+                            <div class="payment-options">
+                                <span class="payment-badge xom">XOM</span>
+                            </div>
+                            <small style="color: #999;">Provider: 0x2468...1357</small>
+                        </div>
+                        <div class="purchase-actions">
+                            <div class="listing-price">500 XOM</div>
+                            <button class="btn btn-primary" onclick="createEscrow('listing_003', 500)">
+                                Buy with Escrow
+                            </button>
+                            <button class="btn btn-secondary" onclick="contactSeller('listing_003')">
+                                Contact Seller
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transaction Log -->
+                <div class="transaction-log">
+                    <h3>Transaction Log</h3>
+                    <div id="transactionLog">
+                        <div class="log-entry">
+                            <div class="log-icon success">✓</div>
+                            <div class="log-details">
+                                <div><strong>Wallet Connected</strong></div>
+                                <div class="log-hash">Address: 0x742d35Cc6634C0532925a3b844Bc8963</div>
+                                <small>Connected to OmniCoin Testnet</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let privacyMode = false;
+        let transactionCount = 0;
+
+        function togglePrivacy() {
+            const toggle = document.getElementById('privacyToggle');
+            privacyMode = !privacyMode;
+            toggle.classList.toggle('active');
+            
+            addLogEntry(
+                privacyMode ? 'Privacy Mode Enabled' : 'Privacy Mode Disabled',
+                privacyMode ? 'All transactions will use pXOM for privacy' : 'Transactions will use regular XOM',
+                'success'
+            );
+        }
+
+        function purchaseListing(listingId, price, usePrivacy) {
+            const token = usePrivacy ? 'pXOM' : 'XOM';
+            const txHash = generateTxHash();
+            
+            // Calculate fees
+            const transactionFee = (price * 0.005).toFixed(2);
+            const referralFee = (price * 0.0025).toFixed(2);
+            const listingFee = (price * 0.0025).toFixed(2);
+            const sellerAmount = (price - transactionFee - referralFee - listingFee).toFixed(2);
+            
+            addLogEntry(
+                `Purchase Initiated (${token})`,
+                `Listing: ${listingId} | Amount: ${price} ${token}`,
+                'pending'
+            );
+            
+            setTimeout(() => {
+                addLogEntry(
+                    'Fee Distribution',
+                    `Seller: ${sellerAmount} | Tx Fee: ${transactionFee} | Ref: ${referralFee} | Node: ${listingFee}`,
+                    'success'
+                );
+                
+                addLogEntry(
+                    'Purchase Complete',
+                    `Tx Hash: ${txHash}`,
+                    'success'
+                );
+                
+                updateBalance(token, -price);
+            }, 2000);
+        }
+
+        function createEscrow(listingId, amount) {
+            const escrowId = `escrow_${Date.now()}`;
+            
+            addLogEntry(
+                'Escrow Created',
+                `Escrow ID: ${escrowId} | Amount: ${amount} XOM`,
+                'pending'
+            );
+            
+            setTimeout(() => {
+                addLogEntry(
+                    'Escrow Funded',
+                    `Funds locked until delivery confirmation`,
+                    'success'
+                );
+            }, 1500);
+        }
+
+        function swapTokens() {
+            addLogEntry(
+                'Swap Initiated',
+                'Converting 100 XOM to pXOM (0.5% fee)',
+                'pending'
+            );
+            
+            setTimeout(() => {
+                addLogEntry(
+                    'Swap Complete',
+                    'Received: 99.5 pXOM',
+                    'success'
+                );
+                updateBalance('XOM', -100);
+                updateBalance('pXOM', 99.5);
+            }, 1500);
+        }
+
+        function makeOffer(listingId) {
+            const offer = prompt('Enter your offer amount:');
+            if (offer) {
+                addLogEntry(
+                    'Offer Submitted',
+                    `Listing: ${listingId} | Offer: ${offer} ${privacyMode ? 'pXOM' : 'XOM'}`,
+                    'pending'
+                );
+            }
+        }
+
+        function contactSeller(listingId) {
+            addLogEntry(
+                'Chat Request Sent',
+                `Opening P2P encrypted chat for listing ${listingId}`,
+                'success'
+            );
+        }
+
+        function disconnectWallet() {
+            if (confirm('Disconnect wallet?')) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function stakeTokens() {
+            addLogEntry(
+                'Staking Interface',
+                'Opening staking dashboard...',
+                'success'
+            );
+        }
+
+        function viewHistory() {
+            addLogEntry(
+                'Transaction History',
+                'Loading transaction history...',
+                'success'
+            );
+        }
+
+        function manageNFTs() {
+            addLogEntry(
+                'NFT Manager',
+                'Loading NFT collection...',
+                'success'
+            );
+        }
+
+        function generateTxHash() {
+            return '0x' + Math.random().toString(16).substring(2, 10) + '...' + 
+                   Math.random().toString(16).substring(2, 6);
+        }
+
+        function addLogEntry(title, message, type) {
+            const log = document.getElementById('transactionLog');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.style.opacity = '0';
+            
+            const icon = type === 'success' ? '✓' : '⏳';
+            
+            entry.innerHTML = `
+                <div class="log-icon ${type}">${icon}</div>
+                <div class="log-details">
+                    <div><strong>${title}</strong></div>
+                    <div class="log-hash">${message}</div>
+                    <small>${new Date().toLocaleTimeString()}</small>
+                </div>
+            `;
+            
+            log.insertBefore(entry, log.firstChild);
+            
+            // Animate entry
+            setTimeout(() => {
+                entry.style.transition = 'opacity 0.3s';
+                entry.style.opacity = '1';
+            }, 10);
+            
+            // Keep only last 10 entries
+            while (log.children.length > 10) {
+                log.removeChild(log.lastChild);
+            }
+        }
+
+        function updateBalance(token, amount) {
+            // In real implementation, would update the balance display
+            console.log(`Updated ${token} balance by ${amount}`);
+        }
+
+        // Simulate periodic activity
+        setInterval(() => {
+            const activities = [
+                { title: 'Network Activity', message: 'New block: #' + Math.floor(Math.random() * 1000000), type: 'success' },
+                { title: 'Participation Update', message: 'Score increased: +2 points', type: 'success' },
+                { title: 'Market Activity', message: 'New listing added to marketplace', type: 'success' }
+            ];
+            
+            if (Math.random() > 0.7) {
+                const activity = activities[Math.floor(Math.random() * activities.length)];
+                addLogEntry(activity.title, activity.message, activity.type);
+            }
+        }, 10000);
+    </script>
+</body>
+</html>

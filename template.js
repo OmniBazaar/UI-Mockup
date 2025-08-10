@@ -61,7 +61,7 @@ const TEMPLATE_CONFIG = {
             ]
         }
     },
-    footerDescription: 'OmniBazaar is a world-wide network of e-commerce marketplaces designed to eliminate middlemen and reduce transaction fees via blockchain technology. We are building an advanced marketplace software template that will allow tens or hundreds of thousands of individuals and small businesses to open localized and specialized marketplaces around the world. With the integrated OmniCoin cryptocurrency, OmniBazaar offers secure transactions, reputation tracking, distributed escrow, and incentives for participation. Our vision is to expand access to global commerce, especially for the 1.5 billion unbanked and underbanked people worldwide.',
+    footerDescription: 'OmniBazaar is a global network of e-commerce marketplaces designed to eliminate middlemen and reduce transaction fees via blockchain technology. We are building an advanced marketplace software template that will allow tens or hundreds of thousands of individuals and small businesses to open localized and specialized marketplaces around the world. With the integrated OmniCoin cryptocurrency, OmniBazaar offers secure transactions, reputation tracking, distributed escrow, and incentives for participation. Our vision is to expand access to global commerce, especially for the 1.5 billion unbanked and underbanked people worldwide.',
     profileMenu: [
         { label: 'User Profile', href: 'profile.html' },
         { label: 'Settings', href: 'settings.html' },
@@ -168,7 +168,7 @@ function generateFooter() {
                 <p style="margin-top: 0.25rem; margin-bottom: 0.25rem;">
                     ${TEMPLATE_CONFIG.footerDescription}
                 </p>
-                <p>© 2025 OmniBazaar. All rights reserved. Built with ❤️ for the decentralized future.</p>
+                <p>© 2025 Omni Development DAO. All rights reserved. Built with ❤️ for the decentralized future.</p>
             </div>
         </div>
     </footer>`;
