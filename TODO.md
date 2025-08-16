@@ -1,6 +1,6 @@
 # UI Mockup Module - TODO
 
-**Last Updated:** 2025-08-09 16:22 UTC
+**Last Updated:** 2025-08-16 21:48 UTC
 
 ## ✅ Completed Tasks
 
@@ -16,6 +16,11 @@
 - [x] Remove bullet points from footer links
 - [x] Ensure TypeScript components mirror HTML templates
 - [x] Clean up repair scripts and backup files
+- [x] Create Block Explorer pages (blocks, transactions, validators, stats)
+- [x] Create Management Dashboard page for admin/ODDAO managers
+- [x] Create Chat modal UI for marketplace integration
+- [x] Create Welcome Bonus pages with decreasing distribution curve
+- [x] Add dynamic bonus amount display based on user registration order
 
 ## 🔄 In Progress
 
@@ -106,10 +111,16 @@
 ## 📝 Notes
 
 - Template system is now fully operational
-- All pages have consistent look and feel
+- All pages have consistent look and feel (47+ pages)
 - Focus should shift to functionality over styling
 - Consider moving to React/Vue for production version
 - Mobile-first approach has been maintained throughout
+- Welcome Bonus system implements decreasing reward curve:
+  - Users 1-1,000: 10,000 XOM
+  - Users 1,001-10,000: 5,000 XOM
+  - Users 10,001-100,000: 2,500 XOM
+  - Users 100,001-1,000,000: 1,250 XOM
+  - Users 1,000,001+: 625 XOM
 
 ## 🐛 Known Issues
 

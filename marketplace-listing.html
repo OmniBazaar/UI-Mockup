@@ -593,5 +593,29 @@
 
     <!-- Template system -->
     <script src="template.js"></script>
+    
+    <!-- Chat Modal -->
+    <script src="chat-modal.js"></script>
+    
+    <!-- Page-specific scripts -->
+    <script>
+        // Add click handler to contact seller button
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update the "Make Offer" button to also open chat
+            const makeOfferBtn = document.querySelector('.btn-secondary');
+            if (makeOfferBtn) {
+                makeOfferBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Open chat and select seller conversation
+                    if (window.chatModal) {
+                        window.chatModal.open();
+                        setTimeout(() => {
+                            window.chatModal.selectRoom('seller');
+                        }, 100);
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

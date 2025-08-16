@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Management Dashboard - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        /* Management Dashboard specific styles */
+        body {
+            background: #0a0a0a;
+            color: #ffffff;
+        }
+        
+        .management-container {
+            max-width: 160rem;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Custom dark theme header */
+        .management-header {
+            background: #1a1a1a;
+            padding: 2rem;
+            border-bottom: 0.1rem solid #333;
+            margin-bottom: 2rem;
+            border-radius: 1.2rem;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 1.6rem;
+        }
+        
+        .header-title h1 {
+            margin: 0;
+            font-size: 2.4rem;
+            font-weight: 500;
+        }
+        
+        .auth-status {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .auth-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1.6rem;
+            background: #2a2a2a;
+            border-radius: 0.8rem;
+        }
+        
+        .status-indicator {
+            width: 0.8rem;
+            height: 0.8rem;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); }
+            70% { box-shadow: 0 0 0 1rem rgba(0, 255, 136, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+        }
+        
+        /* Alert Banner */
+        .alert-banner {
+            background: #ff3333;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0.8rem;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .alert-icon {
+            font-size: 2rem;
+        }
+        
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(32rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .dashboard-card {
+            background: #1a1a1a;
+            border: 0.1rem solid #333;
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 0.4rem;
+            background: linear-gradient(90deg, #373373, #00ff88);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .card-title {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #00ff88;
+        }
+        
+        .card-action {
+            background: #373373;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.6rem;
+            border-radius: 0.6rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.4rem;
+        }
+        
+        .card-action:hover {
+            background: #4B4881;
+        }
+        
+        .card-action.danger {
+            background: #ff3333;
+        }
+        
+        .card-action.danger:hover {
+            background: #cc0000;
+        }
+        
+        /* Metrics */
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 0.1rem solid #333;
+        }
+        
+        .metric:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            color: #999;
+            font-size: 1.4rem;
+        }
+        
+        .metric-value {
+            font-weight: 500;
+            font-size: 1.4rem;
+        }
+        
+        .status-healthy {
+            color: #00ff88;
+        }
+        
+        .status-warning {
+            color: #ffaa00;
+        }
+        
+        .status-error {
+            color: #ff3333;
+        }
+        
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .chart-container {
+            background: #1a1a1a;
+            border: 0.1rem solid #333;
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+        }
+        
+        .chart-placeholder {
+            height: 30rem;
+            background: #0a0a0a;
+            border-radius: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 1.8rem;
+        }
+        
+        /* Validator Management Table */
+        .table-container {
+            background: #1a1a1a;
+            border: 0.1rem solid #333;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+        
+        .table-header {
+            padding: 2rem 2.4rem;
+            border-bottom: 0.1rem solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .table-title {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 500;
+            color: #00ff88;
+        }
+        
+        .table-filters {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .filter-select {
+            background: #2a2a2a;
+            color: white;
+            border: 0.1rem solid #444;
+            padding: 0.8rem 1.6rem;
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #2a2a2a;
+            padding: 1.6rem;
+            text-align: left;
+            font-weight: 500;
+            color: #999;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+        }
+        
+        td {
+            padding: 1.6rem;
+            border-bottom: 0.1rem solid #333;
+            font-size: 1.4rem;
+        }
+        
+        tr:hover {
+            background: #2a2a2a;
+        }
+        
+        .node-id {
+            font-family: var(--font-family-mono);
+            color: #00ff88;
+        }
+        
+        .validator-type {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .type-gateway {
+            background: #373373;
+            color: white;
+        }
+        
+        .type-computation {
+            background: #1976D2;
+            color: white;
+        }
+        
+        .status-active {
+            color: #00ff88;
+        }
+        
+        .status-inactive {
+            color: #ff3333;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.8rem;
+        }
+        
+        .action-btn {
+            background: #2a2a2a;
+            color: white;
+            border: 0.1rem solid #444;
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            background: #373373;
+            border-color: #373373;
+        }
+        
+        .action-btn.danger:hover {
+            background: #ff3333;
+            border-color: #ff3333;
+        }
+        
+        /* Quick Actions Section */
+        .quick-actions {
+            background: #1a1a1a;
+            border: 0.1rem solid #ff3333;
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            margin-bottom: 3rem;
+        }
+        
+        .quick-actions h2 {
+            color: #ff3333;
+            margin-bottom: 1rem;
+        }
+        
+        .quick-actions p {
+            color: #999;
+            margin-bottom: 2rem;
+        }
+        
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+            gap: 1.6rem;
+        }
+        
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0a0a0a;
+        }
+        
+        .login-box {
+            background: #1a1a1a;
+            border: 0.1rem solid #333;
+            border-radius: 1.2rem;
+            padding: 4rem;
+            width: 100%;
+            max-width: 40rem;
+            text-align: center;
+        }
+        
+        .login-title {
+            font-size: 2.4rem;
+            margin-bottom: 1rem;
+            color: #00ff88;
+        }
+        
+        .login-subtitle {
+            color: #999;
+            margin-bottom: 3rem;
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+        }
+        
+        .form-input {
+            background: #2a2a2a;
+            border: 0.1rem solid #444;
+            color: white;
+            padding: 1.6rem;
+            border-radius: 0.8rem;
+            font-size: 1.6rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #373373;
+            box-shadow: 0 0 0 0.3rem rgba(55, 51, 115, 0.2);
+        }
+        
+        .login-button {
+            background: #373373;
+            color: white;
+            border: none;
+            padding: 1.6rem;
+            border-radius: 0.8rem;
+            font-size: 1.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .login-button:hover {
+            background: #4B4881;
+        }
+        
+        .login-error {
+            color: #ff3333;
+            margin-top: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen (shown when not authenticated) -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-box">
+            <h1 class="login-title">🛡️ Management Dashboard</h1>
+            <p class="login-subtitle">Authorized access only</p>
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <input type="password" class="form-input" placeholder="API Key" id="apiKey" required>
+                <button type="submit" class="login-button">Access Dashboard</button>
+                <div class="login-error" id="loginError">Invalid API key. Access denied.</div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Dashboard (hidden until authenticated) -->
+    <div id="dashboardContent" style="display: none;">
+        <!-- Management Header -->
+        <div class="management-header">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>🛡️ OmniBazaar Management Dashboard</h1>
+                    <span style="color: #666; font-size: 1.4rem;">Internal Use Only</span>
+                </div>
+                <div class="auth-status">
+                    <div class="auth-user">
+                        <div class="status-indicator"></div>
+                        <span>Admin Connected</span>
+                    </div>
+                    <button class="card-action" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="management-container">
+            <!-- Alert Banner -->
+            <div class="alert-banner">
+                <span class="alert-icon">⚠️</span>
+                <span>AUTHORIZED ACCESS ONLY - All actions are logged and monitored</span>
+            </div>
+            
+            <!-- System Health Overview -->
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">System Health</h2>
+                        <button class="card-action" onclick="refreshHealth()">Refresh</button>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Blockchain</span>
+                        <span class="metric-value status-healthy">● Healthy</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Database</span>
+                        <span class="metric-value status-healthy">● Healthy</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Redis Cache</span>
+                        <span class="metric-value status-healthy">● Healthy</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">IPFS Storage</span>
+                        <span class="metric-value status-warning">● Degraded</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Chat Service</span>
+                        <span class="metric-value status-healthy">● Healthy</span>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Performance Metrics</h2>
+                        <button class="card-action" onclick="viewDetailedMetrics()">Details</button>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">CPU Usage</span>
+                        <span class="metric-value">42.3%</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Memory Usage</span>
+                        <span class="metric-value">68.5%</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Disk Usage</span>
+                        <span class="metric-value">51.2%</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Network Latency</span>
+                        <span class="metric-value">12.5ms</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">API Response Time</span>
+                        <span class="metric-value">145ms</span>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Treasury Status</h2>
+                        <button class="card-action" onclick="viewTreasuryProposals()">Proposals</button>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Balance</span>
+                        <span class="metric-value">2,450,000 XOM</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">24h Inflow</span>
+                        <span class="metric-value status-healthy">+12,340 XOM</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">24h Outflow</span>
+                        <span class="metric-value">-8,920 XOM</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Pending Proposals</span>
+                        <span class="metric-value status-warning">3</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Reserve Ratio</span>
+                        <span class="metric-value">156%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analytics Charts -->
+            <div class="charts-section">
+                <div class="chart-container">
+                    <h2 class="card-title">Network Activity (30 Days)</h2>
+                    <div class="chart-placeholder">
+                        📊 Transaction Volume Chart
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h2 class="card-title">System Alerts</h2>
+                    <div class="metric">
+                        <span class="metric-label status-error">● Critical</span>
+                        <span class="metric-value">0</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label status-error">● High</span>
+                        <span class="metric-value">0</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label status-warning">● Medium</span>
+                        <span class="metric-value">2</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">● Low</span>
+                        <span class="metric-value">5</span>
+                    </div>
+                    <button class="card-action" onclick="viewAllAlerts()" style="width: 100%; margin-top: 2rem;">View All Alerts</button>
+                </div>
+            </div>
+            
+            <!-- Validator Management -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h2 class="table-title">Validator Management</h2>
+                    <div class="table-filters">
+                        <select class="filter-select">
+                            <option>All Validators</option>
+                            <option>Gateway Only</option>
+                            <option>Computation Only</option>
+                            <option>Active</option>
+                            <option>Inactive</option>
+                        </select>
+                        <button class="card-action">Export Data</button>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Node ID</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Uptime</th>
+                            <th>Performance</th>
+                            <th>Warnings</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="node-id">gateway-validator-1</td>
+                            <td><span class="validator-type type-gateway">Gateway</span></td>
+                            <td class="status-active">● Active</td>
+                            <td>99.98%</td>
+                            <td>98.5</td>
+                            <td>0</td>
+                            <td class="action-buttons">
+                                <button class="action-btn" onclick="viewValidator('gateway-validator-1')">View</button>
+                                <button class="action-btn" onclick="messageValidator('gateway-validator-1')">Message</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="node-id">computation-node-12</td>
+                            <td><span class="validator-type type-computation">Computation</span></td>
+                            <td class="status-active">● Active</td>
+                            <td>99.92%</td>
+                            <td>97.8</td>
+                            <td>0</td>
+                            <td class="action-buttons">
+                                <button class="action-btn" onclick="viewValidator('computation-node-12')">View</button>
+                                <button class="action-btn" onclick="messageValidator('computation-node-12')">Message</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="node-id">gateway-validator-2</td>
+                            <td><span class="validator-type type-gateway">Gateway</span></td>
+                            <td class="status-active">● Active</td>
+                            <td>99.95%</td>
+                            <td>97.2</td>
+                            <td>0</td>
+                            <td class="action-buttons">
+                                <button class="action-btn" onclick="viewValidator('gateway-validator-2')">View</button>
+                                <button class="action-btn" onclick="messageValidator('gateway-validator-2')">Message</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="node-id">computation-node-45</td>
+                            <td><span class="validator-type type-computation">Computation</span></td>
+                            <td class="status-inactive">● Inactive</td>
+                            <td>0.00%</td>
+                            <td>0.0</td>
+                            <td class="status-error">5</td>
+                            <td class="action-buttons">
+                                <button class="action-btn" onclick="viewValidator('computation-node-45')">View</button>
+                                <button class="action-btn danger" onclick="slashValidator('computation-node-45')">Slash</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h2>⚡ Emergency Controls</h2>
+                <p>Use with extreme caution - all actions are irreversible and logged</p>
+                <div class="action-grid">
+                    <button class="card-action danger" onclick="pauseMarketplace()">Pause Marketplace</button>
+                    <button class="card-action danger" onclick="freezeSuspiciousAccounts()">Freeze Suspicious Accounts</button>
+                    <button class="card-action danger" onclick="triggerEmergencyShutdown()">Emergency Shutdown</button>
+                    <button class="card-action danger" onclick="pauseNewListings()">Pause New Listings</button>
+                    <button class="card-action danger" onclick="disableWithdrawals()">Disable Withdrawals</button>
+                    <button class="card-action danger" onclick="forceMaintenanceMode()">Force Maintenance Mode</button>
+                </div>
+            </div>
+            
+            <!-- Footer Info -->
+            <div style="text-align: center; padding: 2rem; color: #666;">
+                <p>Management Dashboard v2.0 | Last deployment: 2025-08-15 | <a href="block-explorer.html" style="color: #373373;">Public Block Explorer →</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Authentication
+        const VALID_API_KEY = 'test-api-key-123'; // In production, this would be validated server-side
+        
+        function handleLogin(event) {
+            event.preventDefault();
+            const apiKey = document.getElementById('apiKey').value;
+            
+            if (apiKey === VALID_API_KEY) {
+                // Store auth in session
+                sessionStorage.setItem('mgmtAuth', 'true');
+                sessionStorage.setItem('authTime', Date.now());
+                
+                // Show dashboard
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboardContent').style.display = 'block';
+                
+                // Start data refresh
+                startDataRefresh();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('loginError').style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        function logout() {
+            sessionStorage.removeItem('mgmtAuth');
+            sessionStorage.removeItem('authTime');
+            location.reload();
+        }
+        
+        // Check auth on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const isAuth = sessionStorage.getItem('mgmtAuth') === 'true';
+            const authTime = parseInt(sessionStorage.getItem('authTime') || '0');
+            const sessionTimeout = 30 * 60 * 1000; // 30 minutes
+            
+            if (isAuth && (Date.now() - authTime < sessionTimeout)) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboardContent').style.display = 'block';
+                startDataRefresh();
+            }
+        });
+        
+        // Dashboard Functions
+        function refreshHealth() {
+            alert('Refreshing system health status...\n\nIn production, this would:\n- Check all service endpoints\n- Verify database connections\n- Test Redis connectivity\n- Monitor IPFS nodes');
+        }
+        
+        function viewDetailedMetrics() {
+            alert('Opening detailed metrics view...\n\nWould display:\n- Historical performance data\n- Resource utilization graphs\n- Error rate trends\n- API latency distribution');
+        }
+        
+        function viewTreasuryProposals() {
+            alert('Treasury Proposals:\n\n1. Marketing Campaign - 50,000 XOM\n2. Developer Grants - 100,000 XOM\n3. Infrastructure Upgrade - 25,000 XOM');
+        }
+        
+        function viewAllAlerts() {
+            alert('System Alerts:\n\nMedium Priority:\n- IPFS node degraded performance\n- High memory usage on validator-3\n\nLow Priority:\n- 5 pending software updates\n- Backup verification needed');
+        }
+        
+        function viewValidator(nodeId) {
+            alert(`Validator Details: ${nodeId}\n\nPerformance History:\n- Last 24h: 98.5% uptime\n- Blocks produced: 1,234\n- Average response time: 125ms\n- Stake: 500,000 XOM`);
+        }
+        
+        function messageValidator(nodeId) {
+            const message = prompt(`Send message to ${nodeId}:`);
+            if (message) {
+                alert(`Message sent to ${nodeId}\n\n"${message}"`);
+            }
+        }
+        
+        function slashValidator(nodeId) {
+            if (confirm(`⚠️ WARNING: Slash validator ${nodeId}?\n\nThis action will:\n- Reduce validator stake by 10%\n- Ban from network for 7 days\n- Notify all connected nodes\n\nProceed?`)) {
+                alert(`Slashing process initiated for ${nodeId}\n\nRequires 2 additional admin approvals.`);
+            }
+        }
+        
+        // Emergency Controls
+        function pauseMarketplace() {
+            if (confirm('⚠️ CRITICAL: Pause ALL marketplace operations?\n\nThis will:\n- Stop all new listings\n- Freeze ongoing transactions\n- Notify all users\n\nContinue?')) {
+                alert('Marketplace PAUSED\n\n- All operations halted\n- Users notified via UI and email\n- Automatic resume in 4 hours unless extended');
+            }
+        }
+        
+        function freezeSuspiciousAccounts() {
+            if (confirm('Freeze 7 suspicious accounts?\n\nAccounts flagged for:\n- Unusual transaction patterns\n- Multiple failed KYC attempts\n- Spam behavior\n\nProceed?')) {
+                alert('Accounts frozen successfully\n\n- 7 accounts locked\n- Funds secured in escrow\n- Manual review required for unlock');
+            }
+        }
+        
+        function triggerEmergencyShutdown() {
+            const code = prompt('⚠️⚠️⚠️ EMERGENCY SHUTDOWN ⚠️⚠️⚠️\n\nEnter authorization code:');
+            if (code === 'SHUTDOWN-2025') {
+                alert('EMERGENCY SHUTDOWN INITIATED\n\n- All systems entering safe mode\n- Validators notified\n- Automatic restart in 1 hour');
+            } else if (code) {
+                alert('Invalid authorization code');
+            }
+        }
+        
+        function pauseNewListings() {
+            if (confirm('Pause new marketplace listings?\n\nExisting listings will remain active.')) {
+                alert('New listings PAUSED\n\n- Sellers notified\n- Queue system activated\n- Will resume automatically in 2 hours');
+            }
+        }
+        
+        function disableWithdrawals() {
+            if (confirm('⚠️ Disable ALL withdrawals?\n\nThis affects:\n- XOM withdrawals\n- Staking rewards\n- Marketplace earnings\n\nContinue?')) {
+                alert('Withdrawals DISABLED\n\n- All withdrawal requests queued\n- Security team notified\n- Manual review required to resume');
+            }
+        }
+        
+        function forceMaintenanceMode() {
+            const duration = prompt('Enter maintenance duration (hours):', '2');
+            if (duration) {
+                alert(`Maintenance Mode ACTIVATED\n\n- Duration: ${duration} hours\n- Read-only access enabled\n- Maintenance page displayed to users`);
+            }
+        }
+        
+        // Auto-refresh data
+        function startDataRefresh() {
+            setInterval(() => {
+                // Update metrics with random variations
+                updateMetrics();
+            }, 5000);
+        }
+        
+        function updateMetrics() {
+            // Simulate real-time updates
+            const cpuElements = document.querySelectorAll('.metric-value');
+            cpuElements.forEach(el => {
+                if (el.textContent.includes('%')) {
+                    const current = parseFloat(el.textContent);
+                    const change = (Math.random() - 0.5) * 5;
+                    el.textContent = Math.max(0, Math.min(100, current + change)).toFixed(1) + '%';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

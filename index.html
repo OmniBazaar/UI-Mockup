@@ -279,8 +279,23 @@
             </div>
         </div>
 
+        <!-- Quick Links to New Features -->
+        <div style="margin-bottom: 3rem;">
+            <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--text-primary);">Explore OmniBazaar Features</h2>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <a href="block-explorer.html" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <span>🔍</span> Block Explorer
+                </a>
+                <a href="management-dashboard.html" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <span>🛡️</span> Management Dashboard (Admin)
+                </a>
+                <button class="btn-secondary" onclick="if(window.chatModal) window.chatModal.open();" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <span>💬</span> Open P2P Chat
+                </button>
+            </div>
+        </div>
+
         <!-- Products Grid -->
-        <div class="products-grid">
             <!-- Product 1 -->
             <div class="product-card" onclick="location.href='marketplace-listing.html'">
                 <img src="https://via.placeholder.com/300x200/4a46a3/ffffff?text=Laptop" alt="Gaming Laptop" class="product-image">

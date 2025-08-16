@@ -56,6 +56,7 @@ const TEMPLATE_CONFIG = {
                 { label: 'Trading', href: 'dex-swap.html' },
                 { label: 'DeFi', href: 'financial.html' },
                 { label: 'Staking', href: 'staking.html' },
+                { label: 'Block Explorer', href: 'block-explorer.html' },
                 { label: 'API Docs', href: 'docs.html' },
                 { label: 'Status', href: 'status.html' }
             ]

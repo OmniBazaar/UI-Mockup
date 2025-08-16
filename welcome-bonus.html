@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Bonus - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .welcome-bonus-hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .bonus-amount {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #6a5acd;
+            margin: 1rem 0;
+        }
+        
+        .verification-steps {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .step-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .step-card.completed {
+            border: 2px solid #4caf50;
+        }
+        
+        .step-card.active {
+            border: 2px solid #6a5acd;
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #6a5acd;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .step-card.completed .step-number {
+            background: #4caf50;
+        }
+        
+        .verification-form {
+            margin-top: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .verification-code-input {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        
+        .verification-code-input input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .social-platforms {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .platform-card {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .platform-card:hover {
+            border-color: #6a5acd;
+        }
+        
+        .platform-card.selected {
+            border-color: #6a5acd;
+            background: #f0ebff;
+        }
+        
+        .platform-card.verified {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+        
+        .platform-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #6a5acd;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .bonus-info {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 600px;
+        }
+        
+        .bonus-tier-info {
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        
+        .anti-sybil-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .dont-show-again {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-left">
+                <img src="OmniBazaar Globe-Clear_Background-64x64.png" alt="OmniBazaar Logo" class="logo">
+                <h1>OmniBazaar</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="index.html">Home</a>
+                <a href="marketplace-listing.html">Marketplace</a>
+                <a href="wallet.html">Wallet</a>
+                <a href="profile.html">Profile</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Welcome Bonus Modal (initially hidden) -->
+    <div id="welcomeBonusModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2 style="text-align: center; color: #6a5acd;">🎉 Welcome to OmniBazaar!</h2>
+            <div class="bonus-amount" id="modalBonusAmount">1,000 XOM</div>
+            <p style="text-align: center;">Complete our quick verification to claim your Welcome Bonus!</p>
+            <div class="bonus-tier-info" id="modalTierInfo">
+                You're user #42,337 - Bonus tier 2: 5,000 XOM per user
+            </div>
+            <div style="margin-top: 2rem;">
+                <h4>What you'll need:</h4>
+                <ul>
+                    <li>✉️ Valid email address</li>
+                    <li>📱 Phone number for SMS verification</li>
+                    <li>🌐 Follow us on 2 social media platforms</li>
+                </ul>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn-primary" onclick="startVerification()">Start Verification</button>
+                <button class="btn-secondary" style="margin-left: 1rem;" onclick="closeModal()">Maybe Later</button>
+            </div>
+            <div class="dont-show-again">
+                <input type="checkbox" id="dontShowAgain">
+                <label for="dontShowAgain">Don't show this again</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="welcome-bonus-hero">
+            <h1>Welcome Bonus Program</h1>
+            <p>Get rewarded for joining the OmniBazaar community!</p>
+            <div class="bonus-amount" id="currentBonusAmount">5,000 XOM</div>
+            <div class="bonus-tier-info" id="currentTierInfo">
+                Current tier: Users 10,001 - 100,000 receive 2,500 XOM each
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <div class="verification-steps">
+            <!-- Step 1: Email Verification -->
+            <div class="step-card active" id="step1">
+                <div class="step-number">1</div>
+                <h3>Email Verification</h3>
+                <p>We'll send a verification code to your email address.</p>
+                <div class="verification-form">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="your@email.com">
+                    </div>
+                    <button class="btn-primary" onclick="sendEmailCode()">Send Code</button>
+                    
+                    <div id="emailCodeSection" style="display: none; margin-top: 1rem;">
+                        <p>Enter the 8-character code sent to your email:</p>
+                        <div class="verification-code-input">
+                            <input type="text" maxlength="1" class="email-code">
+                            <input type="text" maxlength="1" class="email-code">
+                            <input type="text" maxlength="1" class="email-code">
+                            <input type="text" maxlength="1" class="email-code">
+                            <span style="margin: 0 10px;">-</span>
+                            <input type="text" maxlength="1" class="email-code">
+                            <input type="text" maxlength="1" class="email-code">
+                            <input type="text" maxlength="1" class="email-code">
+                            <input type="text" maxlength="1" class="email-code">
+                        </div>
+                        <button class="btn-primary" onclick="verifyEmailCode()">Verify Email</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Phone Verification -->
+            <div class="step-card" id="step2">
+                <div class="step-number">2</div>
+                <h3>Phone Verification</h3>
+                <p>Verify your phone number to secure your account.</p>
+                <div class="verification-form">
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" placeholder="+1 234 567 8900">
+                    </div>
+                    <button class="btn-primary" onclick="sendSMSCode()">Send SMS Code</button>
+                    
+                    <div id="smsCodeSection" style="display: none; margin-top: 1rem;">
+                        <p>Enter the 6-digit code sent to your phone:</p>
+                        <div class="verification-code-input">
+                            <input type="text" maxlength="1" class="sms-code">
+                            <input type="text" maxlength="1" class="sms-code">
+                            <input type="text" maxlength="1" class="sms-code">
+                            <input type="text" maxlength="1" class="sms-code">
+                            <input type="text" maxlength="1" class="sms-code">
+                            <input type="text" maxlength="1" class="sms-code">
+                        </div>
+                        <button class="btn-primary" onclick="verifySMSCode()">Verify Phone</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Social Media Verification -->
+            <div class="step-card" id="step3">
+                <div class="step-number">3</div>
+                <h3>Social Media Verification</h3>
+                <p>Follow OmniBazaar on <strong>2 platforms</strong> to complete verification:</p>
+                
+                <div class="social-platforms">
+                    <div class="platform-card" onclick="selectPlatform('twitter')">
+                        <div class="platform-icon">𝕏</div>
+                        <div>Twitter/X</div>
+                        <small>@OmniBazaar</small>
+                    </div>
+                    
+                    <div class="platform-card" onclick="selectPlatform('telegram')">
+                        <div class="platform-icon">✈️</div>
+                        <div>Telegram</div>
+                        <small>@OmniBazaarOfficial</small>
+                    </div>
+                    
+                    <div class="platform-card" onclick="selectPlatform('discord')">
+                        <div class="platform-icon">💬</div>
+                        <div>Discord</div>
+                        <small>OmniBazaar Server</small>
+                    </div>
+                    
+                    <div class="platform-card" onclick="selectPlatform('wechat')">
+                        <div class="platform-icon">💬</div>
+                        <div>WeChat</div>
+                        <small>OmniBazaar官方</small>
+                    </div>
+                    
+                    <div class="platform-card" onclick="selectPlatform('weibo')">
+                        <div class="platform-icon">🌐</div>
+                        <div>Weibo</div>
+                        <small>@OmniBazaar官方</small>
+                    </div>
+                    
+                    <div class="platform-card" onclick="selectPlatform('whatsapp')">
+                        <div class="platform-icon">📱</div>
+                        <div>WhatsApp</div>
+                        <small>Business Account</small>
+                    </div>
+                </div>
+                
+                <div id="platformVerification" style="display: none; margin-top: 1rem;">
+                    <div class="form-group">
+                        <label id="platformHandleLabel">Enter your username:</label>
+                        <input type="text" id="platformHandle" placeholder="@username">
+                    </div>
+                    <button class="btn-primary" onclick="verifyPlatform()">Verify Follow</button>
+                </div>
+                
+                <p style="margin-top: 1rem; text-align: center;">
+                    <span id="platformsVerified">0</span> of 2 platforms verified
+                </p>
+            </div>
+
+            <!-- Claim Bonus -->
+            <div class="step-card" id="step4" style="display: none;">
+                <h3 style="text-align: center; color: #4caf50;">✅ All Verifications Complete!</h3>
+                <p style="text-align: center;">You're now eligible for Tier 1 KYC status and your Welcome Bonus.</p>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="btn-primary btn-large" onclick="claimBonus()">
+                        Claim <span id="finalBonusAmount">5,000</span> XOM
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Anti-Sybil Notice -->
+        <div class="bonus-info">
+            <div class="anti-sybil-notice">
+                <strong>⚠️ Anti-Sybil Protection Active</strong><br>
+                To ensure fair distribution, we limit accounts per IP address and require unique phone numbers and email addresses. 
+                Attempting to create multiple accounts may result in all accounts being banned.
+            </div>
+            
+            <h3>Bonus Distribution</h3>
+            <p>The Welcome Bonus amount decreases as more users join:</p>
+            <table style="width: 100%; margin-top: 1rem;">
+                <tr>
+                    <th>User Range</th>
+                    <th>Bonus Amount</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>1 - 1,000</td>
+                    <td>10,000 XOM</td>
+                    <td>✅ Completed</td>
+                </tr>
+                <tr>
+                    <td>1,001 - 10,000</td>
+                    <td>5,000 XOM</td>
+                    <td>✅ Completed</td>
+                </tr>
+                <tr style="background: #f0ebff;">
+                    <td>10,001 - 100,000</td>
+                    <td>2,500 XOM</td>
+                    <td>🔄 Current Tier</td>
+                </tr>
+                <tr>
+                    <td>100,001 - 1,000,000</td>
+                    <td>1,250 XOM</td>
+                    <td>⏳ Upcoming</td>
+                </tr>
+                <tr>
+                    <td>1,000,001+</td>
+                    <td>625 XOM</td>
+                    <td>⏳ Future</td>
+                </tr>
+            </table>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About</h4>
+                <a href="about.html">About Us</a>
+                <a href="mission.html">Mission</a>
+                <a href="blog.html">Blog</a>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <a href="help.html">Help Center</a>
+                <a href="faq.html">FAQ</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="terms.html">Terms</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="cookies.html">Cookies</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 OmniBazaar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mock user number for demo
+        let currentUserNumber = 42337;
+        let selectedPlatforms = new Set();
+        let verifiedPlatforms = new Set();
+        let currentStep = 1;
+
+        // Calculate bonus amount based on user number
+        function calculateBonusAmount(userNum) {
+            if (userNum <= 1000) return 10000;
+            if (userNum <= 10000) return 5000;
+            if (userNum <= 100000) return 2500;
+            if (userNum <= 1000000) return 1250;
+            return 625;
+        }
+
+        // Update bonus display
+        function updateBonusDisplay() {
+            const amount = calculateBonusAmount(currentUserNumber);
+            document.getElementById('currentBonusAmount').textContent = amount.toLocaleString() + ' XOM';
+            document.getElementById('modalBonusAmount').textContent = amount.toLocaleString() + ' XOM';
+            document.getElementById('finalBonusAmount').textContent = amount.toLocaleString();
+            
+            // Update tier info
+            let tierInfo = '';
+            if (currentUserNumber <= 1000) {
+                tierInfo = `You're user #${currentUserNumber.toLocaleString()} - Bonus tier 1: 10,000 XOM per user`;
+            } else if (currentUserNumber <= 10000) {
+                tierInfo = `You're user #${currentUserNumber.toLocaleString()} - Bonus tier 2: 5,000 XOM per user`;
+            } else if (currentUserNumber <= 100000) {
+                tierInfo = `You're user #${currentUserNumber.toLocaleString()} - Bonus tier 3: 2,500 XOM per user`;
+            } else if (currentUserNumber <= 1000000) {
+                tierInfo = `You're user #${currentUserNumber.toLocaleString()} - Bonus tier 4: 1,250 XOM per user`;
+            } else {
+                tierInfo = `You're user #${currentUserNumber.toLocaleString()} - Bonus tier 5: 625 XOM per user`;
+            }
+            
+            document.getElementById('currentTierInfo').textContent = tierInfo;
+            document.getElementById('modalTierInfo').textContent = tierInfo;
+        }
+
+        // Show modal on page load (if not dismissed)
+        window.onload = function() {
+            updateBonusDisplay();
+            
+            // Check if user hasn't dismissed modal
+            if (!localStorage.getItem('welcomeBonusDismissed')) {
+                document.getElementById('welcomeBonusModal').style.display = 'flex';
+            }
+        };
+
+        function closeModal() {
+            const dontShow = document.getElementById('dontShowAgain').checked;
+            if (dontShow) {
+                localStorage.setItem('welcomeBonusDismissed', 'true');
+            }
+            document.getElementById('welcomeBonusModal').style.display = 'none';
+        }
+
+        function startVerification() {
+            closeModal();
+            document.getElementById('step1').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updateProgress() {
+            const totalSteps = 3;
+            const completedSteps = currentStep - 1;
+            const progress = (completedSteps / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function moveToStep(stepNum) {
+            // Update step cards
+            for (let i = 1; i <= 3; i++) {
+                const card = document.getElementById(`step${i}`);
+                card.classList.remove('active', 'completed');
+                if (i < stepNum) card.classList.add('completed');
+                if (i === stepNum) card.classList.add('active');
+            }
+            
+            currentStep = stepNum;
+            updateProgress();
+            
+            // Show claim button if all steps complete
+            if (stepNum > 3) {
+                document.getElementById('step4').style.display = 'block';
+                document.getElementById('progressBar').style.width = '100%';
+            }
+        }
+
+        // Email verification
+        function sendEmailCode() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                alert('Please enter your email address');
+                return;
+            }
+            
+            // Simulate sending code
+            document.getElementById('emailCodeSection').style.display = 'block';
+            alert('Verification code sent to ' + email);
+        }
+
+        function verifyEmailCode() {
+            // In real implementation, verify the code
+            alert('Email verified successfully!');
+            moveToStep(2);
+        }
+
+        // Phone verification
+        function sendSMSCode() {
+            const phone = document.getElementById('phone').value;
+            if (!phone) {
+                alert('Please enter your phone number');
+                return;
+            }
+            
+            // Simulate sending code
+            document.getElementById('smsCodeSection').style.display = 'block';
+            alert('SMS code sent to ' + phone);
+        }
+
+        function verifySMSCode() {
+            // In real implementation, verify the code
+            alert('Phone verified successfully!');
+            moveToStep(3);
+        }
+
+        // Social media verification
+        function selectPlatform(platform) {
+            if (verifiedPlatforms.has(platform)) {
+                alert('Already verified on this platform');
+                return;
+            }
+            
+            selectedPlatforms.add(platform);
+            document.getElementById('platformVerification').style.display = 'block';
+            
+            // Update label based on platform
+            const labels = {
+                twitter: 'Enter your Twitter/X handle:',
+                telegram: 'Enter your Telegram username:',
+                discord: 'Enter your Discord username:',
+                wechat: 'Enter your WeChat ID:',
+                weibo: 'Enter your Weibo profile URL:',
+                whatsapp: 'Enter your WhatsApp number:'
+            };
+            
+            document.getElementById('platformHandleLabel').textContent = labels[platform];
+            
+            // Update selected state
+            document.querySelectorAll('.platform-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.platform-card').classList.add('selected');
+        }
+
+        function verifyPlatform() {
+            const handle = document.getElementById('platformHandle').value;
+            if (!handle) {
+                alert('Please enter your username/handle');
+                return;
+            }
+            
+            // Get selected platform
+            const selectedPlatform = Array.from(selectedPlatforms).pop();
+            verifiedPlatforms.add(selectedPlatform);
+            
+            // Update UI
+            document.querySelector(`.platform-card:has(div:contains("${selectedPlatform}"))`).classList.add('verified');
+            document.getElementById('platformsVerified').textContent = verifiedPlatforms.size;
+            
+            // Clear input
+            document.getElementById('platformHandle').value = '';
+            document.getElementById('platformVerification').style.display = 'none';
+            
+            alert('Platform verified successfully!');
+            
+            // Check if we have 2 platforms verified
+            if (verifiedPlatforms.size >= 2) {
+                moveToStep(4);
+            }
+        }
+
+        function claimBonus() {
+            const amount = calculateBonusAmount(currentUserNumber);
+            alert(`Congratulations! ${amount.toLocaleString()} XOM has been added to your wallet.`);
+            
+            // In real implementation, redirect to marketplace
+            setTimeout(() => {
+                window.location.href = 'marketplace-listing.html';
+            }, 2000);
+        }
+
+        // Auto-advance code inputs
+        document.querySelectorAll('.email-code, .sms-code').forEach((input, index, inputs) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

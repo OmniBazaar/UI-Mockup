@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block Explorer - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        /* Block Explorer specific styles */
+        .explorer-container {
+            max-width: 144rem;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        .explorer-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .explorer-title {
+            font-size: 3.6rem;
+            font-weight: 800;
+            color: #373373;
+            margin-bottom: 1.2rem;
+        }
+        
+        .explorer-subtitle {
+            font-size: 1.8rem;
+            color: #6F727F;
+        }
+        
+        /* Search Bar */
+        .explorer-search {
+            background: white;
+            padding: 3.2rem;
+            border-radius: 1.2rem;
+            box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05);
+            margin-bottom: 4rem;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 1.6rem;
+            margin-bottom: 1.6rem;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 1.6rem 2.4rem;
+            font-size: 1.6rem;
+            border: 0.1rem solid #D2D3D7;
+            border-radius: 0.8rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #373373;
+            box-shadow: 0 0 0 0.3rem rgba(55, 51, 115, 0.1);
+        }
+        
+        .search-button {
+            padding: 1.6rem 3.2rem;
+            background: #373373;
+            color: white;
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-button:hover {
+            background: #4B4881;
+            transform: translateY(-0.2rem);
+            box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-options {
+            display: flex;
+            gap: 2.4rem;
+            align-items: center;
+            font-size: 1.4rem;
+            color: #6F727F;
+        }
+        
+        .search-option {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+        }
+        
+        .search-option input[type="radio"] {
+            cursor: pointer;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+            gap: 2.4rem;
+            margin-bottom: 4rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 2.4rem;
+            border-radius: 1.2rem;
+            border: 0.1rem solid #E5E5E5;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-0.4rem);
+            box-shadow: 0 0.8rem 1.6rem rgba(0, 0, 0, 0.08);
+        }
+        
+        .stat-label {
+            font-size: 1.4rem;
+            color: #8E909B;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+        
+        .stat-value {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: #373373;
+            margin-bottom: 0.4rem;
+        }
+        
+        .stat-change {
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+        
+        .stat-change.positive {
+            color: #2D844C;
+        }
+        
+        .stat-change.negative {
+            color: #DC3C3C;
+        }
+        
+        /* Data Tables */
+        .data-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3.2rem;
+            margin-bottom: 4rem;
+        }
+        
+        @media (max-width: 1024px) {
+            .data-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .data-card {
+            background: white;
+            border-radius: 1.2rem;
+            border: 0.1rem solid #E5E5E5;
+            overflow: hidden;
+        }
+        
+        .data-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.4rem;
+            border-bottom: 0.1rem solid #E5E5E5;
+        }
+        
+        .data-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3E4153;
+        }
+        
+        .view-all {
+            color: #373373;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .view-all:hover {
+            text-decoration: underline;
+        }
+        
+        .data-list {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        
+        .data-item {
+            padding: 2rem 2.4rem;
+            border-bottom: 0.1rem solid #F3F4F6;
+            transition: background 0.2s ease;
+        }
+        
+        .data-item:hover {
+            background: #F7F8FA;
+        }
+        
+        .data-item:last-child {
+            border-bottom: none;
+        }
+        
+        .block-info, .tx-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 1.6rem;
+        }
+        
+        .block-main, .tx-main {
+            flex: 1;
+        }
+        
+        .block-number, .tx-hash {
+            font-weight: 600;
+            color: #373373;
+            margin-bottom: 0.4rem;
+            font-family: var(--font-family-mono);
+            font-size: 1.4rem;
+        }
+        
+        .block-meta, .tx-meta {
+            font-size: 1.3rem;
+            color: #8E909B;
+        }
+        
+        .block-stats, .tx-value {
+            text-align: right;
+        }
+        
+        .block-txs {
+            font-size: 1.4rem;
+            color: #6F727F;
+            margin-bottom: 0.4rem;
+        }
+        
+        .block-time, .tx-time {
+            font-size: 1.3rem;
+            color: #8E909B;
+        }
+        
+        .tx-amount {
+            font-weight: 600;
+            color: #3E4153;
+            margin-bottom: 0.4rem;
+        }
+        
+        .tx-type {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            background: #F3F3F9;
+            color: #373373;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        /* Validator Section */
+        .validator-section {
+            background: white;
+            padding: 3.2rem;
+            border-radius: 1.2rem;
+            border: 0.1rem solid #E5E5E5;
+            margin-bottom: 4rem;
+        }
+        
+        .validator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+            gap: 2.4rem;
+            margin-top: 2.4rem;
+        }
+        
+        .validator-card {
+            padding: 2rem;
+            background: #F7F8FA;
+            border-radius: 0.8rem;
+            border: 0.1rem solid #E5E5E5;
+        }
+        
+        .validator-name {
+            font-weight: 600;
+            color: #3E4153;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .validator-badge {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            background: #E8F5E9;
+            color: #2D844C;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .validator-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+        
+        .validator-stat {
+            text-align: center;
+        }
+        
+        .validator-stat-label {
+            font-size: 1.2rem;
+            color: #8E909B;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+        
+        .validator-stat-value {
+            font-weight: 600;
+            color: #3E4153;
+        }
+        
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: #8E909B;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 3.2rem;
+            height: 3.2rem;
+            border: 0.3rem solid #E5E5E5;
+            border-top: 0.3rem solid #373373;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="explorer-container">
+            <!-- Explorer Header -->
+            <div class="explorer-header">
+                <h1 class="explorer-title">OmniCoin Block Explorer</h1>
+                <p class="explorer-subtitle">Real-time blockchain data and analytics</p>
+            </div>
+            
+            <!-- Search Section -->
+            <div class="explorer-search">
+                <form class="search-form" onsubmit="searchExplorer(event)">
+                    <input type="text" class="search-input" placeholder="Search by block height, transaction hash, or address..." id="explorerSearch">
+                    <button type="submit" class="search-button">Search</button>
+                </form>
+                <div class="search-options">
+                    <label class="search-option">
+                        <input type="radio" name="searchType" value="all" checked>
+                        <span>All</span>
+                    </label>
+                    <label class="search-option">
+                        <input type="radio" name="searchType" value="block">
+                        <span>Blocks</span>
+                    </label>
+                    <label class="search-option">
+                        <input type="radio" name="searchType" value="transaction">
+                        <span>Transactions</span>
+                    </label>
+                    <label class="search-option">
+                        <input type="radio" name="searchType" value="address">
+                        <span>Addresses</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Network Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Block Height</div>
+                    <div class="stat-value" id="blockHeight">1,234,567</div>
+                    <div class="stat-change positive">+240 blocks/hour</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Transactions</div>
+                    <div class="stat-value" id="totalTxs">45,678,901</div>
+                    <div class="stat-change positive">+12.5% today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Validators</div>
+                    <div class="stat-value" id="activeValidators">98</div>
+                    <div class="stat-change">100 total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Network TPS</div>
+                    <div class="stat-value" id="networkTps">1,847</div>
+                    <div class="stat-change positive">+5.2% avg</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Staked</div>
+                    <div class="stat-value" id="totalStaked">45.2M XOM</div>
+                    <div class="stat-change positive">+2.3M this week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Marketplace Volume</div>
+                    <div class="stat-value" id="marketVolume">$2.4M</div>
+                    <div class="stat-change positive">+18% today</div>
+                </div>
+            </div>
+            
+            <!-- Latest Blocks and Transactions -->
+            <div class="data-section">
+                <!-- Latest Blocks -->
+                <div class="data-card">
+                    <div class="data-header">
+                        <h2 class="data-title">Latest Blocks</h2>
+                        <a href="#" class="view-all">View all blocks →</a>
+                    </div>
+                    <ul class="data-list" id="latestBlocks">
+                        <li class="data-item">
+                            <div class="block-info">
+                                <div class="block-main">
+                                    <div class="block-number">#1234567</div>
+                                    <div class="block-meta">Validator: gateway-validator-1</div>
+                                </div>
+                                <div class="block-stats">
+                                    <div class="block-txs">145 txns</div>
+                                    <div class="block-time">10 secs ago</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="data-item">
+                            <div class="block-info">
+                                <div class="block-main">
+                                    <div class="block-number">#1234566</div>
+                                    <div class="block-meta">Validator: gateway-validator-2</div>
+                                </div>
+                                <div class="block-stats">
+                                    <div class="block-txs">203 txns</div>
+                                    <div class="block-time">22 secs ago</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="data-item">
+                            <div class="block-info">
+                                <div class="block-main">
+                                    <div class="block-number">#1234565</div>
+                                    <div class="block-meta">Validator: gateway-validator-3</div>
+                                </div>
+                                <div class="block-stats">
+                                    <div class="block-txs">178 txns</div>
+                                    <div class="block-time">35 secs ago</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="data-item">
+                            <div class="block-info">
+                                <div class="block-main">
+                                    <div class="block-number">#1234564</div>
+                                    <div class="block-meta">Validator: gateway-validator-1</div>
+                                </div>
+                                <div class="block-stats">
+                                    <div class="block-txs">192 txns</div>
+                                    <div class="block-time">48 secs ago</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="data-item">
+                            <div class="block-info">
+                                <div class="block-main">
+                                    <div class="block-number">#1234563</div>
+                                    <div class="block-meta">Validator: gateway-validator-4</div>
+                                </div>
+                                <div class="block-stats">
+                                    <div class="block-txs">167 txns</div>
+                                    <div class="block-time">1 min ago</div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Latest Transactions -->
+                <div class="data-card">
+                    <div class="data-header">
+                        <h2 class="data-title">Latest Transactions</h2>
+                        <a href="#" class="view-all">View all transactions →</a>
+                    </div>
+                    <ul class="data-list" id="latestTransactions">
+                        <li class="data-item">
+                            <div class="tx-info">
+                                <div class="tx-main">
+                                    <div class="tx-hash">0x3f4e...8a2b</div>
+                                    <div class="tx-meta">From: 0x1234...5678 → To: 0xabcd...ef01</div>
+                                </div>
+                                <div class="tx-value">
+                                    <div class="tx-amount">125.50 XOM</div>
+                                    <div class="tx-time">5 secs ago</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="data-item">
+                            <div class="tx-info">
+                                <div class="tx-main">
+                                    <div class="tx-hash">0x8c9d...2f3a</div>
+                                    <div class="tx-meta">
+                                        <span class="tx-type">Marketplace</span> Listing purchase
+                                    </div>
+                                </div>
+                                <div class="tx-value">
+                                    <div class="tx-amount">450.00 XOM</div>
+                                    <div class="tx-time">12 secs ago</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="data-item">
+                            <div class="tx-info">
+                                <div class="tx-main">
+                                    <div class="tx-hash">0x7b2c...4d5e</div>
+                                    <div class="tx-meta">
+                                        <span class="tx-type">Staking</span> Delegation reward
+                                    </div>
+                                </div>
+                                <div class="tx-value">
+                                    <div class="tx-amount">32.75 XOM</div>
+                                    <div class="tx-time">18 secs ago</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="data-item">
+                            <div class="tx-info">
+                                <div class="tx-main">
+                                    <div class="tx-hash">0x9e1f...6a7b</div>
+                                    <div class="tx-meta">From: 0x5678...9abc → To: 0xdef0...1234</div>
+                                </div>
+                                <div class="tx-value">
+                                    <div class="tx-amount">1,250.00 XOM</div>
+                                    <div class="tx-time">25 secs ago</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="data-item">
+                            <div class="tx-info">
+                                <div class="tx-main">
+                                    <div class="tx-hash">0x2d3e...8c9f</div>
+                                    <div class="tx-meta">
+                                        <span class="tx-type">DEX</span> Token swap
+                                    </div>
+                                </div>
+                                <div class="tx-value">
+                                    <div class="tx-amount">500.00 XOM</div>
+                                    <div class="tx-time">32 secs ago</div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Top Validators -->
+            <div class="validator-section">
+                <h2 class="data-title">Top Validators</h2>
+                <div class="validator-grid">
+                    <div class="validator-card">
+                        <div class="validator-name">
+                            gateway-validator-1
+                            <span class="validator-badge">Gateway</span>
+                        </div>
+                        <div class="validator-stats">
+                            <div class="validator-stat">
+                                <div class="validator-stat-label">Uptime</div>
+                                <div class="validator-stat-value">99.98%</div>
+                            </div>
+                            <div class="validator-stat">
+                                <div class="validator-stat-label">Blocks</div>
+                                <div class="validator-stat-value">24,567</div>
+                            </div>
+                            <div class="validator-stat">
+                                <div class="validator-stat-label">Score</div>
+                                <div class="validator-stat-value">98.5</div>
+                            </div>
+                            <div class="validator-stat">
+                                <div class="validator-stat-label">Stake</div>
+                                <div class="validator-stat-value">2.5M XOM</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="validator-card">
+                        <div class="validator-name">
+                            computation-node-12
+                            <span class="validator-badge" style="background: #E3F2FD; color: #1976D2;">Computation</span>
+                        </div>
+                        <div class="validator-stats">
+                            <div class="validator-stat">
+                                <div class="validator-stat-label">Uptime</div>
+                                <div class="validator-stat-value">99.92%</div>
+                            </div>
+                            <div class="validator-stat">
+                                <div class="validator-stat-label">Tasks</div>
+                                <div class="validator-stat-value">156,789</div>
+                            </div>
+                            <div class="validator-stat">
+                                <div class="validator-stat-label">Score</div>
+                                <div class="validator-stat-value">97.8</div>
+                            </div>
+                            <div class="validator-stat">
+                                <div class="validator-stat-label">Stake</div>
+                                <div class="validator-stat-value">500K XOM</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="validator-card">
+                        <div class="validator-name">
+                            gateway-validator-2
+                            <span class="validator-badge">Gateway</span>
+                        </div>
+                        <div class="validator-stats">
+                            <div class="validator-stat">
+                                <div class="validator-stat-label">Uptime</div>
+                                <div class="validator-stat-value">99.95%</div>
+                            </div>
+                            <div class="validator-stat">
+                                <div class="validator-stat-label">Blocks</div>
+                                <div class="validator-stat-value">23,890</div>
+                            </div>
+                            <div class="validator-stat">
+                                <div class="validator-stat-label">Score</div>
+                                <div class="validator-stat-value">97.2</div>
+                            </div>
+                            <div class="validator-stat">
+                                <div class="validator-stat-label">Stake</div>
+                                <div class="validator-stat-value">2.1M XOM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+    
+    <script>
+        // Search functionality
+        function searchExplorer(event) {
+            event.preventDefault();
+            const query = document.getElementById('explorerSearch').value.trim();
+            const searchType = document.querySelector('input[name="searchType"]:checked').value;
+            
+            if (query) {
+                // In production, this would call the actual API
+                console.log(`Searching for ${query} in ${searchType}...`);
+                // Show loading state
+                showSearchResults(query, searchType);
+            }
+        }
+        
+        function showSearchResults(query, type) {
+            // Simulate search results
+            alert(`Searching for "${query}" in ${type}...\n\nIn production, this would display:\n- Matching blocks\n- Transaction details\n- Address information\n- Token balances`);
+        }
+        
+        // Auto-refresh data every 10 seconds
+        function refreshData() {
+            // In production, this would fetch real data from the API
+            console.log('Refreshing blockchain data...');
+            
+            // Update block height
+            const blockHeight = document.getElementById('blockHeight');
+            const currentHeight = parseInt(blockHeight.textContent.replace(/,/g, ''));
+            blockHeight.textContent = (currentHeight + 1).toLocaleString();
+            
+            // Update other stats with slight variations
+            updateStats();
+        }
+        
+        function updateStats() {
+            // Simulate real-time updates
+            const tps = document.getElementById('networkTps');
+            const currentTps = parseInt(tps.textContent.replace(/,/g, ''));
+            const newTps = currentTps + Math.floor(Math.random() * 20) - 10;
+            tps.textContent = Math.max(100, newTps).toLocaleString();
+        }
+        
+        // Start auto-refresh
+        setInterval(refreshData, 10000);
+        
+        // Initialize WebSocket connection for real-time updates
+        function initializeWebSocket() {
+            // In production, connect to actual WebSocket endpoint
+            console.log('Initializing WebSocket connection for real-time updates...');
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeWebSocket();
+        });
+    </script>
+</body>
+</html>
