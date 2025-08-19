@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validator Dashboard - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        /* Page Specific Styles */
+        .validator-container {
+            max-width: 140rem;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .node-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .status-indicator {
+            width: 1.2rem;
+            height: 1.2rem;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-online {
+            background: var(--success);
+        }
+
+        .status-offline {
+            background: var(--error);
+        }
+
+        .status-syncing {
+            background: var(--warning);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+            }
+        }
+
+        .tabs-container {
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 3rem;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 1.2rem 0;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            font-size: 2.4rem;
+        }
+
+        .stat-label {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-change {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .positive {
+            color: var(--success);
+        }
+
+        .negative {
+            color: var(--error);
+        }
+
+        .resources-section {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .resource-bars {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .resource-item {
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .resource-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .resource-label {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .resource-value {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            height: 0.8rem;
+            background: var(--hover);
+            border-radius: 0.4rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .accounts-table {
+            background: var(--surface);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 3rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--hover);
+            padding: 1.2rem 1.6rem;
+            text-align: left;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 1.4rem 1.6rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 1.4rem;
+            color: var(--text-primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .account-type {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .type-gateway {
+            background: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .type-computation {
+            background: var(--secondary-light);
+            color: var(--secondary);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .service-card {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-name {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .service-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .service-metrics {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3rem;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+        }
+
+        .metric-value {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .service-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            padding: 0.8rem 1.6rem;
+            border-radius: 0.6rem;
+            font-size: 1.3rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--hover);
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+        .revenue-chart {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 3rem;
+        }
+
+        .chart-placeholder {
+            height: 30rem;
+            background: var(--hover);
+            border-radius: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 1.6rem;
+        }
+
+        .alert-banner {
+            background: var(--warning-light);
+            color: var(--warning-dark);
+            padding: 1.2rem 2rem;
+            border-radius: 0.8rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .alert-icon {
+            font-size: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .accounts-table {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 70rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="validator-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Validator Dashboard</h1>
+                <div class="node-status">
+                    <span class="status-indicator status-online"></span>
+                    <span style="font-size: 1.6rem; color: var(--success);">Node Online</span>
+                    <span style="font-size: 1.4rem; color: var(--text-secondary); margin-left: 2rem;">
+                        Last sync: 2 minutes ago | Block height: 1,234,567
+                    </span>
+                </div>
+            </div>
+
+            <!-- Alert Banner -->
+            <div class="alert-banner">
+                <span class="alert-icon">⚠️</span>
+                <span>New validator update available (v2.4.1). Please update within 48 hours to maintain consensus.</span>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('overview')">Overview</div>
+                    <div class="tab" onclick="switchTab('accounts')">Accounts</div>
+                    <div class="tab" onclick="switchTab('network')">Network</div>
+                    <div class="tab" onclick="switchTab('revenue')">Revenue</div>
+                    <div class="tab" onclick="switchTab('arbitration')">Arbitration</div>
+                    <div class="tab" onclick="switchTab('services')">Services</div>
+                </div>
+            </div>
+
+            <!-- Overview Tab Content -->
+            <div id="overview-content" class="tab-content">
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Total Staked</div>
+                                <div class="stat-value">125,000 XOM</div>
+                                <div class="stat-change positive">+5,000 XOM this week</div>
+                            </div>
+                            <div class="stat-icon">💰</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Uptime</div>
+                                <div class="stat-value">99.98%</div>
+                                <div class="stat-change">45 days continuous</div>
+                            </div>
+                            <div class="stat-icon">⏰</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Blocks Validated</div>
+                                <div class="stat-value">8,456</div>
+                                <div class="stat-change positive">+1,234 today</div>
+                            </div>
+                            <div class="stat-icon">⛓️</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Active Accounts</div>
+                                <div class="stat-value">3</div>
+                                <div class="stat-change">2 Gateway, 1 Computation</div>
+                            </div>
+                            <div class="stat-icon">👥</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Total Rewards</div>
+                                <div class="stat-value">3,456 XOM</div>
+                                <div class="stat-change positive">+234 XOM today</div>
+                            </div>
+                            <div class="stat-icon">🎁</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Network Rank</div>
+                                <div class="stat-value">#42</div>
+                                <div class="stat-change positive">↑ 5 positions</div>
+                            </div>
+                            <div class="stat-icon">🏆</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resource Usage -->
+                <div class="resources-section">
+                    <h2 class="section-title">System Resources</h2>
+                    <div class="resource-bars">
+                        <div class="resource-item">
+                            <div class="resource-header">
+                                <span class="resource-label">CPU Usage</span>
+                                <span class="resource-value">35% (4 cores)</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 35%"></div>
+                            </div>
+                        </div>
+
+                        <div class="resource-item">
+                            <div class="resource-header">
+                                <span class="resource-label">Memory</span>
+                                <span class="resource-value">6.2 GB / 16 GB</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 38.75%"></div>
+                            </div>
+                        </div>
+
+                        <div class="resource-item">
+                            <div class="resource-header">
+                                <span class="resource-label">Storage</span>
+                                <span class="resource-value">125 GB / 500 GB</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 25%"></div>
+                            </div>
+                        </div>
+
+                        <div class="resource-item">
+                            <div class="resource-header">
+                                <span class="resource-label">Network</span>
+                                <span class="resource-value">45 Mbps / 1000 Mbps</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 4.5%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services Status -->
+                <h2 class="section-title">Services Status</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-header">
+                            <span class="service-name">Blockchain Sync</span>
+                            <div class="service-status">
+                                <span class="status-indicator status-online"></span>
+                                <span style="color: var(--success)">Running</span>
+                            </div>
+                        </div>
+                        <div class="service-metrics">
+                            <div class="metric-row">
+                                <span class="metric-label">Block Height</span>
+                                <span class="metric-value">1,234,567</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Peers</span>
+                                <span class="metric-value">125</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Sync Speed</span>
+                                <span class="metric-value">50 blocks/sec</span>
+                            </div>
+                        </div>
+                        <div class="service-actions">
+                            <button class="btn btn-secondary">Restart</button>
+                            <button class="btn btn-danger">Stop</button>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-header">
+                            <span class="service-name">P2P Network</span>
+                            <div class="service-status">
+                                <span class="status-indicator status-online"></span>
+                                <span style="color: var(--success)">Running</span>
+                            </div>
+                        </div>
+                        <div class="service-metrics">
+                            <div class="metric-row">
+                                <span class="metric-label">Active Connections</span>
+                                <span class="metric-value">89</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Messages/sec</span>
+                                <span class="metric-value">234</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Bandwidth</span>
+                                <span class="metric-value">12.5 MB/s</span>
+                            </div>
+                        </div>
+                        <div class="service-actions">
+                            <button class="btn btn-secondary">Restart</button>
+                            <button class="btn btn-danger">Stop</button>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-header">
+                            <span class="service-name">Consensus Engine</span>
+                            <div class="service-status">
+                                <span class="status-indicator status-online"></span>
+                                <span style="color: var(--success)">Running</span>
+                            </div>
+                        </div>
+                        <div class="service-metrics">
+                            <div class="metric-row">
+                                <span class="metric-label">Rounds Completed</span>
+                                <span class="metric-value">45,678</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Success Rate</span>
+                                <span class="metric-value">99.8%</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Avg Time</span>
+                                <span class="metric-value">2.3s</span>
+                            </div>
+                        </div>
+                        <div class="service-actions">
+                            <button class="btn btn-secondary">Restart</button>
+                            <button class="btn btn-danger">Stop</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accounts Tab Content (hidden by default) -->
+            <div id="accounts-content" class="tab-content" style="display: none;">
+                <div class="accounts-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Account</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Staked</th>
+                                <th>Rewards</th>
+                                <th>Uptime</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 600;">Gateway Node #1</div>
+                                    <div style="font-size: 1.2rem; color: var(--text-secondary);">0x1234...5678</div>
+                                </td>
+                                <td><span class="account-type type-gateway">Gateway</span></td>
+                                <td><span style="color: var(--success)">● Active</span></td>
+                                <td>50,000 XOM</td>
+                                <td>1,234 XOM</td>
+                                <td>99.99%</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.6rem 1.2rem; font-size: 1.2rem;">Manage</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 600;">Gateway Node #2</div>
+                                    <div style="font-size: 1.2rem; color: var(--text-secondary);">0x8765...4321</div>
+                                </td>
+                                <td><span class="account-type type-gateway">Gateway</span></td>
+                                <td><span style="color: var(--success)">● Active</span></td>
+                                <td>50,000 XOM</td>
+                                <td>1,189 XOM</td>
+                                <td>99.97%</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.6rem 1.2rem; font-size: 1.2rem;">Manage</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 600;">Computation Node</div>
+                                    <div style="font-size: 1.2rem; color: var(--text-secondary);">0xABCD...EFGH</div>
+                                </td>
+                                <td><span class="account-type type-computation">Computation</span></td>
+                                <td><span style="color: var(--success)">● Active</span></td>
+                                <td>25,000 XOM</td>
+                                <td>1,033 XOM</td>
+                                <td>99.95%</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.6rem 1.2rem; font-size: 1.2rem;">Manage</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="text-align: center; margin-top: 3rem;">
+                    <button class="btn btn-primary" style="padding: 1.2rem 3rem;">
+                        <span style="margin-right: 0.8rem;">➕</span>
+                        Add New Validator Account
+                    </button>
+                </div>
+            </div>
+
+            <!-- Revenue Chart -->
+            <div class="revenue-chart" id="revenue-section" style="display: none;">
+                <h2 class="section-title">Revenue Overview</h2>
+                <div class="chart-placeholder">
+                    📊 Revenue Chart - Shows daily rewards, fees collected, and total earnings
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+    <script>
+        // Tab switching
+        function switchTab(tab) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            // Show selected content
+            if (tab === 'overview') {
+                document.getElementById('overview-content').style.display = 'block';
+            } else if (tab === 'accounts') {
+                document.getElementById('accounts-content').style.display = 'block';
+            } else if (tab === 'revenue') {
+                document.getElementById('revenue-section').style.display = 'block';
+            }
+            
+            console.log('Switched to tab:', tab);
+        }
+
+        // Simulate real-time updates
+        setInterval(() => {
+            // Update block height
+            const blockHeightElements = document.querySelectorAll('.metric-value');
+            blockHeightElements.forEach(el => {
+                if (el.textContent.includes('1,234,567')) {
+                    const currentHeight = parseInt(el.textContent.replace(/,/g, ''));
+                    el.textContent = (currentHeight + 1).toLocaleString();
+                }
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

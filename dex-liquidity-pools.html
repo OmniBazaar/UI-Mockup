@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquidity Pools - OmniBazaar DEX</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        /* Page Specific Styles */
+        .liquidity-container {
+            max-width: 140rem;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.6rem;
+            color: var(--text-secondary);
+            max-width: 60rem;
+            margin: 0 auto;
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-label {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+
+        .stat-value {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-change {
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .positive {
+            color: var(--success);
+        }
+
+        .negative {
+            color: var(--error);
+        }
+
+        .pool-filters {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 30rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.2rem 1.6rem;
+            padding-left: 4rem;
+            border: 1px solid var(--border);
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            background: var(--surface);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+        }
+
+        .filter-btn {
+            padding: 1.2rem 2rem;
+            border: 1px solid var(--border);
+            border-radius: 0.8rem;
+            background: var(--surface);
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .create-pool-btn {
+            padding: 1.2rem 2.4rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .create-pool-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-0.2rem);
+        }
+
+        .pools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(38rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .pool-card {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .pool-card:hover {
+            transform: translateY(-0.4rem);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .pool-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .pool-tokens {
+            display: flex;
+            align-items: center;
+        }
+
+        .token-icon {
+            width: 3.6rem;
+            height: 3.6rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .token-icon:nth-child(2) {
+            margin-left: -1rem;
+        }
+
+        .pool-name {
+            flex: 1;
+        }
+
+        .pool-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .pool-type {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .pool-badge {
+            padding: 0.4rem 0.8rem;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .pool-stats {
+            display: grid;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.4rem;
+        }
+
+        .stat-name {
+            color: var(--text-secondary);
+        }
+
+        .stat-val {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .apy-value {
+            color: var(--success);
+            font-size: 1.6rem;
+        }
+
+        .pool-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            padding: 1rem;
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-add {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-add:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-swap {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-swap:hover {
+            background: var(--primary-light);
+        }
+
+        .my-liquidity {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .liquidity-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 1.2rem 1.6rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 1.4rem 1.6rem;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pool-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .pool-icons {
+            display: flex;
+        }
+
+        .mini-icon {
+            width: 2.4rem;
+            height: 2.4rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .mini-icon:nth-child(2) {
+            margin-left: -0.8rem;
+        }
+
+        .manage-btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .manage-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .info-banner {
+            background: var(--info-light);
+            border: 1px solid var(--info);
+            border-radius: 0.8rem;
+            padding: 1.6rem;
+            margin-bottom: 3rem;
+            display: flex;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .info-icon {
+            font-size: 2rem;
+            color: var(--info);
+        }
+
+        .info-text {
+            font-size: 1.4rem;
+            color: var(--info-dark);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .pools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pool-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                min-width: auto;
+            }
+
+            .liquidity-table {
+                font-size: 1.2rem;
+            }
+
+            th, td {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="liquidity-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Liquidity Pools</h1>
+                <p class="page-subtitle">Provide liquidity to earn trading fees and LP rewards</p>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-label">Total Value Locked</div>
+                    <div class="stat-value">$458.2M</div>
+                    <div class="stat-change positive">+12.5% this week</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🏊</div>
+                    <div class="stat-label">Active Pools</div>
+                    <div class="stat-value">127</div>
+                    <div class="stat-change positive">+8 new pools</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">💸</div>
+                    <div class="stat-label">24h Fees Generated</div>
+                    <div class="stat-value">$1.24M</div>
+                    <div class="stat-change positive">+18.3%</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-label">Avg APY</div>
+                    <div class="stat-value">24.8%</div>
+                    <div class="stat-change negative">-2.1%</div>
+                </div>
+            </div>
+
+            <!-- Info Banner -->
+            <div class="info-banner">
+                <span class="info-icon">💡</span>
+                <div class="info-text">
+                    <strong>Earn passive income by providing liquidity!</strong> When you add liquidity to a pool, you receive LP tokens representing your share. You earn a portion of all trading fees proportional to your share of the pool.
+                </div>
+            </div>
+
+            <!-- Pool Filters -->
+            <div class="pool-filters">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search pools by token name...">
+                </div>
+                
+                <button class="filter-btn active">All Pools</button>
+                <button class="filter-btn">My Pools</button>
+                <button class="filter-btn">Stable Pools</button>
+                <button class="filter-btn">New Pools</button>
+                
+                <button class="create-pool-btn">+ Create Pool</button>
+            </div>
+
+            <!-- Pools Grid -->
+            <div class="pools-grid">
+                <!-- Pool 1 -->
+                <div class="pool-card">
+                    <div class="pool-header">
+                        <div class="pool-tokens">
+                            <div class="token-icon" style="background: #373373;">XOM</div>
+                            <div class="token-icon" style="background: #627EEA;">ETH</div>
+                        </div>
+                        <div class="pool-name">
+                            <div class="pool-title">XOM / ETH</div>
+                            <div class="pool-type">0.3% Fee Tier</div>
+                        </div>
+                        <div class="pool-badge">Popular</div>
+                    </div>
+                    
+                    <div class="pool-stats">
+                        <div class="stat-row">
+                            <span class="stat-name">APY</span>
+                            <span class="stat-val apy-value">45.2%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">TVL</span>
+                            <span class="stat-val">$24.5M</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">24h Volume</span>
+                            <span class="stat-val">$8.2M</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">24h Fees</span>
+                            <span class="stat-val">$24,600</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pool-actions">
+                        <button class="action-btn btn-add">Add Liquidity</button>
+                        <a href="dex-swap.html" class="action-btn btn-swap">Swap</a>
+                    </div>
+                </div>
+
+                <!-- Pool 2 -->
+                <div class="pool-card">
+                    <div class="pool-header">
+                        <div class="pool-tokens">
+                            <div class="token-icon" style="background: #373373;">XOM</div>
+                            <div class="token-icon" style="background: #26A69A;">USDT</div>
+                        </div>
+                        <div class="pool-name">
+                            <div class="pool-title">XOM / USDT</div>
+                            <div class="pool-type">0.05% Fee Tier</div>
+                        </div>
+                        <div class="pool-badge">Stable</div>
+                    </div>
+                    
+                    <div class="pool-stats">
+                        <div class="stat-row">
+                            <span class="stat-name">APY</span>
+                            <span class="stat-val apy-value">18.5%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">TVL</span>
+                            <span class="stat-val">$58.3M</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">24h Volume</span>
+                            <span class="stat-val">$32.1M</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">24h Fees</span>
+                            <span class="stat-val">$16,050</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pool-actions">
+                        <button class="action-btn btn-add">Add Liquidity</button>
+                        <a href="dex-swap.html" class="action-btn btn-swap">Swap</a>
+                    </div>
+                </div>
+
+                <!-- Pool 3 -->
+                <div class="pool-card">
+                    <div class="pool-header">
+                        <div class="pool-tokens">
+                            <div class="token-icon" style="background: #F7931A;">BTC</div>
+                            <div class="token-icon" style="background: #627EEA;">ETH</div>
+                        </div>
+                        <div class="pool-name">
+                            <div class="pool-title">WBTC / ETH</div>
+                            <div class="pool-type">0.3% Fee Tier</div>
+                        </div>
+                    </div>
+                    
+                    <div class="pool-stats">
+                        <div class="stat-row">
+                            <span class="stat-name">APY</span>
+                            <span class="stat-val apy-value">22.8%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">TVL</span>
+                            <span class="stat-val">$42.7M</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">24h Volume</span>
+                            <span class="stat-val">$12.4M</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">24h Fees</span>
+                            <span class="stat-val">$37,200</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pool-actions">
+                        <button class="action-btn btn-add">Add Liquidity</button>
+                        <a href="dex-swap.html" class="action-btn btn-swap">Swap</a>
+                    </div>
+                </div>
+
+                <!-- Pool 4 -->
+                <div class="pool-card">
+                    <div class="pool-header">
+                        <div class="pool-tokens">
+                            <div class="token-icon" style="background: #26A69A;">USDT</div>
+                            <div class="token-icon" style="background: #2775CA;">USDC</div>
+                        </div>
+                        <div class="pool-name">
+                            <div class="pool-title">USDT / USDC</div>
+                            <div class="pool-type">0.01% Fee Tier</div>
+                        </div>
+                        <div class="pool-badge">Stable</div>
+                    </div>
+                    
+                    <div class="pool-stats">
+                        <div class="stat-row">
+                            <span class="stat-name">APY</span>
+                            <span class="stat-val apy-value">8.2%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">TVL</span>
+                            <span class="stat-val">$125.4M</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">24h Volume</span>
+                            <span class="stat-val">$89.7M</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">24h Fees</span>
+                            <span class="stat-val">$8,970</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pool-actions">
+                        <button class="action-btn btn-add">Add Liquidity</button>
+                        <a href="dex-swap.html" class="action-btn btn-swap">Swap</a>
+                    </div>
+                </div>
+
+                <!-- Pool 5 -->
+                <div class="pool-card">
+                    <div class="pool-header">
+                        <div class="pool-tokens">
+                            <div class="token-icon" style="background: #373373;">XOM</div>
+                            <div class="token-icon" style="background: #F7931A;">BTC</div>
+                        </div>
+                        <div class="pool-name">
+                            <div class="pool-title">XOM / WBTC</div>
+                            <div class="pool-type">0.3% Fee Tier</div>
+                        </div>
+                        <div class="pool-badge">New</div>
+                    </div>
+                    
+                    <div class="pool-stats">
+                        <div class="stat-row">
+                            <span class="stat-name">APY</span>
+                            <span class="stat-val apy-value">68.5%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">TVL</span>
+                            <span class="stat-val">$3.2M</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">24h Volume</span>
+                            <span class="stat-val">$456K</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">24h Fees</span>
+                            <span class="stat-val">$1,368</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pool-actions">
+                        <button class="action-btn btn-add">Add Liquidity</button>
+                        <a href="dex-swap.html" class="action-btn btn-swap">Swap</a>
+                    </div>
+                </div>
+
+                <!-- Pool 6 -->
+                <div class="pool-card">
+                    <div class="pool-header">
+                        <div class="pool-tokens">
+                            <div class="token-icon" style="background: #627EEA;">ETH</div>
+                            <div class="token-icon" style="background: #26A69A;">USDT</div>
+                        </div>
+                        <div class="pool-name">
+                            <div class="pool-title">ETH / USDT</div>
+                            <div class="pool-type">0.3% Fee Tier</div>
+                        </div>
+                    </div>
+                    
+                    <div class="pool-stats">
+                        <div class="stat-row">
+                            <span class="stat-name">APY</span>
+                            <span class="stat-val apy-value">31.2%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">TVL</span>
+                            <span class="stat-val">$78.9M</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">24h Volume</span>
+                            <span class="stat-val">$45.6M</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">24h Fees</span>
+                            <span class="stat-val">$136,800</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pool-actions">
+                        <button class="action-btn btn-add">Add Liquidity</button>
+                        <a href="dex-swap.html" class="action-btn btn-swap">Swap</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Liquidity Section -->
+            <div class="my-liquidity">
+                <div class="section-header">
+                    <h2 class="section-title">My Liquidity Positions</h2>
+                    <div style="text-align: right;">
+                        <div style="font-size: 1.2rem; color: var(--text-secondary);">Total Value</div>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">$12,458.32</div>
+                    </div>
+                </div>
+
+                <div class="liquidity-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pool</th>
+                                <th>Your Liquidity</th>
+                                <th>Pool Share</th>
+                                <th>Earned Fees</th>
+                                <th>APY</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="pool-info">
+                                        <div class="pool-icons">
+                                            <div class="mini-icon" style="background: #373373;">X</div>
+                                            <div class="mini-icon" style="background: #627EEA;">E</div>
+                                        </div>
+                                        <span>XOM / ETH</span>
+                                    </div>
+                                </td>
+                                <td>$5,234.56</td>
+                                <td>0.24%</td>
+                                <td>$456.78</td>
+                                <td class="apy-value">45.2%</td>
+                                <td>
+                                    <button class="manage-btn">Manage</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="pool-info">
+                                        <div class="pool-icons">
+                                            <div class="mini-icon" style="background: #373373;">X</div>
+                                            <div class="mini-icon" style="background: #26A69A;">T</div>
+                                        </div>
+                                        <span>XOM / USDT</span>
+                                    </div>
+                                </td>
+                                <td>$7,223.76</td>
+                                <td>0.18%</td>
+                                <td>$234.12</td>
+                                <td class="apy-value">18.5%</td>
+                                <td>
+                                    <button class="manage-btn">Manage</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Additional Links -->
+            <div style="margin-top: 3rem; text-align: center;">
+                <p style="font-size: 1.4rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    Explore more DEX features:
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <a href="dex-swap.html" style="padding: 0.8rem 1.6rem; background: var(--surface); border: 1px solid var(--border); border-radius: 0.6rem; text-decoration: none; color: var(--text-primary); font-size: 1.3rem;">
+                        Spot Trading
+                    </a>
+                    <a href="dex-perpetuals.html" style="padding: 0.8rem 1.6rem; background: var(--surface); border: 1px solid var(--border); border-radius: 0.6rem; text-decoration: none; color: var(--text-primary); font-size: 1.3rem;">
+                        Perpetuals
+                    </a>
+                    <a href="dex-trading-history.html" style="padding: 0.8rem 1.6rem; background: var(--surface); border: 1px solid var(--border); border-radius: 0.6rem; text-decoration: none; color: var(--text-primary); font-size: 1.3rem;">
+                        Trading History
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+    <script>
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // In real implementation, would filter the pools
+                console.log('Filter:', this.textContent);
+            });
+        });
+
+        // Search functionality
+        document.querySelector('.search-input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            // In real implementation, would filter pools based on search
+            console.log('Search:', searchTerm);
+        });
+    </script>
+</body>
+</html>

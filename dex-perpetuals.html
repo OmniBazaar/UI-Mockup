@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perpetuals Trading - OmniBazaar DEX</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        /* Page Specific Styles */
+        .perpetuals-container {
+            max-width: 160rem;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .market-selector-row {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .market-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            background: var(--surface);
+            border-radius: 0.8rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .market-info {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            flex: 1;
+        }
+
+        .price-display {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .current-price {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .price-change {
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+
+        .positive {
+            color: var(--success);
+        }
+
+        .negative {
+            color: var(--error);
+        }
+
+        .market-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .trading-layout {
+            display: grid;
+            grid-template-columns: 1fr 35rem;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-section {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .timeframe-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .timeframe-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 1.3rem;
+            cursor: pointer;
+            border-radius: 0.4rem;
+            transition: all 0.2s;
+        }
+
+        .timeframe-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .chart-placeholder {
+            height: 50rem;
+            background: var(--hover);
+            border-radius: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 1.6rem;
+        }
+
+        .trading-panel {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .trade-type-tabs {
+            display: flex;
+            background: var(--hover);
+            border-radius: 0.6rem;
+            padding: 0.4rem;
+            margin-bottom: 2rem;
+        }
+
+        .trade-type-tab {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            background: transparent;
+            font-size: 1.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 0.4rem;
+            transition: all 0.2s;
+        }
+
+        .trade-type-tab.active {
+            background: var(--surface);
+            box-shadow: var(--shadow-xs);
+        }
+
+        .trade-type-tab.long {
+            color: var(--success);
+        }
+
+        .trade-type-tab.short {
+            color: var(--error);
+        }
+
+        .input-group {
+            margin-bottom: 1.8rem;
+        }
+
+        .input-label {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1.2rem;
+            padding-right: 6rem;
+            border: 1px solid var(--border);
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .input-suffix {
+            position: absolute;
+            right: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+        }
+
+        .leverage-slider {
+            margin-top: 1rem;
+        }
+
+        .leverage-display {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+
+        .leverage-value {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .slider {
+            width: 100%;
+            height: 0.6rem;
+            background: var(--hover);
+            border-radius: 0.3rem;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 1.8rem;
+            height: 1.8rem;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .trade-summary {
+            background: var(--hover);
+            border-radius: 0.6rem;
+            padding: 1.5rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            font-size: 1.3rem;
+        }
+
+        .summary-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .summary-label {
+            color: var(--text-secondary);
+        }
+
+        .summary-value {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .trade-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1.2rem;
+            border: none;
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-long {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-long:hover {
+            opacity: 0.9;
+        }
+
+        .btn-short {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-short:hover {
+            opacity: 0.9;
+        }
+
+        .positions-section {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .position-tabs {
+            display: flex;
+            gap: 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .position-tab {
+            padding: 1rem 0;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .position-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .positions-table {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem 1.2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 1.2rem;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .position-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .position-side {
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.3rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .side-long {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .side-short {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .pnl-positive {
+            color: var(--success);
+        }
+
+        .pnl-negative {
+            color: var(--error);
+        }
+
+        .position-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: transparent;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: var(--hover);
+        }
+
+        .action-btn.close {
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .action-btn.close:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .risk-warning {
+            background: var(--warning-light);
+            border: 1px solid var(--warning);
+            border-radius: 0.8rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .warning-icon {
+            font-size: 2rem;
+            color: var(--warning);
+        }
+
+        .warning-text {
+            font-size: 1.3rem;
+            color: var(--warning-dark);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 1200px) {
+            .trading-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .market-info {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .market-selector-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .positions-table {
+                font-size: 1.2rem;
+            }
+
+            th, td {
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="perpetuals-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Perpetuals Trading</h1>
+            </div>
+
+            <!-- Market Selector Row -->
+            <div class="market-selector-row">
+                <div class="market-selector">
+                    <span style="font-size: 1.8rem; font-weight: 600;">BTC-PERP</span>
+                    <span style="color: var(--text-secondary);">▼</span>
+                </div>
+
+                <div class="market-info">
+                    <div class="price-display">
+                        <div class="current-price">$42,156.50</div>
+                        <div class="price-change positive">+2.45% ($1,008.32)</div>
+                    </div>
+
+                    <div class="market-stat">
+                        <div class="stat-label">24h High</div>
+                        <div class="stat-value">$42,890.00</div>
+                    </div>
+
+                    <div class="market-stat">
+                        <div class="stat-label">24h Low</div>
+                        <div class="stat-value">$41,234.00</div>
+                    </div>
+
+                    <div class="market-stat">
+                        <div class="stat-label">24h Volume</div>
+                        <div class="stat-value">$458.2M</div>
+                    </div>
+
+                    <div class="market-stat">
+                        <div class="stat-label">Funding Rate</div>
+                        <div class="stat-value positive">0.0100%</div>
+                    </div>
+
+                    <div class="market-stat">
+                        <div class="stat-label">Open Interest</div>
+                        <div class="stat-value">$2.34B</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trading Layout -->
+            <div class="trading-layout">
+                <!-- Chart Section -->
+                <div class="chart-section">
+                    <div class="chart-header">
+                        <div class="timeframe-selector">
+                            <button class="timeframe-btn">1m</button>
+                            <button class="timeframe-btn">5m</button>
+                            <button class="timeframe-btn active">15m</button>
+                            <button class="timeframe-btn">1h</button>
+                            <button class="timeframe-btn">4h</button>
+                            <button class="timeframe-btn">1d</button>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button style="padding: 0.6rem 1.2rem; border: 1px solid var(--border); background: transparent; border-radius: 0.4rem; cursor: pointer;">
+                                📊 Indicators
+                            </button>
+                            <button style="padding: 0.6rem 1.2rem; border: 1px solid var(--border); background: transparent; border-radius: 0.4rem; cursor: pointer;">
+                                ⚙️ Settings
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-placeholder">
+                        📈 TradingView Chart Widget
+                    </div>
+                </div>
+
+                <!-- Trading Panel -->
+                <div class="trading-panel">
+                    <h2 style="font-size: 1.6rem; font-weight: 600; margin-bottom: 1.5rem;">Place Order</h2>
+                    
+                    <div class="trade-type-tabs">
+                        <button class="trade-type-tab long active" onclick="selectTradeType('long')">Long</button>
+                        <button class="trade-type-tab short" onclick="selectTradeType('short')">Short</button>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Order Type</label>
+                        <select class="input-field" style="padding-right: 1.2rem;">
+                            <option>Market</option>
+                            <option>Limit</option>
+                            <option>Stop Market</option>
+                            <option>Stop Limit</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Size</label>
+                        <div class="input-wrapper">
+                            <input type="number" class="input-field" value="0.1" step="0.01">
+                            <span class="input-suffix">BTC</span>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Leverage</label>
+                        <div class="leverage-slider">
+                            <div class="leverage-display">
+                                <span>Leverage</span>
+                                <span class="leverage-value" id="leverageValue">10x</span>
+                            </div>
+                            <input type="range" class="slider" min="1" max="100" value="10" oninput="updateLeverage(this.value)">
+                            <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 1.2rem; color: var(--text-secondary);">
+                                <span>1x</span>
+                                <span>25x</span>
+                                <span>50x</span>
+                                <span>75x</span>
+                                <span>100x</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="trade-summary">
+                        <div class="summary-row">
+                            <span class="summary-label">Position Value</span>
+                            <span class="summary-value">$4,215.65</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Required Margin</span>
+                            <span class="summary-value">$421.57</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Entry Price</span>
+                            <span class="summary-value">$42,156.50</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Liquidation Price</span>
+                            <span class="summary-value">$38,940.75</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Est. Fee</span>
+                            <span class="summary-value">$4.22</span>
+                        </div>
+                    </div>
+
+                    <div class="trade-buttons">
+                        <button class="btn btn-long" id="longBtn">Long</button>
+                        <button class="btn btn-short" id="shortBtn" style="display: none;">Short</button>
+                    </div>
+
+                    <div class="risk-warning">
+                        <span class="warning-icon">⚠️</span>
+                        <div class="warning-text">
+                            <strong>High Risk Warning:</strong> Trading perpetual futures with leverage can result in rapid losses. You may lose your entire margin. Only trade with funds you can afford to lose.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Positions Section -->
+            <div class="positions-section">
+                <div class="section-header">
+                    <h2 class="section-title">Positions & Orders</h2>
+                    <button style="padding: 0.8rem 1.5rem; background: var(--primary-color); color: white; border: none; border-radius: 0.6rem; font-size: 1.3rem; cursor: pointer;">
+                        Close All Positions
+                    </button>
+                </div>
+
+                <div class="position-tabs">
+                    <div class="position-tab active" onclick="switchPositionTab('positions')">Positions (2)</div>
+                    <div class="position-tab" onclick="switchPositionTab('orders')">Open Orders (3)</div>
+                    <div class="position-tab" onclick="switchPositionTab('history')">Order History</div>
+                </div>
+
+                <div class="positions-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Contract</th>
+                                <th>Side</th>
+                                <th>Size</th>
+                                <th>Entry Price</th>
+                                <th>Mark Price</th>
+                                <th>Margin</th>
+                                <th>PnL (ROE%)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="position-info">
+                                        <span>BTC-PERP</span>
+                                        <span class="position-side side-long">LONG</span>
+                                    </div>
+                                </td>
+                                <td>10x</td>
+                                <td>0.25 BTC</td>
+                                <td>$41,850.00</td>
+                                <td>$42,156.50</td>
+                                <td>$1,046.25</td>
+                                <td class="pnl-positive">+$76.63 (+7.32%)</td>
+                                <td>
+                                    <div class="position-actions">
+                                        <button class="action-btn">Add</button>
+                                        <button class="action-btn close">Close</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="position-info">
+                                        <span>ETH-PERP</span>
+                                        <span class="position-side side-short">SHORT</span>
+                                    </div>
+                                </td>
+                                <td>5x</td>
+                                <td>10 ETH</td>
+                                <td>$3,485.00</td>
+                                <td>$3,456.78</td>
+                                <td>$6,970.00</td>
+                                <td class="pnl-positive">+$282.20 (+4.05%)</td>
+                                <td>
+                                    <div class="position-actions">
+                                        <button class="action-btn">Add</button>
+                                        <button class="action-btn close">Close</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Additional Links -->
+            <div style="margin-top: 3rem; text-align: center;">
+                <p style="font-size: 1.4rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    Explore more DEX features:
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <a href="dex-swap.html" style="padding: 0.8rem 1.6rem; background: var(--surface); border: 1px solid var(--border); border-radius: 0.6rem; text-decoration: none; color: var(--text-primary); font-size: 1.3rem;">
+                        Spot Trading
+                    </a>
+                    <a href="dex-liquidity-pools.html" style="padding: 0.8rem 1.6rem; background: var(--surface); border: 1px solid var(--border); border-radius: 0.6rem; text-decoration: none; color: var(--text-primary); font-size: 1.3rem;">
+                        Liquidity Pools
+                    </a>
+                    <a href="dex-trading-history.html" style="padding: 0.8rem 1.6rem; background: var(--surface); border: 1px solid var(--border); border-radius: 0.6rem; text-decoration: none; color: var(--text-primary); font-size: 1.3rem;">
+                        Trading History
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+    <script>
+        function selectTradeType(type) {
+            document.querySelectorAll('.trade-type-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'long') {
+                document.getElementById('longBtn').style.display = 'block';
+                document.getElementById('shortBtn').style.display = 'none';
+            } else {
+                document.getElementById('longBtn').style.display = 'none';
+                document.getElementById('shortBtn').style.display = 'block';
+            }
+        }
+
+        function updateLeverage(value) {
+            document.getElementById('leverageValue').textContent = value + 'x';
+            // Update margin calculations
+            updateTradeSummary();
+        }
+
+        function updateTradeSummary() {
+            // In real implementation, would recalculate all values
+        }
+
+        function switchPositionTab(tab) {
+            document.querySelectorAll('.position-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            // In real implementation, would show different content
+        }
+    </script>
+</body>
+</html>

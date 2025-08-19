@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XOM Staking Advanced - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        /* Page Specific Styles */
+        .staking-container {
+            max-width: 140rem;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 3.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+            max-width: 60rem;
+            margin: 0 auto;
+        }
+
+        .tabs-container {
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+        }
+
+        .tab {
+            padding: 1.2rem 0;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .staking-tiers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(28rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .tier-card {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tier-card:hover {
+            transform: translateY(-0.4rem);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .tier-card.selected {
+            border: 2px solid var(--primary-color);
+        }
+
+        .tier-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tier-name {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .tier-bronze { color: #CD7F32; }
+        .tier-silver { color: #C0C0C0; }
+        .tier-gold { color: #FFD700; }
+        .tier-platinum { color: #E5E4E2; }
+
+        .tier-requirement {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .tier-benefits {
+            margin-bottom: 1.5rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.3rem;
+        }
+
+        .benefit-icon {
+            color: var(--success);
+        }
+
+        .tier-apy {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .staking-calculator {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 3rem;
+            box-shadow: var(--shadow-sm);
+            max-width: 80rem;
+            margin: 0 auto 4rem;
+        }
+
+        .calculator-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 2rem;
+        }
+
+        .input-label {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1.2rem 1.6rem;
+            padding-right: 6rem;
+            border: 1px solid var(--border);
+            border-radius: 0.8rem;
+            font-size: 1.6rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .input-suffix {
+            position: absolute;
+            right: 1.6rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .slider-container {
+            margin-top: 1rem;
+        }
+
+        .slider {
+            width: 100%;
+            height: 0.8rem;
+            background: var(--hover);
+            border-radius: 0.4rem;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 2rem;
+            height: 2rem;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .duration-options {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .duration-btn {
+            flex: 1;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.6rem;
+            background: var(--surface);
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .duration-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .calculator-results {
+            background: var(--hover);
+            border-radius: 0.8rem;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            font-size: 1.4rem;
+        }
+
+        .result-row:last-child {
+            margin-bottom: 0;
+            padding-top: 1.2rem;
+            border-top: 1px solid var(--border);
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+        }
+
+        .result-value {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .stake-button {
+            width: 100%;
+            padding: 1.6rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 2rem;
+            transition: all 0.2s;
+        }
+
+        .stake-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-0.2rem);
+        }
+
+        .my-stakes {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 3rem;
+        }
+
+        .stakes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .stakes-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stakes-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 1.2rem 1.6rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 1.4rem 1.6rem;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .action-btn {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--primary-color);
+            border-radius: 0.4rem;
+            background: transparent;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .warning-box {
+            background: var(--warning-light);
+            border: 1px solid var(--warning);
+            border-radius: 0.8rem;
+            padding: 1.6rem;
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .warning-icon {
+            font-size: 2rem;
+            color: var(--warning);
+        }
+
+        .warning-text {
+            font-size: 1.3rem;
+            color: var(--warning-dark);
+        }
+
+        .leaderboard-section {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .rank-1 { background: #FFD700; color: #333; }
+        .rank-2 { background: #C0C0C0; color: #333; }
+        .rank-3 { background: #CD7F32; color: #333; }
+        .rank-other { background: var(--hover); color: var(--text-primary); }
+
+        @media (max-width: 768px) {
+            .staking-tiers {
+                grid-template-columns: 1fr;
+            }
+
+            .duration-options {
+                flex-wrap: wrap;
+            }
+
+            .stakes-table {
+                font-size: 1.2rem;
+            }
+
+            th, td {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="staking-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">XOM Staking</h1>
+                <p class="page-subtitle">Stake your XOM tokens to earn rewards and support the OmniBazaar network</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('stake')">Stake</div>
+                    <div class="tab" onclick="switchTab('mystakes')">My Stakes</div>
+                    <div class="tab" onclick="switchTab('analytics')">Analytics</div>
+                    <div class="tab" onclick="switchTab('history')">History</div>
+                    <div class="tab" onclick="switchTab('leaderboard')">Leaderboard</div>
+                </div>
+            </div>
+
+            <!-- Stake Tab Content -->
+            <div id="stake-content" class="tab-content">
+                <!-- Staking Tiers -->
+                <div class="staking-tiers">
+                    <div class="tier-card" onclick="selectTier(1, 5000)">
+                        <h3 class="tier-name tier-bronze">Bronze Tier</h3>
+                        <p class="tier-requirement">Minimum: 5,000 XOM</p>
+                        <div class="tier-benefits">
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>Basic staking rewards</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>Governance voting rights</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>Priority customer support</span>
+                            </div>
+                        </div>
+                        <div class="tier-apy">8% APY</div>
+                    </div>
+
+                    <div class="tier-card selected" onclick="selectTier(2, 25000)">
+                        <span class="tier-badge">Popular</span>
+                        <h3 class="tier-name tier-silver">Silver Tier</h3>
+                        <p class="tier-requirement">Minimum: 25,000 XOM</p>
+                        <div class="tier-benefits">
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>Enhanced staking rewards</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>2x voting power</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>Reduced trading fees</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>Early access to features</span>
+                            </div>
+                        </div>
+                        <div class="tier-apy">12% APY</div>
+                    </div>
+
+                    <div class="tier-card" onclick="selectTier(3, 100000)">
+                        <h3 class="tier-name tier-gold">Gold Tier</h3>
+                        <p class="tier-requirement">Minimum: 100,000 XOM</p>
+                        <div class="tier-benefits">
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>Premium staking rewards</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>5x voting power</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>Zero trading fees</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>Validator node eligibility</span>
+                            </div>
+                        </div>
+                        <div class="tier-apy">18% APY</div>
+                    </div>
+
+                    <div class="tier-card" onclick="selectTier(4, 500000)">
+                        <h3 class="tier-name tier-platinum">Platinum Tier</h3>
+                        <p class="tier-requirement">Minimum: 500,000 XOM</p>
+                        <div class="tier-benefits">
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>Maximum staking rewards</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>10x voting power</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>Revenue sharing</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>Exclusive partnership benefits</span>
+                            </div>
+                        </div>
+                        <div class="tier-apy">25% APY</div>
+                    </div>
+                </div>
+
+                <!-- Staking Calculator -->
+                <div class="staking-calculator">
+                    <h2 class="calculator-title">Staking Calculator</h2>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Amount to Stake</label>
+                        <div class="input-wrapper">
+                            <input type="number" class="input-field" id="stake-amount" value="25000" min="5000" oninput="updateCalculator()">
+                            <span class="input-suffix">XOM</span>
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" class="slider" min="5000" max="1000000" value="25000" oninput="updateSlider(this.value)">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Staking Duration</label>
+                        <div class="duration-options">
+                            <button class="duration-btn" onclick="selectDuration(30)">30 Days</button>
+                            <button class="duration-btn" onclick="selectDuration(90)">90 Days</button>
+                            <button class="duration-btn active" onclick="selectDuration(180)">180 Days</button>
+                            <button class="duration-btn" onclick="selectDuration(365)">1 Year</button>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">
+                            <input type="checkbox" id="auto-compound" checked onchange="updateCalculator()">
+                            Auto-compound rewards
+                        </label>
+                    </div>
+
+                    <div class="calculator-results">
+                        <div class="result-row">
+                            <span class="result-label">Selected Tier</span>
+                            <span class="result-value" id="selected-tier">Silver (12% APY)</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Daily Rewards</span>
+                            <span class="result-value" id="daily-rewards">8.22 XOM</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Monthly Rewards</span>
+                            <span class="result-value" id="monthly-rewards">246.58 XOM</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Total Rewards (180 days)</span>
+                            <span class="result-value" id="total-rewards">1,479.45 XOM</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Total Value at Maturity</span>
+                            <span class="result-value" id="maturity-value">26,479.45 XOM</span>
+                        </div>
+                    </div>
+
+                    <button class="stake-button" onclick="initiateStaking()">
+                        Stake 25,000 XOM
+                    </button>
+
+                    <div class="warning-box">
+                        <span class="warning-icon">⚠️</span>
+                        <div class="warning-text">
+                            <strong>Important:</strong> Staked tokens are locked for the selected duration. Early withdrawal incurs a 10% penalty. Make sure you understand the terms before staking.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Stakes Tab Content (hidden by default) -->
+            <div id="mystakes-content" class="tab-content" style="display: none;">
+                <div class="my-stakes">
+                    <div class="stakes-header">
+                        <h2 class="stakes-title">Active Stakes</h2>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.2rem; color: var(--text-secondary);">Total Staked</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">125,000 XOM</div>
+                        </div>
+                    </div>
+
+                    <div class="stakes-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Amount</th>
+                                    <th>Tier</th>
+                                    <th>APY</th>
+                                    <th>Start Date</th>
+                                    <th>Maturity</th>
+                                    <th>Rewards Earned</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>50,000 XOM</td>
+                                    <td><span style="color: #C0C0C0; font-weight: 600;">Silver</span></td>
+                                    <td>12%</td>
+                                    <td>Oct 15, 2024</td>
+                                    <td>Apr 13, 2025</td>
+                                    <td>2,465.75 XOM</td>
+                                    <td><span style="color: var(--success);">Active</span></td>
+                                    <td>
+                                        <button class="action-btn">Compound</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>25,000 XOM</td>
+                                    <td><span style="color: #CD7F32; font-weight: 600;">Bronze</span></td>
+                                    <td>8%</td>
+                                    <td>Nov 20, 2024</td>
+                                    <td>Feb 18, 2025</td>
+                                    <td>493.15 XOM</td>
+                                    <td><span style="color: var(--success);">Active</span></td>
+                                    <td>
+                                        <button class="action-btn">Withdraw</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>50,000 XOM</td>
+                                    <td><span style="color: #C0C0C0; font-weight: 600;">Silver</span></td>
+                                    <td>12%</td>
+                                    <td>Dec 1, 2024</td>
+                                    <td>May 30, 2025</td>
+                                    <td>1,232.88 XOM</td>
+                                    <td><span style="color: var(--success);">Active</span></td>
+                                    <td>
+                                        <button class="action-btn">Compound</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Rewards Summary -->
+                <div class="my-stakes" style="margin-top: 2rem;">
+                    <h2 class="stakes-title">Rewards Summary</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: 2rem; margin-top: 2rem;">
+                        <div>
+                            <div style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Total Rewards Earned</div>
+                            <div style="font-size: 2.4rem; font-weight: 700; color: var(--success);">4,191.78 XOM</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Pending Rewards</div>
+                            <div style="font-size: 2.4rem; font-weight: 700; color: var(--primary-color);">164.38 XOM</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Next Payout</div>
+                            <div style="font-size: 2.4rem; font-weight: 700; color: var(--text-primary);">2d 14h 32m</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Tab Content (hidden by default) -->
+            <div id="leaderboard-content" class="tab-content" style="display: none;">
+                <div class="leaderboard-section">
+                    <h2 class="stakes-title">Top Stakers</h2>
+                    <div class="leaderboard-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Address</th>
+                                    <th>Total Staked</th>
+                                    <th>Tier</th>
+                                    <th>Total Rewards</th>
+                                    <th>Member Since</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="rank-badge rank-1">1</span></td>
+                                    <td>0x1234...5678</td>
+                                    <td>2,500,000 XOM</td>
+                                    <td><span style="color: #E5E4E2; font-weight: 600;">Platinum</span></td>
+                                    <td>125,678 XOM</td>
+                                    <td>Jan 2024</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank-badge rank-2">2</span></td>
+                                    <td>0xABCD...EFGH</td>
+                                    <td>1,800,000 XOM</td>
+                                    <td><span style="color: #E5E4E2; font-weight: 600;">Platinum</span></td>
+                                    <td>98,234 XOM</td>
+                                    <td>Feb 2024</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank-badge rank-3">3</span></td>
+                                    <td>0x9876...5432</td>
+                                    <td>1,200,000 XOM</td>
+                                    <td><span style="color: #E5E4E2; font-weight: 600;">Platinum</span></td>
+                                    <td>76,543 XOM</td>
+                                    <td>Mar 2024</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank-badge rank-other">4</span></td>
+                                    <td>0x5555...6666</td>
+                                    <td>850,000 XOM</td>
+                                    <td><span style="color: #E5E4E2; font-weight: 600;">Platinum</span></td>
+                                    <td>65,432 XOM</td>
+                                    <td>Jan 2024</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank-badge rank-other">5</span></td>
+                                    <td>0x7777...8888</td>
+                                    <td>650,000 XOM</td>
+                                    <td><span style="color: #E5E4E2; font-weight: 600;">Platinum</span></td>
+                                    <td>54,321 XOM</td>
+                                    <td>Apr 2024</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+    <script>
+        let selectedTier = 2;
+        let selectedDuration = 180;
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            if (tab === 'stake') {
+                document.getElementById('stake-content').style.display = 'block';
+            } else if (tab === 'mystakes') {
+                document.getElementById('mystakes-content').style.display = 'block';
+            } else if (tab === 'leaderboard') {
+                document.getElementById('leaderboard-content').style.display = 'block';
+            }
+        }
+
+        function selectTier(tier, minAmount) {
+            document.querySelectorAll('.tier-card').forEach(card => card.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            selectedTier = tier;
+            
+            document.getElementById('stake-amount').value = minAmount;
+            document.querySelector('.slider').value = minAmount;
+            updateCalculator();
+        }
+
+        function selectDuration(days) {
+            document.querySelectorAll('.duration-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            selectedDuration = days;
+            updateCalculator();
+        }
+
+        function updateSlider(value) {
+            document.getElementById('stake-amount').value = value;
+            updateCalculator();
+        }
+
+        function updateCalculator() {
+            const amount = parseInt(document.getElementById('stake-amount').value) || 0;
+            const autoCompound = document.getElementById('auto-compound').checked;
+            
+            // Determine tier based on amount
+            let tier, apy, tierName;
+            if (amount >= 500000) {
+                tier = 4; apy = 0.25; tierName = 'Platinum (25% APY)';
+            } else if (amount >= 100000) {
+                tier = 3; apy = 0.18; tierName = 'Gold (18% APY)';
+            } else if (amount >= 25000) {
+                tier = 2; apy = 0.12; tierName = 'Silver (12% APY)';
+            } else if (amount >= 5000) {
+                tier = 1; apy = 0.08; tierName = 'Bronze (8% APY)';
+            } else {
+                tier = 0; apy = 0; tierName = 'Below minimum';
+            }
+            
+            // Update tier display
+            document.getElementById('selected-tier').textContent = tierName;
+            
+            // Calculate rewards
+            const dailyRate = apy / 365;
+            const dailyRewards = amount * dailyRate;
+            const monthlyRewards = dailyRewards * 30;
+            
+            let totalRewards;
+            if (autoCompound) {
+                // Compound interest formula
+                totalRewards = amount * (Math.pow(1 + dailyRate, selectedDuration) - 1);
+            } else {
+                // Simple interest
+                totalRewards = dailyRewards * selectedDuration;
+            }
+            
+            // Update display
+            document.getElementById('daily-rewards').textContent = dailyRewards.toFixed(2) + ' XOM';
+            document.getElementById('monthly-rewards').textContent = monthlyRewards.toFixed(2) + ' XOM';
+            document.getElementById('total-rewards').textContent = totalRewards.toFixed(2) + ' XOM';
+            document.getElementById('maturity-value').textContent = (amount + totalRewards).toFixed(2) + ' XOM';
+            
+            // Update button
+            document.querySelector('.stake-button').textContent = `Stake ${amount.toLocaleString()} XOM`;
+        }
+
+        function initiateStaking() {
+            alert('Staking functionality would connect to wallet here');
+        }
+
+        // Initialize calculator
+        updateCalculator();
+    </script>
+</body>
+</html>

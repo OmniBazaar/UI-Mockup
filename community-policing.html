@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Policing - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        /* Page Specific Styles */
+        .policing-container {
+            max-width: 140rem;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.6rem;
+            color: var(--text-secondary);
+            max-width: 80rem;
+        }
+
+        .tabs-container {
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .tab {
+            padding: 1.2rem 0;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-icon {
+            font-size: 2.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-label {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-change {
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .positive {
+            color: var(--success);
+        }
+
+        .negative {
+            color: var(--error);
+        }
+
+        .reported-listings {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 0.8rem 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 0.6rem;
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 1.3rem;
+        }
+
+        .listing-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 1.2rem 1.6rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 1.4rem 1.6rem;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .listing-title {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .listing-id {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .report-count {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            background: var(--error-light);
+            color: var(--error);
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .score-ratio {
+            font-weight: 600;
+        }
+
+        .high-risk {
+            color: var(--error);
+        }
+
+        .medium-risk {
+            color: var(--warning);
+        }
+
+        .low-risk {
+            color: var(--success);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+
+        .status-banned {
+            background: var(--error-light);
+            color: var(--error);
+        }
+
+        .status-reviewed {
+            background: var(--success-light);
+            color: var(--success);
+        }
+
+        .action-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-view {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: var(--primary-dark);
+        }
+
+        .my-reports {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .report-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.6rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .report-item:last-child {
+            border-bottom: none;
+        }
+
+        .report-info {
+            flex: 1;
+        }
+
+        .report-status {
+            text-align: right;
+        }
+
+        .report-date {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .leaderboard {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .rank {
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .rank-1 { background: #FFD700; color: #333; }
+        .rank-2 { background: #C0C0C0; color: #333; }
+        .rank-3 { background: #CD7F32; color: #333; }
+        .rank-other { background: var(--hover); color: var(--text-primary); }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .username {
+            font-weight: 600;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+        }
+
+        .user-stats {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+
+        .user-score {
+            text-align: right;
+        }
+
+        .score-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .report-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 3rem;
+            max-width: 50rem;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .reason-options {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .reason-option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 0.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reason-option:hover {
+            background: var(--hover);
+        }
+
+        .reason-option.selected {
+            border-color: var(--primary-color);
+            background: var(--primary-light);
+        }
+
+        .reason-radio {
+            width: 1.8rem;
+            height: 1.8rem;
+        }
+
+        .reason-text {
+            flex: 1;
+        }
+
+        .reason-label {
+            font-weight: 500;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+        }
+
+        .reason-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+
+        .description-field {
+            width: 100%;
+            padding: 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+            min-height: 10rem;
+            resize: vertical;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-cancel {
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-cancel:hover {
+            background: var(--hover);
+        }
+
+        .btn-submit {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-dark);
+        }
+
+        @media (max-width: 768px) {
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-controls {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+
+            table {
+                font-size: 1.2rem;
+            }
+
+            th, td {
+                padding: 1rem;
+            }
+
+            .modal-content {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder - will be populated by template.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="policing-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Community Policing</h1>
+                <p class="page-subtitle">Help keep OmniBazaar safe by reporting illegal, fraudulent, or inappropriate listings. Your participation score affects the weight of your reports.</p>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-icon">🚨</div>
+                    <div class="stat-label">Total Reports</div>
+                    <div class="stat-value">1,234</div>
+                    <div class="stat-change positive">+15% this week</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🚫</div>
+                    <div class="stat-label">Banned Listings</div>
+                    <div class="stat-value">87</div>
+                    <div class="stat-change">7% of reported</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">👮</div>
+                    <div class="stat-label">Active Reporters</div>
+                    <div class="stat-value">456</div>
+                    <div class="stat-change positive">+23 today</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-label">Avg Response Time</div>
+                    <div class="stat-value">2.4h</div>
+                    <div class="stat-change positive">-30min vs last week</div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('reported')">Reported Listings</div>
+                    <div class="tab" onclick="switchTab('myreports')">My Reports</div>
+                    <div class="tab" onclick="switchTab('statistics')">Statistics</div>
+                    <div class="tab" onclick="switchTab('leaderboard')">Leaderboard</div>
+                </div>
+            </div>
+
+            <!-- Reported Listings Tab -->
+            <div id="reported-content" class="tab-content">
+                <div class="reported-listings">
+                    <div class="section-header">
+                        <h2 class="section-title">Recently Reported Listings</h2>
+                        <div class="filter-controls">
+                            <select class="filter-select">
+                                <option>All Reports</option>
+                                <option>Pending Review</option>
+                                <option>Banned</option>
+                                <option>Dismissed</option>
+                            </select>
+                            <select class="filter-select">
+                                <option>Sort by Reports</option>
+                                <option>Sort by Risk Score</option>
+                                <option>Sort by Date</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="listing-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Listing</th>
+                                    <th>Reports</th>
+                                    <th>Risk Score</th>
+                                    <th>Status</th>
+                                    <th>Reported</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="listing-title">Suspicious Luxury Watch - Rolex</div>
+                                        <div class="listing-id">ID: LST-2024-0892</div>
+                                    </td>
+                                    <td><span class="report-count">23</span></td>
+                                    <td><span class="score-ratio high-risk">8.5 / 2.1</span></td>
+                                    <td><span class="status-badge status-pending">Under Review</span></td>
+                                    <td>2 hours ago</td>
+                                    <td><button class="action-btn btn-view">View Details</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="listing-title">Counterfeit Designer Handbag</div>
+                                        <div class="listing-id">ID: LST-2024-0889</div>
+                                    </td>
+                                    <td><span class="report-count">45</span></td>
+                                    <td><span class="score-ratio high-risk">12.3 / 1.5</span></td>
+                                    <td><span class="status-badge status-banned">Banned</span></td>
+                                    <td>5 hours ago</td>
+                                    <td><button class="action-btn btn-view">View Details</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="listing-title">Unauthorized Software License</div>
+                                        <div class="listing-id">ID: LST-2024-0885</div>
+                                    </td>
+                                    <td><span class="report-count">12</span></td>
+                                    <td><span class="score-ratio medium-risk">4.2 / 3.8</span></td>
+                                    <td><span class="status-badge status-pending">Under Review</span></td>
+                                    <td>1 day ago</td>
+                                    <td><button class="action-btn btn-view">View Details</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="listing-title">Misleading Product Description</div>
+                                        <div class="listing-id">ID: LST-2024-0878</div>
+                                    </td>
+                                    <td><span class="report-count">8</span></td>
+                                    <td><span class="score-ratio low-risk">2.1 / 5.5</span></td>
+                                    <td><span class="status-badge status-reviewed">Reviewed</span></td>
+                                    <td>2 days ago</td>
+                                    <td><button class="action-btn btn-view">View Details</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Reports Tab -->
+            <div id="myreports-content" class="tab-content" style="display: none;">
+                <div class="my-reports">
+                    <div class="section-header">
+                        <h2 class="section-title">Your Reporting History</h2>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.2rem; color: var(--text-secondary);">Success Rate</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--success);">78%</div>
+                        </div>
+                    </div>
+
+                    <div class="report-list">
+                        <div class="report-item">
+                            <div class="report-info">
+                                <div class="listing-title">Fake Electronics - iPhone Clone</div>
+                                <div class="report-date">Reported on Jan 15, 2025 • Reason: Fraudulent</div>
+                            </div>
+                            <div class="report-status">
+                                <span class="status-badge status-banned">Listing Banned</span>
+                                <div style="font-size: 1.2rem; color: var(--success); margin-top: 0.5rem;">+10 points earned</div>
+                            </div>
+                        </div>
+
+                        <div class="report-item">
+                            <div class="report-info">
+                                <div class="listing-title">Suspicious Cryptocurrency Offer</div>
+                                <div class="report-date">Reported on Jan 14, 2025 • Reason: Scam</div>
+                            </div>
+                            <div class="report-status">
+                                <span class="status-badge status-pending">Under Review</span>
+                            </div>
+                        </div>
+
+                        <div class="report-item">
+                            <div class="report-info">
+                                <div class="listing-title">Offensive Content in Description</div>
+                                <div class="report-date">Reported on Jan 12, 2025 • Reason: Inappropriate</div>
+                            </div>
+                            <div class="report-status">
+                                <span class="status-badge status-reviewed">Dismissed</span>
+                                <div style="font-size: 1.2rem; color: var(--text-secondary); margin-top: 0.5rem;">No action taken</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Tab -->
+            <div id="leaderboard-content" class="tab-content" style="display: none;">
+                <div class="leaderboard">
+                    <div class="section-header">
+                        <h2 class="section-title">Top Community Moderators</h2>
+                        <div style="font-size: 1.3rem; color: var(--text-secondary);">This Month</div>
+                    </div>
+
+                    <div class="leaderboard-list">
+                        <div class="leaderboard-item">
+                            <div class="rank rank-1">1</div>
+                            <div class="user-info">
+                                <div class="username">SafetyFirst</div>
+                                <div class="user-stats">142 reports • 89% success rate</div>
+                            </div>
+                            <div class="user-score">
+                                <div class="score-value">1,234</div>
+                                <div style="font-size: 1.2rem; color: var(--text-secondary);">points</div>
+                            </div>
+                        </div>
+
+                        <div class="leaderboard-item">
+                            <div class="rank rank-2">2</div>
+                            <div class="user-info">
+                                <div class="username">WatchDog2025</div>
+                                <div class="user-stats">128 reports • 85% success rate</div>
+                            </div>
+                            <div class="user-score">
+                                <div class="score-value">1,089</div>
+                                <div style="font-size: 1.2rem; color: var(--text-secondary);">points</div>
+                            </div>
+                        </div>
+
+                        <div class="leaderboard-item">
+                            <div class="rank rank-3">3</div>
+                            <div class="user-info">
+                                <div class="username">CommunityGuard</div>
+                                <div class="user-stats">98 reports • 92% success rate</div>
+                            </div>
+                            <div class="user-score">
+                                <div class="score-value">987</div>
+                                <div style="font-size: 1.2rem; color: var(--text-secondary);">points</div>
+                            </div>
+                        </div>
+
+                        <div class="leaderboard-item">
+                            <div class="rank rank-other">4</div>
+                            <div class="user-info">
+                                <div class="username">TrustVerifier</div>
+                                <div class="user-stats">87 reports • 78% success rate</div>
+                            </div>
+                            <div class="user-score">
+                                <div class="score-value">756</div>
+                                <div style="font-size: 1.2rem; color: var(--text-secondary);">points</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Modal -->
+        <div class="report-modal" id="reportModal">
+            <div class="modal-content">
+                <h2 class="modal-header">Report Listing</h2>
+                
+                <div class="reason-options">
+                    <div class="reason-option" onclick="selectReason('illegal')">
+                        <input type="radio" name="reason" value="illegal" class="reason-radio">
+                        <div class="reason-text">
+                            <div class="reason-label">Illegal Content</div>
+                            <div class="reason-description">Content that violates laws or regulations</div>
+                        </div>
+                    </div>
+
+                    <div class="reason-option" onclick="selectReason('prohibited')">
+                        <input type="radio" name="reason" value="prohibited" class="reason-radio">
+                        <div class="reason-text">
+                            <div class="reason-label">Prohibited Item</div>
+                            <div class="reason-description">Items not allowed on the platform</div>
+                        </div>
+                    </div>
+
+                    <div class="reason-option" onclick="selectReason('fraudulent')">
+                        <input type="radio" name="reason" value="fraudulent" class="reason-radio">
+                        <div class="reason-text">
+                            <div class="reason-label">Fraudulent</div>
+                            <div class="reason-description">Scam or fraudulent listing</div>
+                        </div>
+                    </div>
+
+                    <div class="reason-option" onclick="selectReason('misleading')">
+                        <input type="radio" name="reason" value="misleading" class="reason-radio">
+                        <div class="reason-text">
+                            <div class="reason-label">Misleading</div>
+                            <div class="reason-description">False or misleading information</div>
+                        </div>
+                    </div>
+
+                    <div class="reason-option" onclick="selectReason('copyright')">
+                        <input type="radio" name="reason" value="copyright" class="reason-radio">
+                        <div class="reason-text">
+                            <div class="reason-label">Copyright Violation</div>
+                            <div class="reason-description">Infringes on intellectual property</div>
+                        </div>
+                    </div>
+
+                    <div class="reason-option" onclick="selectReason('inappropriate')">
+                        <input type="radio" name="reason" value="inappropriate" class="reason-radio">
+                        <div class="reason-text">
+                            <div class="reason-label">Inappropriate</div>
+                            <div class="reason-description">Offensive or inappropriate content</div>
+                        </div>
+                    </div>
+
+                    <div class="reason-option" onclick="selectReason('spam')">
+                        <input type="radio" name="reason" value="spam" class="reason-radio">
+                        <div class="reason-text">
+                            <div class="reason-label">Spam</div>
+                            <div class="reason-description">Spam or duplicate listing</div>
+                        </div>
+                    </div>
+
+                    <div class="reason-option" onclick="selectReason('other')">
+                        <input type="radio" name="reason" value="other" class="reason-radio">
+                        <div class="reason-text">
+                            <div class="reason-label">Other</div>
+                            <div class="reason-description">Other policy violation</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="font-size: 1.4rem; font-weight: 500; display: block; margin-bottom: 0.8rem;">
+                        Additional Details (Optional)
+                    </label>
+                    <textarea class="description-field" placeholder="Provide more information about why you're reporting this listing..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-cancel" onclick="closeReportModal()">Cancel</button>
+                    <button class="btn btn-submit" onclick="submitReport()">Submit Report</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer placeholder - will be populated by template.js -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Template system -->
+    <script src="template.js"></script>
+    <script>
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            document.getElementById(tab + '-content').style.display = 'block';
+        }
+
+        // Report reason selection
+        function selectReason(reason) {
+            document.querySelectorAll('.reason-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            event.currentTarget.querySelector('.reason-radio').checked = true;
+        }
+
+        // Modal functions
+        function openReportModal(listingId) {
+            document.getElementById('reportModal').style.display = 'flex';
+            // In real implementation, would store the listingId
+        }
+
+        function closeReportModal() {
+            document.getElementById('reportModal').style.display = 'none';
+        }
+
+        function submitReport() {
+            const selectedReason = document.querySelector('input[name="reason"]:checked');
+            if (!selectedReason) {
+                alert('Please select a reason for reporting');
+                return;
+            }
+            
+            alert('Report submitted successfully! Thank you for helping keep OmniBazaar safe.');
+            closeReportModal();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('reportModal');
+            if (event.target === modal) {
+                closeReportModal();
+            }
+        }
+    </script>
+</body>
+</html>
