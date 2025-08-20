@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Status - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .verification-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .page-title {
+            font-size: 3.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+        }
+
+        .verification-score {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 2rem;
+            padding: 4rem;
+            margin-bottom: 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .verification-score::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.1; }
+        }
+
+        .score-circle {
+            width: 15rem;
+            height: 15rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            position: relative;
+            font-size: 4rem;
+            font-weight: 800;
+        }
+
+        .score-label {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .score-sublabel {
+            font-size: 1.6rem;
+            opacity: 0.9;
+        }
+
+        .verification-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .verification-card {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+        }
+
+        .verification-card:hover {
+            transform: translateY(-0.4rem);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.6rem;
+        }
+
+        .card-icon {
+            width: 4.8rem;
+            height: 4.8rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+        }
+
+        .card-status {
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .status-verified {
+            background: var(--success-light);
+            color: var(--success-color);
+        }
+
+        .status-pending {
+            background: var(--warning-light);
+            color: var(--warning-color);
+        }
+
+        .status-unverified {
+            background: var(--text-light);
+            color: var(--text-secondary);
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .card-description {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .verification-details {
+            background: var(--surface-light);
+            border-radius: 0.8rem;
+            padding: 1.6rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+        }
+
+        .detail-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 1.2rem;
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-light);
+        }
+
+        .benefits-section {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .benefits-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-item {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .benefit-icon {
+            font-size: 3.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .benefit-description {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .security-tips {
+            background: linear-gradient(135deg, var(--info-light), var(--info-lighter));
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            margin-bottom: 3rem;
+        }
+
+        .tips-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .tips-icon {
+            font-size: 2.4rem;
+        }
+
+        .tips-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+        }
+
+        .tip-icon {
+            color: var(--info-color);
+            flex-shrink: 0;
+        }
+
+        .activity-log {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .log-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .log-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+
+        .log-link:hover {
+            text-decoration: underline;
+        }
+
+        .log-items {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .log-item {
+            display: flex;
+            gap: 1.2rem;
+            padding: 1.2rem;
+            background: var(--surface-light);
+            border-radius: 0.8rem;
+        }
+
+        .log-icon {
+            width: 3.6rem;
+            height: 3.6rem;
+            border-radius: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .log-content {
+            flex: 1;
+        }
+
+        .log-action {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.4rem;
+        }
+
+        .log-time {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .badge-showcase {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .badges-row {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .badge-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-icon {
+            font-size: 3.2rem;
+        }
+
+        .badge-name {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="OmniBazaar%20Globe-Clear_Background-64x64.png" alt="OmniBazaar Logo" class="logo-img">
+                <span>OmniBazaar</span>
+            </a>
+            
+            <div class="nav-menu">
+                <a href="marketplace-home.html" class="nav-link">Marketplace</a>
+                <a href="dex-swap.html" class="nav-link">DEX</a>
+                <a href="wallet.html" class="nav-link">Wallet</a>
+                <a href="validator-dashboard.html" class="nav-link">Validator</a>
+                <a href="community.html" class="nav-link">Community</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn" onclick="toggleTheme()">🌓</button>
+                <a href="messages.html" class="icon-btn">💬</a>
+                <a href="notifications.html" class="icon-btn">🔔</a>
+                <a href="profile.html" class="nav-user">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="User" class="user-avatar">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Header -->
+            <div class="verification-header">
+                <h1 class="page-title">Verification Status</h1>
+                <p class="page-subtitle">Build trust and unlock premium features with verified credentials</p>
+            </div>
+
+            <!-- Verification Score -->
+            <div class="verification-score">
+                <div class="score-circle">85%</div>
+                <div class="score-label">Trust Score</div>
+                <div class="score-sublabel">You're a highly trusted member!</div>
+            </div>
+
+            <!-- Badge Showcase -->
+            <div class="badge-showcase">
+                <h3 style="font-size: 1.8rem; font-weight: 600; margin-bottom: 1rem;">Your Verification Badges</h3>
+                <div class="badges-row">
+                    <div class="badge-item">
+                        <div class="badge-icon">✉️</div>
+                        <div class="badge-name">Email</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">📱</div>
+                        <div class="badge-name">Phone</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">🆔</div>
+                        <div class="badge-name">KYC</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">🏦</div>
+                        <div class="badge-name">Bank</div>
+                    </div>
+                    <div class="badge-item" style="opacity: 0.3;">
+                        <div class="badge-icon">💼</div>
+                        <div class="badge-name">Business</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verification Cards -->
+            <div class="verification-grid">
+                <!-- Email Verification -->
+                <div class="verification-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--success-light); color: var(--success-color);">
+                            ✉️
+                        </div>
+                        <span class="card-status status-verified">Verified</span>
+                    </div>
+                    <h3 class="card-title">Email Verification</h3>
+                    <p class="card-description">
+                        Your email address has been verified and is used for account recovery and important notifications.
+                    </p>
+                    <div class="verification-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Email</span>
+                            <span class="detail-value">user@example.com</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Verified On</span>
+                            <span class="detail-value">Nov 12, 2025</span>
+                        </div>
+                    </div>
+                    <button class="action-btn btn-secondary">Update Email</button>
+                </div>
+
+                <!-- Phone Verification -->
+                <div class="verification-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--success-light); color: var(--success-color);">
+                            📱
+                        </div>
+                        <span class="card-status status-verified">Verified</span>
+                    </div>
+                    <h3 class="card-title">Phone Verification</h3>
+                    <p class="card-description">
+                        Two-factor authentication is enabled on your account for enhanced security.
+                    </p>
+                    <div class="verification-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Phone</span>
+                            <span class="detail-value">+1 ***-***-5678</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">2FA Status</span>
+                            <span class="detail-value">Enabled</span>
+                        </div>
+                    </div>
+                    <button class="action-btn btn-secondary">Manage 2FA</button>
+                </div>
+
+                <!-- KYC Verification -->
+                <div class="verification-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--success-light); color: var(--success-color);">
+                            🆔
+                        </div>
+                        <span class="card-status status-verified">Verified</span>
+                    </div>
+                    <h3 class="card-title">Identity (KYC)</h3>
+                    <p class="card-description">
+                        Your identity has been verified, enabling higher transaction limits and premium features.
+                    </p>
+                    <div class="verification-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Level</span>
+                            <span class="detail-value">Tier 2</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Daily Limit</span>
+                            <span class="detail-value">$50,000</span>
+                        </div>
+                    </div>
+                    <button class="action-btn btn-secondary">View Details</button>
+                </div>
+
+                <!-- Bank Account -->
+                <div class="verification-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--success-light); color: var(--success-color);">
+                            🏦
+                        </div>
+                        <span class="card-status status-verified">Verified</span>
+                    </div>
+                    <h3 class="card-title">Bank Account</h3>
+                    <p class="card-description">
+                        Your bank account is linked for fiat deposits and withdrawals.
+                    </p>
+                    <div class="verification-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Bank</span>
+                            <span class="detail-value">Chase ****1234</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Type</span>
+                            <span class="detail-value">Checking</span>
+                        </div>
+                    </div>
+                    <button class="action-btn btn-secondary">Manage Banks</button>
+                </div>
+
+                <!-- Social Media -->
+                <div class="verification-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--warning-light); color: var(--warning-color);">
+                            🌐
+                        </div>
+                        <span class="card-status status-pending">Pending</span>
+                    </div>
+                    <h3 class="card-title">Social Media</h3>
+                    <p class="card-description">
+                        Link your social media accounts to increase your trust score and visibility.
+                    </p>
+                    <div class="verification-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Twitter/X</span>
+                            <span class="detail-value">Not linked</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">LinkedIn</span>
+                            <span class="detail-value">Not linked</span>
+                        </div>
+                    </div>
+                    <button class="action-btn btn-primary">Link Accounts</button>
+                </div>
+
+                <!-- Business Verification -->
+                <div class="verification-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--text-light); color: var(--text-secondary);">
+                            💼
+                        </div>
+                        <span class="card-status status-unverified">Not Started</span>
+                    </div>
+                    <h3 class="card-title">Business Account</h3>
+                    <p class="card-description">
+                        Verify your business to access bulk trading, API access, and business features.
+                    </p>
+                    <div class="verification-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Status</span>
+                            <span class="detail-value">Not applicable</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Benefits</span>
+                            <span class="detail-value">Premium APIs</span>
+                        </div>
+                    </div>
+                    <button class="action-btn btn-primary">Start Verification</button>
+                </div>
+            </div>
+
+            <!-- Benefits Section -->
+            <div class="benefits-section">
+                <h2 class="benefits-title">Benefits of Being Verified</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">💰</div>
+                        <h3 class="benefit-title">Higher Limits</h3>
+                        <p class="benefit-description">
+                            Increase your daily transaction and withdrawal limits
+                        </p>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🛡️</div>
+                        <h3 class="benefit-title">Enhanced Security</h3>
+                        <p class="benefit-description">
+                            Additional security features and account protection
+                        </p>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">⭐</div>
+                        <h3 class="benefit-title">Trust Badge</h3>
+                        <p class="benefit-description">
+                            Display verified badge on your profile and listings
+                        </p>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🚀</div>
+                        <h3 class="benefit-title">Priority Support</h3>
+                        <p class="benefit-description">
+                            Get faster response times from our support team
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Tips -->
+            <div class="security-tips">
+                <div class="tips-header">
+                    <span class="tips-icon">🔒</span>
+                    <h3 class="tips-title">Security Best Practices</h3>
+                </div>
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <span class="tip-icon">•</span>
+                        <span>Enable two-factor authentication on all your accounts</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-icon">•</span>
+                        <span>Never share your private keys or recovery phrases</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-icon">•</span>
+                        <span>Regularly review your connected devices and active sessions</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-icon">•</span>
+                        <span>Keep your verification documents up to date</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="activity-log">
+                <div class="log-header">
+                    <h3 class="log-title">Recent Security Activity</h3>
+                    <a href="#" class="log-link">View All →</a>
+                </div>
+                <div class="log-items">
+                    <div class="log-item">
+                        <div class="log-icon" style="background: var(--success-light); color: var(--success-color);">
+                            ✓
+                        </div>
+                        <div class="log-content">
+                            <div class="log-action">2FA enabled successfully</div>
+                            <div class="log-time">2 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="log-item">
+                        <div class="log-icon" style="background: var(--info-light); color: var(--info-color);">
+                            🔑
+                        </div>
+                        <div class="log-content">
+                            <div class="log-action">Password changed</div>
+                            <div class="log-time">Yesterday at 3:45 PM</div>
+                        </div>
+                    </div>
+                    <div class="log-item">
+                        <div class="log-icon" style="background: var(--warning-light); color: var(--warning-color);">
+                            📍
+                        </div>
+                        <div class="log-content">
+                            <div class="log-action">New login from Chrome on Windows</div>
+                            <div class="log-time">Dec 17, 2025</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="template.js"></script>
+    <script src="theme-switch.js"></script>
+    <script src="chat-modal.js"></script>
+</body>
+</html>

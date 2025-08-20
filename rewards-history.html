@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rewards History - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .rewards-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .page-title {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .claim-all-btn {
+            padding: 1.2rem 2.4rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .claim-all-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-0.2rem);
+        }
+
+        .rewards-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .summary-card {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .summary-icon {
+            width: 4.8rem;
+            height: 4.8rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .summary-label {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+
+        .summary-value {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .summary-subtext {
+            font-size: 1.3rem;
+            color: var(--text-tertiary);
+        }
+
+        .pending-rewards {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 1.6rem;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .pending-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.4rem;
+        }
+
+        .pending-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+        }
+
+        .pending-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+            gap: 1.6rem;
+        }
+
+        .pending-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.8rem;
+            padding: 1.6rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pending-info {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .pending-icon {
+            width: 3.6rem;
+            height: 3.6rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .pending-type {
+            font-size: 1.4rem;
+            opacity: 0.9;
+        }
+
+        .pending-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .claim-btn {
+            padding: 0.6rem 1.6rem;
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            border-radius: 0.6rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .claim-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .filters-bar {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2.4rem;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .filter-select {
+            padding: 0.8rem 1.6rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.6rem;
+            background: white;
+            font-size: 1.4rem;
+            min-width: 15rem;
+            cursor: pointer;
+        }
+
+        .rewards-table {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--surface-light);
+            padding: 1.6rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 2rem 1.6rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 1.4rem;
+        }
+
+        tr:hover td {
+            background: var(--surface-light);
+        }
+
+        .reward-type {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .type-icon {
+            width: 3.2rem;
+            height: 3.2rem;
+            border-radius: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+        }
+
+        .type-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .type-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .type-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .status-claimed {
+            background: var(--success-light);
+            color: var(--success-color);
+        }
+
+        .status-pending {
+            background: var(--warning-light);
+            color: var(--warning-color);
+        }
+
+        .status-expired {
+            background: var(--error-light);
+            color: var(--error-color);
+        }
+
+        .amount-cell {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .charts-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-card {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chart-header {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .chart-placeholder {
+            height: 25rem;
+            background: var(--surface-light);
+            border-radius: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .reward-sources {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .source-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem;
+            background: var(--surface-light);
+            border-radius: 0.8rem;
+        }
+
+        .source-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .source-dot {
+            width: 1.2rem;
+            height: 1.2rem;
+            border-radius: 50%;
+        }
+
+        .source-name {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+        }
+
+        .source-percentage {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .export-section {
+            text-align: center;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 1rem;
+            margin-top: 3rem;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .export-btn {
+            padding: 1rem 2rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .export-btn:hover {
+            background: var(--surface-light);
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="OmniBazaar%20Globe-Clear_Background-64x64.png" alt="OmniBazaar Logo" class="logo-img">
+                <span>OmniBazaar</span>
+            </a>
+            
+            <div class="nav-menu">
+                <a href="marketplace-home.html" class="nav-link">Marketplace</a>
+                <a href="dex-swap.html" class="nav-link">DEX</a>
+                <a href="wallet.html" class="nav-link">Wallet</a>
+                <a href="validator-dashboard.html" class="nav-link">Validator</a>
+                <a href="community.html" class="nav-link">Community</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn" onclick="toggleTheme()">🌓</button>
+                <a href="messages.html" class="icon-btn">💬</a>
+                <a href="notifications.html" class="icon-btn">🔔</a>
+                <a href="profile.html" class="nav-user">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="User" class="user-avatar">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Header -->
+            <div class="rewards-header">
+                <h1 class="page-title">Rewards History</h1>
+                <button class="claim-all-btn">
+                    <span>🎁</span> Claim All Rewards (234 XOM)
+                </button>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="rewards-summary">
+                <div class="summary-card">
+                    <div class="summary-icon" style="background: var(--success-light); color: var(--success-color);">
+                        💰
+                    </div>
+                    <div class="summary-label">Total Earned</div>
+                    <div class="summary-value">3,456 XOM</div>
+                    <div class="summary-subtext">≈ $6,912 USD</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon" style="background: var(--warning-light); color: var(--warning-color);">
+                        ⏳
+                    </div>
+                    <div class="summary-label">Pending Rewards</div>
+                    <div class="summary-value">234 XOM</div>
+                    <div class="summary-subtext">Ready to claim</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon" style="background: var(--primary-light); color: var(--primary-color);">
+                        📈
+                    </div>
+                    <div class="summary-label">This Month</div>
+                    <div class="summary-value">567 XOM</div>
+                    <div class="summary-subtext">+23% vs last month</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon" style="background: var(--info-light); color: var(--info-color);">
+                        🏆
+                    </div>
+                    <div class="summary-label">Reward Streak</div>
+                    <div class="summary-value">42 days</div>
+                    <div class="summary-subtext">Keep it going!</div>
+                </div>
+            </div>
+
+            <!-- Pending Rewards -->
+            <div class="pending-rewards">
+                <div class="pending-header">
+                    <h2 class="pending-title">Pending Rewards</h2>
+                    <span style="font-size: 1.4rem; opacity: 0.9;">Claim before they expire!</span>
+                </div>
+                <div class="pending-grid">
+                    <div class="pending-item">
+                        <div class="pending-info">
+                            <div class="pending-icon">💎</div>
+                            <div>
+                                <div class="pending-type">Staking Rewards</div>
+                                <div class="pending-amount">45.23 XOM</div>
+                            </div>
+                        </div>
+                        <button class="claim-btn">Claim</button>
+                    </div>
+                    <div class="pending-item">
+                        <div class="pending-info">
+                            <div class="pending-icon">👥</div>
+                            <div>
+                                <div class="pending-type">Referral Bonus</div>
+                                <div class="pending-amount">125 XOM</div>
+                            </div>
+                        </div>
+                        <button class="claim-btn">Claim</button>
+                    </div>
+                    <div class="pending-item">
+                        <div class="pending-info">
+                            <div class="pending-icon">🎯</div>
+                            <div>
+                                <div class="pending-type">Trading Rewards</div>
+                                <div class="pending-amount">34.5 XOM</div>
+                            </div>
+                        </div>
+                        <button class="claim-btn">Claim</button>
+                    </div>
+                    <div class="pending-item">
+                        <div class="pending-info">
+                            <div class="pending-icon">⭐</div>
+                            <div>
+                                <div class="pending-type">Participation Score</div>
+                                <div class="pending-amount">29.27 XOM</div>
+                            </div>
+                        </div>
+                        <button class="claim-btn">Claim</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <!-- Rewards Over Time -->
+                <div class="chart-card">
+                    <h3 class="chart-header">Rewards Over Time</h3>
+                    <div class="chart-placeholder">
+                        📊 Line Chart
+                    </div>
+                </div>
+
+                <!-- Reward Sources -->
+                <div class="chart-card">
+                    <h3 class="chart-header">Reward Sources</h3>
+                    <div class="reward-sources">
+                        <div class="source-item">
+                            <div class="source-info">
+                                <div class="source-dot" style="background: var(--primary-color);"></div>
+                                <span class="source-name">Staking</span>
+                            </div>
+                            <span class="source-percentage">42%</span>
+                        </div>
+                        <div class="source-item">
+                            <div class="source-info">
+                                <div class="source-dot" style="background: var(--success-color);"></div>
+                                <span class="source-name">Referrals</span>
+                            </div>
+                            <span class="source-percentage">28%</span>
+                        </div>
+                        <div class="source-item">
+                            <div class="source-info">
+                                <div class="source-dot" style="background: var(--warning-color);"></div>
+                                <span class="source-name">Trading</span>
+                            </div>
+                            <span class="source-percentage">18%</span>
+                        </div>
+                        <div class="source-item">
+                            <div class="source-info">
+                                <div class="source-dot" style="background: var(--info-color);"></div>
+                                <span class="source-name">Community</span>
+                            </div>
+                            <span class="source-percentage">12%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-bar">
+                <div class="filter-group">
+                    <label class="filter-label">Type</label>
+                    <select class="filter-select">
+                        <option>All Types</option>
+                        <option>Staking Rewards</option>
+                        <option>Referral Bonuses</option>
+                        <option>Trading Rewards</option>
+                        <option>Community Rewards</option>
+                        <option>Welcome Bonus</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Status</label>
+                    <select class="filter-select">
+                        <option>All Status</option>
+                        <option>Claimed</option>
+                        <option>Pending</option>
+                        <option>Expired</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Date Range</label>
+                    <select class="filter-select">
+                        <option>Last 30 Days</option>
+                        <option>Last 90 Days</option>
+                        <option>This Year</option>
+                        <option>All Time</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Rewards History Table -->
+            <div class="rewards-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dec 19, 2025</td>
+                            <td>
+                                <div class="reward-type">
+                                    <div class="type-icon" style="background: var(--primary-light); color: var(--primary-color);">
+                                        💎
+                                    </div>
+                                    <div class="type-text">
+                                        <span class="type-name">Staking Rewards</span>
+                                        <span class="type-description">30-day pool rewards</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="amount-cell">45.23 XOM</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td><button class="claim-btn">Claim</button></td>
+                        </tr>
+                        <tr>
+                            <td>Dec 18, 2025</td>
+                            <td>
+                                <div class="reward-type">
+                                    <div class="type-icon" style="background: var(--success-light); color: var(--success-color);">
+                                        👥
+                                    </div>
+                                    <div class="type-text">
+                                        <span class="type-name">Referral Bonus</span>
+                                        <span class="type-description">alice_trader signed up</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="amount-cell">125 XOM</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td><button class="claim-btn">Claim</button></td>
+                        </tr>
+                        <tr>
+                            <td>Dec 15, 2025</td>
+                            <td>
+                                <div class="reward-type">
+                                    <div class="type-icon" style="background: var(--warning-light); color: var(--warning-color);">
+                                        📊
+                                    </div>
+                                    <div class="type-text">
+                                        <span class="type-name">Trading Rewards</span>
+                                        <span class="type-description">Weekly trading volume bonus</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="amount-cell">89.5 XOM</td>
+                            <td><span class="status-badge status-claimed">Claimed</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Dec 12, 2025</td>
+                            <td>
+                                <div class="reward-type">
+                                    <div class="type-icon" style="background: var(--info-light); color: var(--info-color);">
+                                        ⭐
+                                    </div>
+                                    <div class="type-text">
+                                        <span class="type-name">Participation Score</span>
+                                        <span class="type-description">Monthly activity bonus</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="amount-cell">67.8 XOM</td>
+                            <td><span class="status-badge status-claimed">Claimed</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Dec 10, 2025</td>
+                            <td>
+                                <div class="reward-type">
+                                    <div class="type-icon" style="background: var(--error-light); color: var(--error-color);">
+                                        🎁
+                                    </div>
+                                    <div class="type-text">
+                                        <span class="type-name">Welcome Bonus</span>
+                                        <span class="type-description">One-time signup bonus</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="amount-cell">500 XOM</td>
+                            <td><span class="status-badge status-claimed">Claimed</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Dec 5, 2025</td>
+                            <td>
+                                <div class="reward-type">
+                                    <div class="type-icon" style="background: var(--primary-light); color: var(--primary-color);">
+                                        💎
+                                    </div>
+                                    <div class="type-text">
+                                        <span class="type-name">Staking Rewards</span>
+                                        <span class="type-description">7-day pool rewards</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="amount-cell">23.45 XOM</td>
+                            <td><span class="status-badge status-expired">Expired</span></td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Export Section -->
+            <div class="export-section">
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                    Export your rewards history for tax purposes or record keeping
+                </p>
+                <div class="export-buttons">
+                    <button class="export-btn">
+                        <span>📄</span> Export CSV
+                    </button>
+                    <button class="export-btn">
+                        <span>📊</span> Export PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="template.js"></script>
+    <script src="theme-switch.js"></script>
+    <script src="chat-modal.js"></script>
+    <script>
+        // Claim button functionality
+        document.querySelectorAll('.claim-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const originalText = this.textContent;
+                this.textContent = '✓ Claimed!';
+                this.style.background = 'var(--success-color)';
+                this.style.color = 'white';
+                this.disabled = true;
+                
+                // Update the corresponding status badge if in table
+                const row = this.closest('tr');
+                if (row) {
+                    const statusBadge = row.querySelector('.status-badge');
+                    if (statusBadge) {
+                        statusBadge.textContent = 'Claimed';
+                        statusBadge.className = 'status-badge status-claimed';
+                    }
+                }
+            });
+        });
+
+        // Claim all functionality
+        document.querySelector('.claim-all-btn').addEventListener('click', function() {
+            const allClaimButtons = document.querySelectorAll('.claim-btn:not(:disabled)');
+            allClaimButtons.forEach(btn => btn.click());
+            
+            this.textContent = '✓ All Rewards Claimed!';
+            this.style.background = 'var(--success-color)';
+            this.disabled = true;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referral Dashboard - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .referral-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .page-title {
+            font-size: 3.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+        }
+
+        .referral-link-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 1.6rem;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .referral-link-label {
+            font-size: 1.6rem;
+            margin-bottom: 1.6rem;
+            opacity: 0.9;
+        }
+
+        .referral-link-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1.6rem;
+            border-radius: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .referral-link {
+            flex: 1;
+            font-family: monospace;
+            font-size: 1.4rem;
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .copy-btn {
+            padding: 0.8rem 2rem;
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-0.2rem);
+            box-shadow: var(--shadow-md);
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .share-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 5.6rem;
+            height: 5.6rem;
+            border-radius: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            margin: 0 auto 1.6rem;
+        }
+
+        .stat-value {
+            font-size: 3.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .stat-label {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .stat-subtext {
+            font-size: 1.3rem;
+            color: var(--success-color);
+            font-weight: 600;
+        }
+
+        .referrals-table {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 3rem;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .table-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .filter-select {
+            padding: 0.8rem 1.6rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.6rem;
+            background: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            padding: 1.2rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 1.6rem 1.2rem;
+            font-size: 1.4rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 3.2rem;
+            height: 3.2rem;
+            border-radius: 50%;
+        }
+
+        .status-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: var(--success-light);
+            color: var(--success-color);
+        }
+
+        .status-pending {
+            background: var(--warning-light);
+            color: var(--warning-color);
+        }
+
+        .status-inactive {
+            background: var(--text-light);
+            color: var(--text-secondary);
+        }
+
+        .earnings-value {
+            font-weight: 600;
+            color: var(--success-color);
+        }
+
+        .rewards-section {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 3rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 3rem;
+        }
+
+        .rewards-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .rewards-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+            gap: 2rem;
+        }
+
+        .reward-tier {
+            background: var(--surface-light);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .reward-tier:hover {
+            transform: translateY(-0.4rem);
+            box-shadow: var(--shadow-md);
+        }
+
+        .reward-tier.achieved {
+            background: var(--primary-light);
+            border: 2px solid var(--primary-color);
+        }
+
+        .tier-icon {
+            font-size: 3.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .tier-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .tier-requirement {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+
+        .tier-reward {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .faq-section {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 3rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .faq-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .faq-item {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 2rem;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .faq-question {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .faq-answer {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .promo-materials {
+            background: linear-gradient(135deg, var(--surface), var(--surface-light));
+            border-radius: 1.2rem;
+            padding: 3rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .promo-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .promo-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .promo-btn {
+            padding: 1.2rem 2.4rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .promo-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-0.2rem);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="OmniBazaar%20Globe-Clear_Background-64x64.png" alt="OmniBazaar Logo" class="logo-img">
+                <span>OmniBazaar</span>
+            </a>
+            
+            <div class="nav-menu">
+                <a href="marketplace-home.html" class="nav-link">Marketplace</a>
+                <a href="dex-swap.html" class="nav-link">DEX</a>
+                <a href="wallet.html" class="nav-link">Wallet</a>
+                <a href="validator-dashboard.html" class="nav-link">Validator</a>
+                <a href="community.html" class="nav-link active">Community</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn" onclick="toggleTheme()">🌓</button>
+                <a href="messages.html" class="icon-btn">💬</a>
+                <a href="notifications.html" class="icon-btn">🔔</a>
+                <a href="profile.html" class="nav-user">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="User" class="user-avatar">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Header -->
+            <div class="referral-header">
+                <h1 class="page-title">Referral Dashboard</h1>
+                <p class="page-subtitle">Invite friends and earn rewards together</p>
+            </div>
+
+            <!-- Referral Link Section -->
+            <div class="referral-link-section">
+                <h2 class="referral-link-label">Your Unique Referral Link</h2>
+                <div class="referral-link-box">
+                    <input type="text" class="referral-link" value="https://omnibazaar.com/ref/USER123ABC" readonly>
+                    <button class="copy-btn" onclick="copyReferralLink()">Copy Link</button>
+                </div>
+                <div class="share-buttons">
+                    <button class="share-btn">
+                        <span>𝕏</span> Share on X
+                    </button>
+                    <button class="share-btn">
+                        <span>📘</span> Share on Facebook
+                    </button>
+                    <button class="share-btn">
+                        <span>💬</span> Share on Telegram
+                    </button>
+                    <button class="share-btn">
+                        <span>📧</span> Share via Email
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: var(--primary-light); color: var(--primary-color);">
+                        👥
+                    </div>
+                    <div class="stat-value">23</div>
+                    <div class="stat-label">Total Referrals</div>
+                    <div class="stat-subtext">+3 this month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: var(--success-light); color: var(--success-color);">
+                        ✓
+                    </div>
+                    <div class="stat-value">19</div>
+                    <div class="stat-label">Active Users</div>
+                    <div class="stat-subtext">82.6% activation rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: var(--warning-light); color: var(--warning-color);">
+                        💰
+                    </div>
+                    <div class="stat-value">1,245 XOM</div>
+                    <div class="stat-label">Total Earnings</div>
+                    <div class="stat-subtext">≈ $2,490 USD</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: var(--info-light); color: var(--info-color);">
+                        🎯
+                    </div>
+                    <div class="stat-value">Silver</div>
+                    <div class="stat-label">Current Tier</div>
+                    <div class="stat-subtext">7 more for Gold!</div>
+                </div>
+            </div>
+
+            <!-- Referrals Table -->
+            <div class="referrals-table">
+                <div class="table-header">
+                    <h2 class="table-title">Your Referrals</h2>
+                    <select class="filter-select">
+                        <option>All Referrals</option>
+                        <option>Active</option>
+                        <option>Pending</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Join Date</th>
+                            <th>Status</th>
+                            <th>Activity</th>
+                            <th>Your Earnings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=alice" alt="User" class="user-avatar">
+                                    <span>alice_trader</span>
+                                </div>
+                            </td>
+                            <td>Dec 15, 2025</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>87 transactions</td>
+                            <td class="earnings-value">125 XOM</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=bob" alt="User" class="user-avatar">
+                                    <span>bob_collector</span>
+                                </div>
+                            </td>
+                            <td>Dec 12, 2025</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>156 transactions</td>
+                            <td class="earnings-value">234 XOM</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=charlie" alt="User" class="user-avatar">
+                                    <span>charlie_dev</span>
+                                </div>
+                            </td>
+                            <td>Dec 18, 2025</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td>0 transactions</td>
+                            <td class="earnings-value">0 XOM</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=diana" alt="User" class="user-avatar">
+                                    <span>diana_artist</span>
+                                </div>
+                            </td>
+                            <td>Nov 28, 2025</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>342 transactions</td>
+                            <td class="earnings-value">456 XOM</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=evan" alt="User" class="user-avatar">
+                                    <span>evan_miner</span>
+                                </div>
+                            </td>
+                            <td>Nov 15, 2025</td>
+                            <td><span class="status-badge status-inactive">Inactive</span></td>
+                            <td>12 transactions</td>
+                            <td class="earnings-value">23 XOM</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Rewards Tiers -->
+            <div class="rewards-section">
+                <div class="rewards-header">
+                    <h2 class="rewards-title">Referral Reward Tiers</h2>
+                    <p style="color: var(--text-secondary);">Unlock higher rewards as you refer more users</p>
+                </div>
+                <div class="rewards-grid">
+                    <div class="reward-tier achieved">
+                        <div class="tier-icon">🥉</div>
+                        <div class="tier-name">Bronze</div>
+                        <div class="tier-requirement">1-10 referrals</div>
+                        <div class="tier-reward">5% commission</div>
+                    </div>
+                    <div class="reward-tier achieved">
+                        <div class="tier-icon">🥈</div>
+                        <div class="tier-name">Silver</div>
+                        <div class="tier-requirement">11-30 referrals</div>
+                        <div class="tier-reward">7.5% commission</div>
+                    </div>
+                    <div class="reward-tier">
+                        <div class="tier-icon">🥇</div>
+                        <div class="tier-name">Gold</div>
+                        <div class="tier-requirement">31-100 referrals</div>
+                        <div class="tier-reward">10% commission</div>
+                    </div>
+                    <div class="reward-tier">
+                        <div class="tier-icon">💎</div>
+                        <div class="tier-name">Diamond</div>
+                        <div class="tier-requirement">100+ referrals</div>
+                        <div class="tier-reward">15% commission</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Promotional Materials -->
+            <div class="promo-materials">
+                <h3 class="promo-title">Promotional Materials</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                    Download banners, graphics, and templates to help promote OmniBazaar
+                </p>
+                <div class="promo-buttons">
+                    <button class="promo-btn">
+                        <span>🖼️</span> Download Banners
+                    </button>
+                    <button class="promo-btn">
+                        <span>📱</span> Social Media Kit
+                    </button>
+                    <button class="promo-btn">
+                        <span>📧</span> Email Templates
+                    </button>
+                    <button class="promo-btn">
+                        <span>📄</span> Info Sheet
+                    </button>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="faq-section">
+                <h2 class="faq-title">Frequently Asked Questions</h2>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I earn referral rewards?
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        You earn commission on all trading fees generated by your referrals. The more active your referrals are, the more you earn. Commissions are paid out in XOM tokens weekly.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        When do referrals become active?
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        A referral becomes active after they complete KYC verification and make their first transaction on the platform. Pending referrals have 30 days to activate their account.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How long do I earn from my referrals?
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        You earn lifetime commissions from all your referrals as long as they remain active on the platform. There's no expiration on referral relationships.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can I track my referrals' activity?
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Yes, you can see aggregated statistics about your referrals' activity, including transaction counts and your earnings. Individual transaction details are kept private for user privacy.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="template.js"></script>
+    <script src="theme-switch.js"></script>
+    <script src="chat-modal.js"></script>
+    <script>
+        function copyReferralLink() {
+            const linkInput = document.querySelector('.referral-link');
+            linkInput.select();
+            document.execCommand('copy');
+            
+            const copyBtn = document.querySelector('.copy-btn');
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = '✓ Copied!';
+            copyBtn.style.background = 'var(--success-color)';
+            
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+                copyBtn.style.background = 'white';
+            }, 2000);
+        }
+
+        // FAQ toggle
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const arrow = this.querySelector('span');
+                
+                if (answer.style.display === 'none' || !answer.style.display) {
+                    answer.style.display = 'block';
+                    arrow.textContent = '▲';
+                } else {
+                    answer.style.display = 'none';
+                    arrow.textContent = '▼';
+                }
+            });
+        });
+
+        // Initially hide all FAQ answers
+        document.querySelectorAll('.faq-answer').forEach(answer => {
+            answer.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

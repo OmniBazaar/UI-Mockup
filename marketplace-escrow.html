@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escrow Management - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .escrow-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .page-title {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .tabs-container {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 0.4rem;
+            margin-bottom: 3rem;
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1.2rem;
+            border: none;
+            background: transparent;
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .escrow-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .escrow-card {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+        }
+
+        .escrow-card:hover {
+            transform: translateY(-0.2rem);
+            box-shadow: var(--shadow-md);
+        }
+
+        .escrow-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 2rem;
+            gap: 2rem;
+        }
+
+        .escrow-info {
+            flex: 1;
+        }
+
+        .escrow-id {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+
+        .escrow-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .escrow-parties {
+            display: flex;
+            gap: 2rem;
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .party-info {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .escrow-status {
+            padding: 0.8rem 1.6rem;
+            border-radius: 2rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .status-active {
+            background: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .status-pending {
+            background: var(--warning-light);
+            color: var(--warning-color);
+        }
+
+        .status-released {
+            background: var(--success-light);
+            color: var(--success-color);
+        }
+
+        .status-disputed {
+            background: var(--error-light);
+            color: var(--error-color);
+        }
+
+        .escrow-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: var(--surface-light);
+            border-radius: 0.8rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .detail-label {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .detail-value {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .escrow-timeline {
+            margin-bottom: 2rem;
+        }
+
+        .timeline-header {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.2rem;
+        }
+
+        .timeline-items {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 0.5rem;
+            top: 0.8rem;
+            bottom: 0.8rem;
+            width: 0.2rem;
+            background: var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            display: flex;
+            gap: 1.2rem;
+            padding: 0.8rem 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -1.7rem;
+            top: 1.2rem;
+            width: 1rem;
+            height: 1rem;
+            background: var(--primary-color);
+            border-radius: 50%;
+            border: 0.2rem solid var(--surface);
+        }
+
+        .timeline-time {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            min-width: 10rem;
+        }
+
+        .timeline-event {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+        }
+
+        .escrow-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 1rem 2rem;
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-light);
+        }
+
+        .btn-danger {
+            background: transparent;
+            color: var(--error-color);
+            border: 2px solid var(--error-color);
+        }
+
+        .btn-danger:hover {
+            background: var(--error-light);
+        }
+
+        .create-escrow-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 1.2rem;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .create-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .create-description {
+            font-size: 1.6rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .create-btn {
+            padding: 1.2rem 3rem;
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .create-btn:hover {
+            transform: translateY(-0.2rem);
+            box-shadow: var(--shadow-md);
+        }
+
+        .filter-bar {
+            background: var(--surface);
+            border-radius: 0.8rem;
+            padding: 1.6rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1.6rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-input {
+            flex: 1;
+            min-width: 25rem;
+            padding: 0.8rem 1.2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+        }
+
+        .filter-select {
+            padding: 0.8rem 1.2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+            background: white;
+            cursor: pointer;
+            min-width: 15rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 6rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 6rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .empty-description {
+            font-size: 1.6rem;
+            margin-bottom: 2rem;
+        }
+
+        .milestone-progress {
+            background: var(--surface-light);
+            border-radius: 0.8rem;
+            padding: 1.6rem;
+            margin-bottom: 2rem;
+        }
+
+        .milestone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .milestone-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .milestone-percentage {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .progress-bar {
+            height: 0.8rem;
+            background: var(--border-color);
+            border-radius: 0.4rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .milestone-list {
+            margin-top: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .milestone-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.3rem;
+        }
+
+        .milestone-checkbox {
+            width: 1.6rem;
+            height: 1.6rem;
+            border-radius: 0.3rem;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .milestone-checkbox.completed {
+            background: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="OmniBazaar%20Globe-Clear_Background-64x64.png" alt="OmniBazaar Logo" class="logo-img">
+                <span>OmniBazaar</span>
+            </a>
+            
+            <div class="nav-menu">
+                <a href="marketplace-home.html" class="nav-link active">Marketplace</a>
+                <a href="dex-swap.html" class="nav-link">DEX</a>
+                <a href="wallet.html" class="nav-link">Wallet</a>
+                <a href="validator-dashboard.html" class="nav-link">Validator</a>
+                <a href="community.html" class="nav-link">Community</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn" onclick="toggleTheme()">🌓</button>
+                <a href="messages.html" class="icon-btn">💬</a>
+                <a href="notifications.html" class="icon-btn">🔔</a>
+                <a href="profile.html" class="nav-user">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="User" class="user-avatar">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Header -->
+            <div class="escrow-header">
+                <h1 class="page-title">Escrow Management</h1>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">7</div>
+                        <div class="stat-label">Active Escrows</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">3,450 XOM</div>
+                        <div class="stat-label">Total Locked</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">98%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create New Escrow -->
+            <div class="create-escrow-section">
+                <h2 class="create-title">Secure Your Transactions</h2>
+                <p class="create-description">
+                    Create escrow contracts for safe peer-to-peer trading with milestone-based releases
+                </p>
+                <button class="create-btn">Create New Escrow</button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <button class="tab-btn active">
+                    <span>📥</span> As Buyer (4)
+                </button>
+                <button class="tab-btn">
+                    <span>📤</span> As Seller (3)
+                </button>
+                <button class="tab-btn">
+                    <span>✅</span> Completed (23)
+                </button>
+                <button class="tab-btn">
+                    <span>⚠️</span> Disputed (1)
+                </button>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <input type="search" class="filter-input" placeholder="Search by ID, title, or party...">
+                <select class="filter-select">
+                    <option>All Status</option>
+                    <option>Active</option>
+                    <option>Pending</option>
+                    <option>Released</option>
+                    <option>Disputed</option>
+                </select>
+                <select class="filter-select">
+                    <option>Date: Newest</option>
+                    <option>Date: Oldest</option>
+                    <option>Amount: High to Low</option>
+                    <option>Amount: Low to High</option>
+                </select>
+            </div>
+
+            <!-- Escrow List -->
+            <div class="escrow-grid">
+                <!-- Active Escrow 1 -->
+                <div class="escrow-card">
+                    <div class="escrow-header-content">
+                        <div class="escrow-info">
+                            <div class="escrow-id">Escrow #ESC-2025-1219-001</div>
+                            <h3 class="escrow-title">MacBook Pro 16" - M3 Max</h3>
+                            <div class="escrow-parties">
+                                <div class="party-info">
+                                    <span>👤</span> Seller: techdealer_pro
+                                </div>
+                                <div class="party-info">
+                                    <span>🛒</span> You (Buyer)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="escrow-status status-active">Active</div>
+                    </div>
+
+                    <div class="escrow-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Amount</span>
+                            <span class="detail-value">1,850 XOM</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Created</span>
+                            <span class="detail-value">Dec 18, 2025</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Release Date</span>
+                            <span class="detail-value">Dec 22, 2025</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Protection</span>
+                            <span class="detail-value">Buyer Protection</span>
+                        </div>
+                    </div>
+
+                    <div class="milestone-progress">
+                        <div class="milestone-header">
+                            <span class="milestone-title">Milestones</span>
+                            <span class="milestone-percentage">50% Complete</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 50%;"></div>
+                        </div>
+                        <div class="milestone-list">
+                            <div class="milestone-item">
+                                <div class="milestone-checkbox completed">✓</div>
+                                <span>Order confirmed</span>
+                            </div>
+                            <div class="milestone-item">
+                                <div class="milestone-checkbox completed">✓</div>
+                                <span>Payment received in escrow</span>
+                            </div>
+                            <div class="milestone-item">
+                                <div class="milestone-checkbox"></div>
+                                <span>Item shipped (tracking: pending)</span>
+                            </div>
+                            <div class="milestone-item">
+                                <div class="milestone-checkbox"></div>
+                                <span>Delivery confirmed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="escrow-actions">
+                        <button class="action-btn btn-primary">Release Payment</button>
+                        <button class="action-btn btn-secondary">View Details</button>
+                        <button class="action-btn btn-danger">Dispute</button>
+                    </div>
+                </div>
+
+                <!-- Active Escrow 2 -->
+                <div class="escrow-card">
+                    <div class="escrow-header-content">
+                        <div class="escrow-info">
+                            <div class="escrow-id">Escrow #ESC-2025-1217-045</div>
+                            <h3 class="escrow-title">Web Development Services - E-commerce Site</h3>
+                            <div class="escrow-parties">
+                                <div class="party-info">
+                                    <span>👤</span> Seller: web_wizard
+                                </div>
+                                <div class="party-info">
+                                    <span>🛒</span> You (Buyer)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="escrow-status status-active">Active</div>
+                    </div>
+
+                    <div class="escrow-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Amount</span>
+                            <span class="detail-value">800 XOM</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Created</span>
+                            <span class="detail-value">Dec 17, 2025</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Release Date</span>
+                            <span class="detail-value">Jan 15, 2026</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Type</span>
+                            <span class="detail-value">Milestone-based</span>
+                        </div>
+                    </div>
+
+                    <div class="escrow-timeline">
+                        <h4 class="timeline-header">Recent Activity</h4>
+                        <div class="timeline-items">
+                            <div class="timeline-line"></div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <span class="timeline-time">2 hours ago</span>
+                                <span class="timeline-event">Milestone 2 completed by seller</span>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <span class="timeline-time">Yesterday</span>
+                                <span class="timeline-event">Milestone 1 payment released (200 XOM)</span>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <span class="timeline-time">Dec 17</span>
+                                <span class="timeline-event">Escrow created and funded</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="escrow-actions">
+                        <button class="action-btn btn-primary">Review Milestone</button>
+                        <button class="action-btn btn-secondary">Message Seller</button>
+                        <button class="action-btn btn-secondary">View Contract</button>
+                    </div>
+                </div>
+
+                <!-- Pending Escrow -->
+                <div class="escrow-card">
+                    <div class="escrow-header-content">
+                        <div class="escrow-info">
+                            <div class="escrow-id">Escrow #ESC-2025-1219-089</div>
+                            <h3 class="escrow-title">Vintage Watch Collection (3 pieces)</h3>
+                            <div class="escrow-parties">
+                                <div class="party-info">
+                                    <span>👤</span> Seller: luxury_timepieces
+                                </div>
+                                <div class="party-info">
+                                    <span>🛒</span> You (Buyer)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="escrow-status status-pending">Pending Payment</div>
+                    </div>
+
+                    <div class="escrow-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Amount</span>
+                            <span class="detail-value">450 XOM</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Created</span>
+                            <span class="detail-value">30 minutes ago</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Expires In</span>
+                            <span class="detail-value">23h 30m</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Status</span>
+                            <span class="detail-value">Awaiting Funding</span>
+                        </div>
+                    </div>
+
+                    <div class="escrow-actions">
+                        <button class="action-btn btn-primary">Fund Escrow</button>
+                        <button class="action-btn btn-secondary">Cancel</button>
+                    </div>
+                </div>
+
+                <!-- Disputed Escrow -->
+                <div class="escrow-card">
+                    <div class="escrow-header-content">
+                        <div class="escrow-info">
+                            <div class="escrow-id">Escrow #ESC-2025-1210-033</div>
+                            <h3 class="escrow-title">Custom Logo Design Package</h3>
+                            <div class="escrow-parties">
+                                <div class="party-info">
+                                    <span>👤</span> Seller: creative_designs
+                                </div>
+                                <div class="party-info">
+                                    <span>🛒</span> You (Buyer)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="escrow-status status-disputed">Under Dispute</div>
+                    </div>
+
+                    <div class="escrow-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Amount</span>
+                            <span class="detail-value">350 XOM</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Dispute Filed</span>
+                            <span class="detail-value">Dec 15, 2025</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Mediator</span>
+                            <span class="detail-value">dispute_resolver_01</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Status</span>
+                            <span class="detail-value">Awaiting Evidence</span>
+                        </div>
+                    </div>
+
+                    <div class="escrow-actions">
+                        <button class="action-btn btn-primary">Submit Evidence</button>
+                        <button class="action-btn btn-secondary">View Dispute</button>
+                        <button class="action-btn btn-secondary">Contact Mediator</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="template.js"></script>
+    <script src="theme-switch.js"></script>
+    <script src="chat-modal.js"></script>
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // In a real app, this would filter the escrows
+                // For demo, we'll just show a message
+                if (this.textContent.includes('Completed')) {
+                    document.querySelector('.escrow-grid').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">✅</div>
+                            <h3 class="empty-title">Completed Escrows</h3>
+                            <p class="empty-description">You have 23 completed escrows with a 98% success rate</p>
+                            <button class="action-btn btn-primary">View History</button>
+                        </div>
+                    `;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

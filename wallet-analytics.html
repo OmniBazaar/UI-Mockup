@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Analytics - OmniWallet</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .analytics-title {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .time-selector {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--surface);
+            padding: 0.4rem;
+            border-radius: 0.8rem;
+        }
+
+        .time-btn {
+            padding: 0.8rem 1.6rem;
+            border: none;
+            background: transparent;
+            border-radius: 0.6rem;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .time-btn.active {
+            background: white;
+            color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .portfolio-summary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 1.6rem;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+            gap: 3rem;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-label {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            margin-bottom: 0.8rem;
+        }
+
+        .summary-value {
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .summary-change {
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .positive {
+            color: #4ade80;
+        }
+
+        .negative {
+            color: #ef4444;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-card {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .chart-placeholder {
+            height: 30rem;
+            background: var(--surface-light);
+            border-radius: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .pie-chart-placeholder {
+            height: 25rem;
+            background: var(--surface-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-secondary);
+            margin: 0 auto;
+            width: 25rem;
+        }
+
+        .asset-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .asset-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem;
+            background: var(--surface-light);
+            border-radius: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .asset-row:hover {
+            background: var(--hover);
+        }
+
+        .asset-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .asset-icon {
+            width: 3.2rem;
+            height: 3.2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .asset-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .asset-symbol {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .asset-allocation {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .metric-card {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .metric-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .metric-icon {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .metric-title {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .metric-value {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .metric-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .transactions-table {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .table-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .view-all-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+
+        .view-all-link:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            padding: 1.2rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 1.6rem 1.2rem;
+            font-size: 1.4rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .profit-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .profit-positive {
+            background: var(--success-light);
+            color: var(--success-color);
+        }
+
+        .profit-negative {
+            background: var(--error-light);
+            color: var(--error-color);
+        }
+
+        .export-section {
+            text-align: center;
+            padding: 3rem;
+            background: var(--surface);
+            border-radius: 1.2rem;
+            margin-top: 3rem;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .export-btn {
+            padding: 1.2rem 2.4rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .export-btn:hover {
+            background: var(--surface-light);
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="OmniBazaar%20Globe-Clear_Background-64x64.png" alt="OmniBazaar Logo" class="logo-img">
+                <span>OmniBazaar</span>
+            </a>
+            
+            <div class="nav-menu">
+                <a href="marketplace-home.html" class="nav-link">Marketplace</a>
+                <a href="dex-swap.html" class="nav-link">DEX</a>
+                <a href="wallet.html" class="nav-link active">Wallet</a>
+                <a href="validator-dashboard.html" class="nav-link">Validator</a>
+                <a href="community.html" class="nav-link">Community</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn" onclick="toggleTheme()">🌓</button>
+                <a href="messages.html" class="icon-btn">💬</a>
+                <a href="notifications.html" class="icon-btn">🔔</a>
+                <a href="profile.html" class="nav-user">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="User" class="user-avatar">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Header -->
+            <div class="analytics-header">
+                <h1 class="analytics-title">Portfolio Analytics</h1>
+                <div class="time-selector">
+                    <button class="time-btn">24H</button>
+                    <button class="time-btn active">7D</button>
+                    <button class="time-btn">30D</button>
+                    <button class="time-btn">90D</button>
+                    <button class="time-btn">1Y</button>
+                    <button class="time-btn">ALL</button>
+                </div>
+            </div>
+
+            <!-- Portfolio Summary -->
+            <div class="portfolio-summary">
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-label">Total Portfolio Value</div>
+                        <div class="summary-value">$28,432.56</div>
+                        <div class="summary-change positive">
+                            <span>↑</span> +$1,245.23 (+4.58%)
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Total Profit/Loss</div>
+                        <div class="summary-value">+$3,892.45</div>
+                        <div class="summary-change positive">
+                            <span>↑</span> +15.87% All Time
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Best Performer</div>
+                        <div class="summary-value">XOM</div>
+                        <div class="summary-change positive">
+                            <span>↑</span> +23.5% This Week
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">24h Change</div>
+                        <div class="summary-value">+$892.34</div>
+                        <div class="summary-change positive">
+                            <span>↑</span> +3.24%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <!-- Portfolio Value Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h2 class="chart-title">Portfolio Value Over Time</h2>
+                        <select class="form-input" style="width: auto; padding: 0.6rem 1.2rem;">
+                            <option>Line Chart</option>
+                            <option>Candlestick</option>
+                            <option>Area Chart</option>
+                        </select>
+                    </div>
+                    <div class="chart-placeholder">
+                        📈 Portfolio Value Chart
+                    </div>
+                </div>
+
+                <!-- Asset Allocation -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h2 class="chart-title">Asset Allocation</h2>
+                    </div>
+                    <div class="pie-chart-placeholder">
+                        🥧 Pie Chart
+                    </div>
+                    <div class="asset-list">
+                        <div class="asset-row">
+                            <div class="asset-info">
+                                <div class="asset-icon" style="background: linear-gradient(135deg, #373373, #4a46a3); color: white;">
+                                    XOM
+                                </div>
+                                <div>
+                                    <div class="asset-name">OmniCoin</div>
+                                    <div class="asset-symbol">12,458.67 XOM</div>
+                                </div>
+                            </div>
+                            <div class="asset-allocation">87.7%</div>
+                        </div>
+                        <div class="asset-row">
+                            <div class="asset-info">
+                                <div class="asset-icon" style="background: linear-gradient(135deg, #627eea, #3b3b8f); color: white;">
+                                    ETH
+                                </div>
+                                <div>
+                                    <div class="asset-name">Ethereum</div>
+                                    <div class="asset-symbol">1.245 ETH</div>
+                                </div>
+                            </div>
+                            <div class="asset-allocation">10.1%</div>
+                        </div>
+                        <div class="asset-row">
+                            <div class="asset-info">
+                                <div class="asset-icon" style="background: linear-gradient(135deg, #f7931a, #ff9900); color: white;">
+                                    BTC
+                                </div>
+                                <div>
+                                    <div class="asset-name">Bitcoin</div>
+                                    <div class="asset-symbol">0.0234 BTC</div>
+                                </div>
+                            </div>
+                            <div class="asset-allocation">2.2%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Metrics -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon" style="background: var(--success-light); color: var(--success-color);">
+                            📊
+                        </div>
+                        <div class="metric-title">Average Buy Price</div>
+                    </div>
+                    <div class="metric-value">$1.85</div>
+                    <div class="metric-description">
+                        Your average XOM purchase price is 32% below current market price
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon" style="background: var(--primary-light); color: var(--primary-color);">
+                            💎
+                        </div>
+                        <div class="metric-title">Staking Rewards</div>
+                    </div>
+                    <div class="metric-value">234.56 XOM</div>
+                    <div class="metric-description">
+                        Earning ~8.5% APY from staking pools this month
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon" style="background: var(--warning-light); color: var(--warning-color);">
+                            🔥
+                        </div>
+                        <div class="metric-title">Gas Saved</div>
+                    </div>
+                    <div class="metric-value">$2,450</div>
+                    <div class="metric-description">
+                        Saved on gas fees by using OmniChain's free transactions
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon" style="background: var(--info-light); color: var(--info-color);">
+                            🎯
+                        </div>
+                        <div class="metric-title">Portfolio Score</div>
+                    </div>
+                    <div class="metric-value">85/100</div>
+                    <div class="metric-description">
+                        Good diversification with strong growth potential
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Profitable Trades -->
+            <div class="transactions-table">
+                <div class="table-header">
+                    <h2 class="table-title">Recent Profitable Trades</h2>
+                    <a href="wallet-transactions.html" class="view-all-link">View All Transactions →</a>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Asset</th>
+                            <th>Amount</th>
+                            <th>Price</th>
+                            <th>Profit/Loss</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dec 18, 2025</td>
+                            <td>Sell</td>
+                            <td>XOM</td>
+                            <td>500</td>
+                            <td>$2.10</td>
+                            <td><span class="profit-badge profit-positive">+$125 (+23.5%)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Dec 16, 2025</td>
+                            <td>Swap</td>
+                            <td>ETH → XOM</td>
+                            <td>0.5 ETH</td>
+                            <td>$2,300</td>
+                            <td><span class="profit-badge profit-positive">+$45 (+3.9%)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Dec 14, 2025</td>
+                            <td>Buy</td>
+                            <td>XOM</td>
+                            <td>1,000</td>
+                            <td>$1.85</td>
+                            <td><span class="profit-badge profit-positive">+$250 (+13.5%)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Dec 12, 2025</td>
+                            <td>Sell</td>
+                            <td>BTC</td>
+                            <td>0.01</td>
+                            <td>$45,000</td>
+                            <td><span class="profit-badge profit-negative">-$50 (-11.1%)</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Export Options -->
+            <div class="export-section">
+                <h2 style="font-size: 2rem; margin-bottom: 1rem;">Export Your Data</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                    Download your portfolio data for tax reporting or personal records
+                </p>
+                <div class="export-buttons">
+                    <button class="export-btn">
+                        <span>📄</span> Export CSV
+                    </button>
+                    <button class="export-btn">
+                        <span>📊</span> Export PDF Report
+                    </button>
+                    <button class="export-btn">
+                        <span>🧾</span> Tax Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="template.js"></script>
+    <script src="theme-switch.js"></script>
+    <script src="chat-modal.js"></script>
+    <script>
+        // Time period selection
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

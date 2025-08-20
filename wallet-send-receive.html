@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send & Receive - OmniWallet</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .send-receive-container {
+            max-width: 120rem;
+            margin: 0 auto;
+            padding: 3rem;
+        }
+
+        .page-title {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .wallet-balance-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 1.6rem;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .balance-label {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            margin-bottom: 0.8rem;
+        }
+
+        .balance-amount {
+            font-size: 4.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        .balance-usd {
+            font-size: 1.8rem;
+            opacity: 0.9;
+        }
+
+        .tabs-container {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 0.4rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1.6rem;
+            border: none;
+            background: transparent;
+            border-radius: 0.8rem;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-content {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 3rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .form-section {
+            margin-bottom: 2.4rem;
+        }
+
+        .form-label {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .form-helper {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 0.4rem;
+        }
+
+        .token-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .token-option {
+            flex: 1;
+            padding: 1.6rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0.8rem;
+            background: var(--surface-light);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .token-option.selected {
+            border-color: var(--primary-color);
+            background: var(--primary-light);
+        }
+
+        .token-icon {
+            font-size: 3.2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .token-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.4rem;
+        }
+
+        .token-balance {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .address-input-group {
+            position: relative;
+        }
+
+        .address-input {
+            width: 100%;
+            padding: 1.6rem;
+            padding-right: 12rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            font-family: monospace;
+            transition: all 0.2s;
+        }
+
+        .address-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .address-actions {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon-btn {
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.4rem;
+        }
+
+        .icon-btn:hover {
+            background: var(--surface-light);
+            border-color: var(--primary-color);
+        }
+
+        .amount-input-container {
+            position: relative;
+        }
+
+        .amount-input {
+            width: 100%;
+            padding: 2rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0.8rem;
+            font-size: 3.2rem;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .amount-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .amount-presets {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .preset-btn {
+            flex: 1;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--surface-light);
+            border-radius: 0.6rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary-color);
+        }
+
+        .fee-info {
+            background: var(--surface-light);
+            border-radius: 0.8rem;
+            padding: 1.6rem;
+            margin-bottom: 2rem;
+        }
+
+        .fee-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .fee-row:last-child {
+            margin-bottom: 0;
+            padding-top: 0.8rem;
+            border-top: 1px solid var(--border-color);
+            font-weight: 600;
+        }
+
+        .fee-label {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .fee-value {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .btn-primary {
+            flex: 1;
+            padding: 1.6rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-0.2rem);
+        }
+
+        .btn-primary:disabled {
+            background: var(--text-tertiary);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            padding: 1.6rem 2.4rem;
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 0.8rem;
+            font-size: 1.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-light);
+        }
+
+        .qr-section {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .qr-code {
+            width: 25rem;
+            height: 25rem;
+            margin: 2rem auto;
+            background: var(--surface-light);
+            border: 1px solid var(--border-color);
+            border-radius: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .wallet-address {
+            background: var(--surface-light);
+            padding: 1.6rem;
+            border-radius: 0.8rem;
+            font-family: monospace;
+            font-size: 1.4rem;
+            word-break: break-all;
+            margin: 2rem 0;
+        }
+
+        .copy-btn {
+            padding: 1.2rem 2.4rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .recent-addresses {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .recent-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .address-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .address-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem;
+            background: var(--surface-light);
+            border-radius: 0.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .address-item:hover {
+            background: var(--hover);
+        }
+
+        .address-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .address-avatar {
+            width: 3.2rem;
+            height: 3.2rem;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .address-text {
+            font-family: monospace;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .address-label {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="OmniBazaar%20Globe-Clear_Background-64x64.png" alt="OmniBazaar Logo" class="logo-img">
+                <span>OmniBazaar</span>
+            </a>
+            
+            <div class="nav-menu">
+                <a href="marketplace-home.html" class="nav-link">Marketplace</a>
+                <a href="dex-swap.html" class="nav-link">DEX</a>
+                <a href="wallet.html" class="nav-link active">Wallet</a>
+                <a href="validator-dashboard.html" class="nav-link">Validator</a>
+                <a href="community.html" class="nav-link">Community</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn" onclick="toggleTheme()">🌓</button>
+                <a href="messages.html" class="icon-btn">💬</a>
+                <a href="notifications.html" class="icon-btn">🔔</a>
+                <a href="profile.html" class="nav-user">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="User" class="user-avatar">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="send-receive-container">
+            <h1 class="page-title">Send & Receive Crypto</h1>
+
+            <!-- Balance Card -->
+            <div class="wallet-balance-card">
+                <div class="balance-label">Available Balance</div>
+                <div class="balance-amount">12,458.67 XOM</div>
+                <div class="balance-usd">≈ $24,917.34 USD</div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <button class="tab-btn active" onclick="switchTab('send')">
+                    <span>↑</span> Send
+                </button>
+                <button class="tab-btn" onclick="switchTab('receive')">
+                    <span>↓</span> Receive
+                </button>
+            </div>
+
+            <!-- Send Tab Content -->
+            <div id="send-tab" class="tab-content">
+                <!-- Token Selection -->
+                <div class="form-section">
+                    <label class="form-label">Select Token</label>
+                    <div class="token-selector">
+                        <div class="token-option selected">
+                            <div class="token-icon">🪙</div>
+                            <div class="token-name">XOM</div>
+                            <div class="token-balance">Balance: 12,458.67</div>
+                        </div>
+                        <div class="token-option">
+                            <div class="token-icon">💎</div>
+                            <div class="token-name">ETH</div>
+                            <div class="token-balance">Balance: 1.245</div>
+                        </div>
+                        <div class="token-option">
+                            <div class="token-icon">₿</div>
+                            <div class="token-name">BTC</div>
+                            <div class="token-balance">Balance: 0.0234</div>
+                        </div>
+                        <div class="token-option">
+                            <div class="token-icon">💵</div>
+                            <div class="token-name">USDT</div>
+                            <div class="token-balance">Balance: 500.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recipient Address -->
+                <div class="form-section">
+                    <label class="form-label">Recipient Address</label>
+                    <div class="address-input-group">
+                        <input type="text" class="address-input" placeholder="Enter wallet address or username">
+                        <div class="address-actions">
+                            <button class="icon-btn" title="Paste">📋</button>
+                            <button class="icon-btn" title="Scan QR">📷</button>
+                            <button class="icon-btn" title="Address Book">📖</button>
+                        </div>
+                    </div>
+                    <p class="form-helper">Supports OmniChain addresses, ENS names, and usernames</p>
+                </div>
+
+                <!-- Amount -->
+                <div class="form-section">
+                    <label class="form-label">Amount</label>
+                    <div class="amount-input-container">
+                        <input type="number" class="amount-input" placeholder="0.00" value="250">
+                    </div>
+                    <div class="amount-presets">
+                        <button class="preset-btn">25%</button>
+                        <button class="preset-btn">50%</button>
+                        <button class="preset-btn">75%</button>
+                        <button class="preset-btn">MAX</button>
+                    </div>
+                    <p class="form-helper">≈ $500.00 USD</p>
+                </div>
+
+                <!-- Transaction Fee -->
+                <div class="fee-info">
+                    <div class="fee-row">
+                        <span class="fee-label">Network Fee</span>
+                        <span class="fee-value">FREE (OmniChain)</span>
+                    </div>
+                    <div class="fee-row">
+                        <span class="fee-label">Amount</span>
+                        <span class="fee-value">250 XOM</span>
+                    </div>
+                    <div class="fee-row">
+                        <span class="fee-label">Total</span>
+                        <span class="fee-value">250 XOM</span>
+                    </div>
+                </div>
+
+                <!-- Recent Addresses -->
+                <div class="recent-addresses">
+                    <h3 class="recent-title">Recent Addresses</h3>
+                    <div class="address-list">
+                        <div class="address-item">
+                            <div class="address-info">
+                                <div class="address-avatar">AT</div>
+                                <div>
+                                    <div class="address-label">alice_trader</div>
+                                    <div class="address-text">0x742d...3e8f</div>
+                                </div>
+                            </div>
+                            <span style="color: var(--text-secondary); font-size: 1.2rem;">2 days ago</span>
+                        </div>
+                        <div class="address-item">
+                            <div class="address-info">
+                                <div class="address-avatar">BM</div>
+                                <div>
+                                    <div class="address-label">bob_merchant</div>
+                                    <div class="address-text">0x8f2a...1b4c</div>
+                                </div>
+                            </div>
+                            <span style="color: var(--text-secondary); font-size: 1.2rem;">5 days ago</span>
+                        </div>
+                        <div class="address-item">
+                            <div class="address-info">
+                                <div class="address-avatar">ME</div>
+                                <div>
+                                    <div class="address-label">marketplace_escrow</div>
+                                    <div class="address-text">0x5e8c...1a9f</div>
+                                </div>
+                            </div>
+                            <span style="color: var(--text-secondary); font-size: 1.2rem;">1 week ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn-secondary">Preview</button>
+                    <button class="btn-primary">Send Transaction</button>
+                </div>
+            </div>
+
+            <!-- Receive Tab Content -->
+            <div id="receive-tab" class="tab-content" style="display: none;">
+                <div class="qr-section">
+                    <h2 style="font-size: 2rem; margin-bottom: 1rem;">Your Wallet Address</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Share this address to receive cryptocurrency</p>
+                    
+                    <div class="qr-code">
+                        📱 QR Code
+                    </div>
+                    
+                    <div class="wallet-address">
+                        0x742d35Cc6634C0532925a3b844Bc9e7595f6A8e7
+                    </div>
+                    
+                    <button class="copy-btn">
+                        <span>📋</span> Copy Address
+                    </button>
+                </div>
+
+                <!-- Token Selection for Receive -->
+                <div class="form-section">
+                    <label class="form-label">Select Token to Receive</label>
+                    <div class="token-selector">
+                        <div class="token-option selected">
+                            <div class="token-icon">🪙</div>
+                            <div class="token-name">XOM</div>
+                            <div class="token-balance">OmniChain</div>
+                        </div>
+                        <div class="token-option">
+                            <div class="token-icon">💎</div>
+                            <div class="token-name">ETH</div>
+                            <div class="token-balance">Ethereum</div>
+                        </div>
+                        <div class="token-option">
+                            <div class="token-icon">₿</div>
+                            <div class="token-name">BTC</div>
+                            <div class="token-balance">Bitcoin</div>
+                        </div>
+                        <div class="token-option">
+                            <div class="token-icon">💵</div>
+                            <div class="token-name">USDT</div>
+                            <div class="token-balance">Tether</div>
+                        </div>
+                    </div>
+                    <p class="form-helper">Make sure sender uses the correct network for the selected token</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="template.js"></script>
+    <script src="theme-switch.js"></script>
+    <script src="chat-modal.js"></script>
+    <script>
+        function switchTab(tab) {
+            const sendTab = document.getElementById('send-tab');
+            const receiveTab = document.getElementById('receive-tab');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            
+            if (tab === 'send') {
+                sendTab.style.display = 'block';
+                receiveTab.style.display = 'none';
+                tabButtons[0].classList.add('active');
+                tabButtons[1].classList.remove('active');
+            } else {
+                sendTab.style.display = 'none';
+                receiveTab.style.display = 'block';
+                tabButtons[0].classList.remove('active');
+                tabButtons[1].classList.add('active');
+            }
+        }
+
+        // Token selection
+        document.querySelectorAll('.token-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.token-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        // Recent address click
+        document.querySelectorAll('.address-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const addressText = this.querySelector('.address-text').textContent;
+                document.querySelector('.address-input').value = addressText;
+            });
+        });
+
+        // Preset buttons
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const text = this.textContent;
+                const amountInput = document.querySelector('.amount-input');
+                const balance = 12458.67; // Mock balance
+                
+                if (text === '25%') amountInput.value = (balance * 0.25).toFixed(2);
+                else if (text === '50%') amountInput.value = (balance * 0.5).toFixed(2);
+                else if (text === '75%') amountInput.value = (balance * 0.75).toFixed(2);
+                else if (text === 'MAX') amountInput.value = balance.toFixed(2);
+            });
+        });
+
+        // Copy address
+        document.querySelector('.copy-btn').addEventListener('click', function() {
+            const address = document.querySelector('.wallet-address').textContent;
+            navigator.clipboard.writeText(address);
+            this.textContent = '✓ Copied!';
+            setTimeout(() => {
+                this.innerHTML = '<span>📋</span> Copy Address';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

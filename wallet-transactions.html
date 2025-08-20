@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History - OmniWallet</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .transactions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .transactions-title {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-label {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+
+        .stat-value {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .stat-change {
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .positive {
+            color: var(--success-color);
+        }
+
+        .negative {
+            color: var(--error-color);
+        }
+
+        .filters-section {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 20rem;
+        }
+
+        .filter-label {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .transactions-table {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--surface-light);
+            padding: 1.6rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 2rem 1.6rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 1.4rem;
+        }
+
+        tr:hover td {
+            background: var(--surface-light);
+        }
+
+        .tx-hash {
+            font-family: monospace;
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .tx-hash:hover {
+            text-decoration: underline;
+        }
+
+        .tx-type {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .tx-icon {
+            width: 3.2rem;
+            height: 3.2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+        }
+
+        .tx-send {
+            background: var(--error-light);
+            color: var(--error-color);
+        }
+
+        .tx-receive {
+            background: var(--success-light);
+            color: var(--success-color);
+        }
+
+        .tx-swap {
+            background: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .status-badge {
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .status-confirmed {
+            background: var(--success-light);
+            color: var(--success-color);
+        }
+
+        .status-pending {
+            background: var(--warning-light);
+            color: var(--warning-color);
+        }
+
+        .status-failed {
+            background: var(--error-light);
+            color: var(--error-color);
+        }
+
+        .amount-cell {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .amount-positive {
+            color: var(--success-color);
+        }
+
+        .amount-negative {
+            color: var(--error-color);
+        }
+
+        .chart-section {
+            background: var(--surface);
+            border-radius: 1.2rem;
+            padding: 2.4rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .period-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .period-btn {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            border-radius: 0.6rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .period-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .chart-placeholder {
+            height: 30rem;
+            background: var(--surface-light);
+            border-radius: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+        }
+
+        .page-btn {
+            padding: 0.8rem 1.2rem;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: var(--surface-light);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="OmniBazaar%20Globe-Clear_Background-64x64.png" alt="OmniBazaar Logo" class="logo-img">
+                <span>OmniBazaar</span>
+            </a>
+            
+            <div class="nav-menu">
+                <a href="marketplace-home.html" class="nav-link">Marketplace</a>
+                <a href="dex-swap.html" class="nav-link">DEX</a>
+                <a href="wallet.html" class="nav-link active">Wallet</a>
+                <a href="validator-dashboard.html" class="nav-link">Validator</a>
+                <a href="community.html" class="nav-link">Community</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn" onclick="toggleTheme()">🌓</button>
+                <a href="messages.html" class="icon-btn">💬</a>
+                <a href="notifications.html" class="icon-btn">🔔</a>
+                <a href="profile.html" class="nav-user">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="User" class="user-avatar">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Header -->
+            <div class="transactions-header">
+                <h1 class="transactions-title">Transaction History</h1>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">
+                        <span>📥</span> Export CSV
+                    </button>
+                    <button class="btn btn-primary">
+                        <span>↻</span> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Transactions</div>
+                    <div class="stat-value">1,247</div>
+                    <div class="stat-change positive">
+                        <span>↑</span> 12.5% this month
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Volume</div>
+                    <div class="stat-value">125,450 XOM</div>
+                    <div class="stat-change positive">
+                        <span>↑</span> 23.8% this month
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Average Transaction</div>
+                    <div class="stat-value">100.6 XOM</div>
+                    <div class="stat-change negative">
+                        <span>↓</span> 5.2% this month
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Gas Fees Saved</div>
+                    <div class="stat-value">$2,450</div>
+                    <div class="stat-change positive">
+                        <span>↑</span> Free on OmniChain!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Chart -->
+            <div class="chart-section">
+                <div class="chart-header">
+                    <h2>Transaction Activity</h2>
+                    <div class="period-selector">
+                        <button class="period-btn">24H</button>
+                        <button class="period-btn active">7D</button>
+                        <button class="period-btn">30D</button>
+                        <button class="period-btn">ALL</button>
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    📊 Transaction Activity Chart
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-section">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="filter-label">Search</label>
+                        <input type="text" class="form-input" placeholder="Search by address, hash, or note...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Type</label>
+                        <select class="form-input">
+                            <option>All Types</option>
+                            <option>Send</option>
+                            <option>Receive</option>
+                            <option>Swap</option>
+                            <option>Contract</option>
+                            <option>Staking</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Token</label>
+                        <select class="form-input">
+                            <option>All Tokens</option>
+                            <option>XOM</option>
+                            <option>XOMP</option>
+                            <option>USDT</option>
+                            <option>ETH</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Date Range</label>
+                        <input type="date" class="form-input">
+                    </div>
+                    <button class="btn btn-primary">Apply Filters</button>
+                </div>
+            </div>
+
+            <!-- Transactions Table -->
+            <div class="transactions-table">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Transaction Hash</th>
+                                <th>From/To</th>
+                                <th>Status</th>
+                                <th style="text-align: right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="tx-type">
+                                        <div class="tx-icon tx-send">↑</div>
+                                        <span>Send</span>
+                                    </div>
+                                </td>
+                                <td>Dec 19, 2025 14:32</td>
+                                <td>
+                                    <a href="#" class="tx-hash">0x8f3a...2b5c</a>
+                                </td>
+                                <td>alice_trader</td>
+                                <td>
+                                    <span class="status-badge status-confirmed">Confirmed</span>
+                                </td>
+                                <td class="amount-cell amount-negative">-250 XOM</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="tx-type">
+                                        <div class="tx-icon tx-receive">↓</div>
+                                        <span>Receive</span>
+                                    </div>
+                                </td>
+                                <td>Dec 19, 2025 12:15</td>
+                                <td>
+                                    <a href="#" class="tx-hash">0x7d2e...9a1f</a>
+                                </td>
+                                <td>bob_merchant</td>
+                                <td>
+                                    <span class="status-badge status-confirmed">Confirmed</span>
+                                </td>
+                                <td class="amount-cell amount-positive">+1,500 XOM</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="tx-type">
+                                        <div class="tx-icon tx-swap">⇄</div>
+                                        <span>Swap</span>
+                                    </div>
+                                </td>
+                                <td>Dec 18, 2025 16:45</td>
+                                <td>
+                                    <a href="#" class="tx-hash">0x3c6b...4e8d</a>
+                                </td>
+                                <td>DEX Router</td>
+                                <td>
+                                    <span class="status-badge status-confirmed">Confirmed</span>
+                                </td>
+                                <td class="amount-cell">500 XOM → 450 USDT</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="tx-type">
+                                        <div class="tx-icon tx-receive">↓</div>
+                                        <span>Staking Reward</span>
+                                    </div>
+                                </td>
+                                <td>Dec 17, 2025 00:00</td>
+                                <td>
+                                    <a href="#" class="tx-hash">0x9f1a...7c3b</a>
+                                </td>
+                                <td>Staking Pool</td>
+                                <td>
+                                    <span class="status-badge status-confirmed">Confirmed</span>
+                                </td>
+                                <td class="amount-cell amount-positive">+25.5 XOM</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="tx-type">
+                                        <div class="tx-icon tx-send">↑</div>
+                                        <span>Send</span>
+                                    </div>
+                                </td>
+                                <td>Dec 16, 2025 18:30</td>
+                                <td>
+                                    <a href="#" class="tx-hash">0x5e8c...1a9f</a>
+                                </td>
+                                <td>marketplace_escrow</td>
+                                <td>
+                                    <span class="status-badge status-pending">Pending</span>
+                                </td>
+                                <td class="amount-cell amount-negative">-100 XOM</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="page-btn" disabled>← Previous</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <span>...</span>
+                    <button class="page-btn">25</button>
+                    <button class="page-btn">Next →</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="template.js"></script>
+    <script src="theme-switch.js"></script>
+    <script src="chat-modal.js"></script>
+</body>
+</html>

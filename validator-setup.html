@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validator Setup Wizard - OmniBazaar</title>
+    <link rel="stylesheet" href="omnibazaar-theme.css">
+    <link rel="stylesheet" href="template-styles.css">
+    <style>
+        .wizard-container {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 3rem;
+        }
+
+        .wizard-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .wizard-title {
+            font-size: 3.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .wizard-subtitle {
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            background: var(--surface);
+            border-radius: 2rem;
+            height: 1rem;
+            margin-bottom: 4rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+            border-radius: 2rem;
+            transition: width 0.5s ease;
+        }
+
+        .steps-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .step-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 2rem;
+            left: 50%;
+            width: 100%;
+            height: 0.2rem;
+            background: var(--border-color);
+            z-index: -1;
+        }
+
+        .step-item.completed::after {
+            background: var(--primary-color);
+        }
+
+        .step-circle {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 0.3rem solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-tertiary);
+        }
+
+        .step-item.active .step-circle {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .step-item.completed .step-circle {
+            background: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .step-item.active .step-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .wizard-content {
+            background: var(--surface);
+            border-radius: 1.6rem;
+            padding: 3rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 3rem;
+        }
+
+        .step-section {
+            display: none;
+        }
+
+        .step-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-description {
+            font-size: 1.6rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        .requirements-list {
+            background: var(--surface-light);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .requirement-item {
+            display: flex;
+            align-items: start;
+            gap: 1.2rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .requirement-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .requirement-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .requirement-text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+        }
+
+        .requirement-met {
+            color: var(--success-color);
+        }
+
+        .requirement-not-met {
+            color: var(--error-color);
+        }
+
+        .form-group {
+            margin-bottom: 2.4rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1.2rem 1.6rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0.8rem;
+            font-size: 1.4rem;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-helper {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 0.6rem;
+        }
+
+        .code-block {
+            background: var(--text-primary);
+            color: var(--text-inverse);
+            border-radius: 0.8rem;
+            padding: 2rem;
+            font-family: monospace;
+            font-size: 1.3rem;
+            overflow-x: auto;
+            margin-bottom: 2rem;
+        }
+
+        .copy-code-btn {
+            float: right;
+            padding: 0.6rem 1.2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.4rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+
+        .copy-code-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .validator-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .type-card {
+            background: var(--surface-light);
+            border: 2px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .type-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-0.2rem);
+        }
+
+        .type-card.selected {
+            border-color: var(--primary-color);
+            background: var(--primary-light);
+        }
+
+        .type-icon {
+            font-size: 3.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .type-name {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .type-description {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .staking-info {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 1rem;
+            padding: 2.4rem;
+            margin-bottom: 3rem;
+        }
+
+        .staking-amount {
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        .staking-label {
+            font-size: 1.6rem;
+            opacity: 0.9;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1.4rem 2.4rem;
+            border-radius: 0.8rem;
+            font-size: 1.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-light);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-0.2rem);
+        }
+
+        .btn-primary:disabled {
+            background: var(--text-tertiary);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .summary-section {
+            background: var(--surface-light);
+            border-radius: 1rem;
+            padding: 2.4rem;
+            margin-bottom: 3rem;
+        }
+
+        .summary-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .summary-value {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .success-message {
+            background: var(--success-light);
+            color: var(--success-color);
+            border-radius: 0.8rem;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .success-text {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="OmniBazaar%20Globe-Clear_Background-64x64.png" alt="OmniBazaar Logo" class="logo-img">
+                <span>OmniBazaar</span>
+            </a>
+            
+            <div class="nav-menu">
+                <a href="marketplace-home.html" class="nav-link">Marketplace</a>
+                <a href="dex-swap.html" class="nav-link">DEX</a>
+                <a href="wallet.html" class="nav-link">Wallet</a>
+                <a href="validator-dashboard.html" class="nav-link active">Validator</a>
+                <a href="community.html" class="nav-link">Community</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn" onclick="toggleTheme()">🌓</button>
+                <a href="messages.html" class="icon-btn">💬</a>
+                <a href="notifications.html" class="icon-btn">🔔</a>
+                <a href="profile.html" class="nav-user">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="User" class="user-avatar">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="wizard-container">
+            <!-- Header -->
+            <div class="wizard-header">
+                <h1 class="wizard-title">Become a Validator</h1>
+                <p class="wizard-subtitle">Join the OmniBazaar network and earn rewards</p>
+            </div>
+
+            <!-- Progress Steps -->
+            <div class="steps-indicator">
+                <div class="step-item active">
+                    <div class="step-circle">1</div>
+                    <span class="step-label">Requirements</span>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle">2</div>
+                    <span class="step-label">Node Type</span>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle">3</div>
+                    <span class="step-label">Setup</span>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle">4</div>
+                    <span class="step-label">Staking</span>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle">5</div>
+                    <span class="step-label">Confirm</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 20%;"></div>
+            </div>
+
+            <!-- Wizard Content -->
+            <div class="wizard-content">
+                <!-- Step 1: Requirements -->
+                <div class="step-section active" id="step-1">
+                    <h2 class="section-title">Validator Requirements</h2>
+                    <p class="section-description">
+                        Before becoming a validator, ensure you meet all the minimum requirements for running a node on the OmniBazaar network.
+                    </p>
+
+                    <div class="requirements-list">
+                        <div class="requirement-item">
+                            <span class="requirement-icon requirement-met">✓</span>
+                            <div>
+                                <div class="requirement-text">
+                                    <strong>Minimum Stake:</strong> 10,000 XOM
+                                </div>
+                                <div class="form-helper">You have 12,458.67 XOM available</div>
+                            </div>
+                        </div>
+                        <div class="requirement-item">
+                            <span class="requirement-icon requirement-met">✓</span>
+                            <div>
+                                <div class="requirement-text">
+                                    <strong>KYC Verification:</strong> Completed
+                                </div>
+                                <div class="form-helper">Your identity has been verified</div>
+                            </div>
+                        </div>
+                        <div class="requirement-item">
+                            <span class="requirement-icon requirement-not-met">✗</span>
+                            <div>
+                                <div class="requirement-text">
+                                    <strong>System Requirements:</strong> 8 GB RAM, 4 CPU cores, 500 GB SSD
+                                </div>
+                                <div class="form-helper">Please ensure your system meets these specifications</div>
+                            </div>
+                        </div>
+                        <div class="requirement-item">
+                            <span class="requirement-icon requirement-not-met">✗</span>
+                            <div>
+                                <div class="requirement-text">
+                                    <strong>Network:</strong> Stable internet with 100 Mbps+ bandwidth
+                                </div>
+                                <div class="form-helper">Low latency connection recommended</div>
+                            </div>
+                        </div>
+                        <div class="requirement-item">
+                            <span class="requirement-icon requirement-not-met">✗</span>
+                            <div>
+                                <div class="requirement-text">
+                                    <strong>Uptime:</strong> 99.9% availability commitment
+                                </div>
+                                <div class="form-helper">Downtime may result in slashing penalties</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" style="margin-right: 0.8rem;">
+                            I confirm that I meet all the system and network requirements
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Step 2: Choose Node Type -->
+                <div class="step-section" id="step-2">
+                    <h2 class="section-title">Choose Your Node Type</h2>
+                    <p class="section-description">
+                        Select the type of validator node you want to run. Each type has different requirements and rewards.
+                    </p>
+
+                    <div class="validator-types">
+                        <div class="type-card" onclick="selectNodeType(this, 'full')">
+                            <div class="type-icon">🖥️</div>
+                            <div class="type-name">Full Validator</div>
+                            <div class="type-description">
+                                Process all transactions and maintain complete blockchain state. Highest rewards but requires most resources.
+                            </div>
+                        </div>
+                        <div class="type-card" onclick="selectNodeType(this, 'light')">
+                            <div class="type-icon">⚡</div>
+                            <div class="type-name">Light Validator</div>
+                            <div class="type-description">
+                                Process subset of transactions with lower resource requirements. Good for beginners.
+                            </div>
+                        </div>
+                        <div class="type-card" onclick="selectNodeType(this, 'specialized')">
+                            <div class="type-icon">🎯</div>
+                            <div class="type-name">Specialized Validator</div>
+                            <div class="type-description">
+                                Focus on specific services like IPFS storage, chat relay, or price oracles.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Node Setup -->
+                <div class="step-section" id="step-3">
+                    <h2 class="section-title">Node Setup Instructions</h2>
+                    <p class="section-description">
+                        Follow these steps to set up your validator node. We support multiple operating systems and deployment methods.
+                    </p>
+
+                    <div class="form-group">
+                        <label class="form-label">Select Your Operating System</label>
+                        <select class="form-input">
+                            <option>Ubuntu 20.04 / 22.04</option>
+                            <option>Windows Server 2019+</option>
+                            <option>macOS 12+</option>
+                            <option>Docker (Any OS)</option>
+                        </select>
+                    </div>
+
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1.5rem;">Installation Commands</h3>
+                    <div class="code-block">
+                        <button class="copy-code-btn">Copy</button>
+                        # Download OmniBazaar validator
+wget https://omnibazaar.com/validator/latest/omnibazaar-validator
+chmod +x omnibazaar-validator
+
+# Initialize validator
+./omnibazaar-validator init --name "YourValidatorName"
+
+# Generate validator keys
+./omnibazaar-validator keys generate
+
+# Start the node
+./omnibazaar-validator start --daemon
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Validator Name</label>
+                        <input type="text" class="form-input" placeholder="Enter a unique name for your validator">
+                        <p class="form-helper">This name will be visible on the network</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Node RPC Endpoint</label>
+                        <input type="text" class="form-input" placeholder="http://your-server-ip:8545">
+                        <p class="form-helper">Your node's public endpoint for network communication</p>
+                    </div>
+                </div>
+
+                <!-- Step 4: Staking -->
+                <div class="step-section" id="step-4">
+                    <h2 class="section-title">Stake Your XOM</h2>
+                    <p class="section-description">
+                        Lock your XOM tokens to activate your validator. You can add more stake later to increase your rewards.
+                    </p>
+
+                    <div class="staking-info">
+                        <div class="staking-amount">12,458.67 XOM</div>
+                        <div class="staking-label">Available Balance</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Staking Amount</label>
+                        <input type="number" class="form-input" value="10000" min="10000">
+                        <p class="form-helper">Minimum stake: 10,000 XOM</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Lock Period</label>
+                        <select class="form-input">
+                            <option>30 days (5% APY)</option>
+                            <option>90 days (8% APY)</option>
+                            <option>180 days (12% APY)</option>
+                            <option>365 days (15% APY)</option>
+                        </select>
+                        <p class="form-helper">Longer lock periods earn higher rewards</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Reward Address</label>
+                        <input type="text" class="form-input" value="0x742d35Cc6634C0532925a3b844Bc9e7595f6A8e7">
+                        <p class="form-helper">Where your staking rewards will be sent</p>
+                    </div>
+                </div>
+
+                <!-- Step 5: Confirmation -->
+                <div class="step-section" id="step-5">
+                    <h2 class="section-title">Review & Confirm</h2>
+                    <p class="section-description">
+                        Please review your validator setup details before confirming.
+                    </p>
+
+                    <div class="summary-section">
+                        <h3 class="summary-title">Validator Configuration</h3>
+                        <div class="summary-item">
+                            <span class="summary-label">Validator Type</span>
+                            <span class="summary-value">Full Validator</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Validator Name</span>
+                            <span class="summary-value">MyOmniValidator</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Staking Amount</span>
+                            <span class="summary-value">10,000 XOM</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Lock Period</span>
+                            <span class="summary-value">90 days (8% APY)</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Expected Monthly Rewards</span>
+                            <span class="summary-value">~66.67 XOM</span>
+                        </div>
+                    </div>
+
+                    <div class="success-message" style="display: none;">
+                        <div class="success-icon">🎉</div>
+                        <div class="success-text">Validator Setup Complete!</div>
+                        <p style="margin-top: 1rem;">Your node is now being registered on the network.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" style="margin-right: 0.8rem;">
+                            I understand that my stake will be locked for the selected period
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="previousStep()">Previous</button>
+                <button class="btn btn-primary" onclick="nextStep()">Next</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="template.js"></script>
+    <script src="theme-switch.js"></script>
+    <script src="chat-modal.js"></script>
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        function updateProgress() {
+            const progressFill = document.querySelector('.progress-fill');
+            progressFill.style.width = `${(currentStep / totalSteps) * 100}%`;
+
+            // Update step indicators
+            document.querySelectorAll('.step-item').forEach((item, index) => {
+                if (index < currentStep - 1) {
+                    item.classList.add('completed');
+                    item.classList.remove('active');
+                    item.querySelector('.step-circle').innerHTML = '✓';
+                } else if (index === currentStep - 1) {
+                    item.classList.add('active');
+                    item.classList.remove('completed');
+                } else {
+                    item.classList.remove('active', 'completed');
+                }
+            });
+
+            // Update button states
+            const prevBtn = document.querySelector('.btn-secondary');
+            const nextBtn = document.querySelector('.btn-primary');
+            
+            prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
+            
+            if (currentStep === totalSteps) {
+                nextBtn.textContent = 'Complete Setup';
+            } else {
+                nextBtn.textContent = 'Next';
+            }
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.step-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`step-${step}`).classList.add('active');
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+                updateProgress();
+                window.scrollTo(0, 0);
+            } else {
+                // Complete setup
+                document.querySelector('.success-message').style.display = 'block';
+                document.querySelector('.btn-primary').textContent = 'Go to Dashboard';
+                document.querySelector('.btn-primary').onclick = () => {
+                    window.location.href = 'validator-dashboard.html';
+                };
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+                updateProgress();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function selectNodeType(card, type) {
+            document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+        }
+
+        // Copy code functionality
+        document.querySelectorAll('.copy-code-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const codeBlock = this.parentElement.textContent.replace('Copy', '').trim();
+                navigator.clipboard.writeText(codeBlock);
+                this.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    this.textContent = 'Copy';
+                }, 2000);
+            });
+        });
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>
